@@ -1,6 +1,6 @@
-main:WickyEngine ResultSet Parser Expression Optimizer Plan Evaluator
+main:WickyEngine ResultSet Parser Expression Optimizer Plan Evaluator Algorithm
 	g++ -c src/main.cpp -Iinclude
-	g++ -o wickydb main.o WickyEngine.o ResultSet.o Parser.o Expression.o Optimizer.o Plan.o Evaluator.o 
+	g++ -o wickydb main.o WickyEngine.o ResultSet.o Parser.o Expression.o Optimizer.o Plan.o Evaluator.o BTree.o 
 WickyEngine:
 	g++ -c src/WickyEngine.cpp -Iinclude
 ResultSet:
@@ -15,3 +15,5 @@ Plan:
 	g++ -c src/Entity/Plan.cpp -Iinclude
 Evaluator:
 	g++ -c src/Evaluator/Evaluator.cpp -Iinclude
+Algorithm:
+	g++ -c src/Algorithm/BTree.cpp -Iinclude

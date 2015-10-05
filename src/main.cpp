@@ -1,5 +1,7 @@
 #include <iostream>
+#include <string>
 #include <WickyEngine.h>
+#include "Algorithm/BTree.cpp"
 
 using namespace std;
 
@@ -13,4 +15,5 @@ int main(int argc, char* argv[]){
 	wickydb.setOptimizer(optimizer);
 	wickydb.setEvaluator(evaluator);
 	wickydb.execute("Issac");
+	CBTree<string> index;
 }
