@@ -1,11 +1,11 @@
 #include <string>
 
-#include <Entity/ResultSet.h>
-#include <Parser/Parser.h>
-#include <Entity/Expression.h>
-#include <Optimizer/Optimizer.h>
-#include <Entity/Plan.h>
-#include <Evaluator/Evaluator.h>
+#include <ResultSet.h>
+#include <Parser.h>
+#include <Expression.h>
+#include <Optimizer.h>
+#include <Plan.h>
+#include <Evaluator.h>
 
 #ifndef _WICKYENGINE_H
 #define _WICKYENGINE_H

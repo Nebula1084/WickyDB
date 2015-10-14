@@ -1,5 +1,5 @@
-#include <Entity/Plan.h>
-#include <Entity/ResultSet.h>
+#include <Plan.h>
+#include <ResultSet.h>
 
 #include <iostream>
 
