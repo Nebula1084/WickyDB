@@ -10,10 +10,10 @@ using namespace std;
 
 class BufferManager{
 public:
-	void write(string fileName, WickyPointer pointer, Tuple tuple);
-	Tuple readTuple(string fileName, WickyPointer pointer);
-	void write(string fileName, WickyPointer pointer, Key key);
-	Key readKey(string fileName, WickyPointer pointer);
+	void write(Table tableName, WickyPointer pointer, Tuple tuple);
+	Tuple readTuple(Table tableName, WickyPointer pointer);
+	void write(Index indexName, WickyPointer pointer, Key key);
+	Key readKey(Index indexName, WickyPointer pointer);
 private:
 };
 

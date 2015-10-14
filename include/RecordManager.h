@@ -12,7 +12,7 @@ class RecordManger{
 public:
 	WickyPointer insertTuple(Table table, Tuple tuple);
 	int deleteTuple(Table table, WickyPointer pointer);
-	Tuple selectTuple(Table table, WickyPointer pointer); 
+	Tuple selectTuple(Table table, WickyPointer pointer,int number = 1);  
 };
 
 #endif
