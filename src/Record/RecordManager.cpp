@@ -8,6 +8,6 @@ int RecordManger::deleteTuple(Table table, WickyPointer pointer){
 	
 }
 
-Tuple RecordManger::selectTuple(Table table, WickyPointer pointer){
+Tuple RecordManger::selectTuple(Table table, WickyPointer pointer, int number){
 	
 } 

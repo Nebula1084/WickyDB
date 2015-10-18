@@ -1,7 +1,8 @@
 #include <string>
-#include <WickyPointer.h>
-#include <Tuple.h>
-#include <Key.h>
+#include <iostream>
+#include "WickyFile.h"
+#include "WickyPointer.h"
+#include "WickyTuple.h"
 
 #ifndef _BUFFERMANAGER_H
 #define _BUFFERMANAGER_H
@@ -9,12 +10,20 @@
 using namespace std;
 
 class BufferManager{
-public:
-	void write(Table tableName, WickyPointer pointer, Tuple tuple);
-	Tuple readTuple(Table tableName, WickyPointer pointer);
-	void write(Index indexName, WickyPointer pointer, Key key);
-	Key readKey(Index indexName, WickyPointer pointer);
 private:
+	static BufferManager* instance;
+	
+	BufferManager();
+	virtual ~BufferManager();
+public:
+	//single instance mode making sure only one buffer exists among global
+	static BufferManager* getInstance();
+	
+	//all parameters are references
+	//and the data specified by wickypointer would be operated, onece
+	void write(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt);
+	void read(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt);
+	
 };
 
 #endif

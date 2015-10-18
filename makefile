@@ -1,9 +1,21 @@
+WICKYDB = wickydb
+WICKY = main.o WickyEngine.o WickyPointer.o WickyFile.o WickyTuple.o Item.o ResultSet.o
+BUFFER = BufferManager.o
+CATALOG = CatalogManager.o
+INDEX = Index.o Key.o IndexManager.o
+INTERPRETOR = Parser.o Expression.o Optimizer.o Plan.o Evaluator.o  
+ALOGRITHM = BTree.o
+RECORD = RecordManager.o Table.o
+
 WickyEngine: Buffer Catalog Index Interpretor Record Algorithm
 	g++ -c src/main.cpp -Iinclude
 	g++ -c src/WickyEngine.cpp -Iinclude
 	g++ -c src/WickyPointer.cpp -Iinclude
+	g++ -c src/WickyFile.cpp -Iinclude
+	g++ -c src/WickyTuple.cpp -Iinclude
+	g++ -c src/Item.cpp -Iinclude
 	g++ -c src/ResultSet.cpp -Iinclude
-	g++ -o wickydb main.o WickyEngine.o ResultSet.o  BTree.o Parser.o Expression.o Optimizer.o Plan.o Evaluator.o
+	g++ -o $(WICKYDB) $(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
 Buffer:
 	g++ -c src/Buffer/BufferManager.cpp -Iinclude
 Catalog:
