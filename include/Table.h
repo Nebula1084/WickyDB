@@ -2,29 +2,37 @@
 #define _TABLE_H
 #include <string>
 #include <vector>
-using namespace std;
+
 
 class Tuple{
 public:
-	vector<string> col; //each column
+	std::vector<std::string> col; //each column
 };
+
 
 class attribute{
 public:
 	int datatype;				//int=0, char=1, float=2
-	bool isPrimary;				//True if it's primary key	
-	bool haveIndex;				//True if it has an index	
+	std::string attrName;		//the name of the attribute
+	bool isPrimary;				//True if it is a primary key	
+	bool isUnique;				//True if it is unique
+	//bool hasIndex;				//True if it has an index	
+	attribute();
+	attribute(int datatype, std::string attrName, bool isPrimary=false, bool isUnique=false);
 };
+
 
 class Table{
 private:
-	string tableName;			//the name of table
+	std::string tableName;			//the name of table
 	int attrNum;				//the number of attributes(column)
-	vector<attribute> attrList;	//the list of attributes
-	vector<Tuple> rows;			//the data of the table	
+	std::vector<attribute> attrList;	//the list of attributes
+
 public:
-	Table();
-	bool CreateTable(string tableName, vector<attribute> attrList);
+	std::vector<Tuple> rows;			//the data of the table	
+	Table(std::string tableName);
+	bool CreateTable(std::vector<attribute> attrList);
+	int getAttrNum(){return attrNum;}
 };
 
 #endif

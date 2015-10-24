@@ -1,19 +1,29 @@
 #include <Table.h>
 #include <string>
 #include <vector>
-using namespace std;
-Table::Table(){
-	attrNum=0;
-	attrName.clear();
-	attrType.clear();
+
+attribute::attribute(int datatype, std::string attrName, bool isPrimary, bool isUnique){
+	this->datatype = datatype;
+	this->attrName = attrName;
+	this->isPrimary = isPrimary;
+	this->isUnique = isUnique;
 }
-// bool Table::CreateTable(vector<string> name,vector<string> type){
-// 	if(name.size()!=type.size()||name.size()>32)  //support at most 32 attributes
-// 		return false;
-// 	for(int i=0;i<name.size();i++){
-// 		attrName.push_back(name[i]);
-// 		attrType.push_back(type[i]);
-// 	}
-// 	attrNum=name.size();
-// 	return true;
-// }
+attribute::attribute(){
+	this->datatype = 0;
+	this->attrName = "NULL";
+	this->isPrimary = false;
+	this->isUnique = false;
+}
+
+Table::Table(std::string name){
+	tableName = name;
+	attrNum=0;
+}
+
+bool Table::CreateTable(std::vector<attribute> v){
+	attrList = v;
+	if(attrList.size()==0)
+		return false;
+	attrNum = attrList.size();
+	return true;
+}
