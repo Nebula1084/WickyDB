@@ -7,13 +7,13 @@ Table::Table(){
 	attrName.clear();
 	attrType.clear();
 }
-bool Table::CreateTable(vector<string> name,vector<string> type){
-	if(name.size()!=type.size()||name.size()>32)  //support at most 32 attributes
-		return false;
-	for(int i=0;i<name.size();i++){
-		attrName.push_back(name[i]);
-		attrType.push_back(type[i]);
-	}
-	attrNum=name.size();
-	return true;
-}
+// bool Table::CreateTable(vector<string> name,vector<string> type){
+// 	if(name.size()!=type.size()||name.size()>32)  //support at most 32 attributes
+// 		return false;
+// 	for(int i=0;i<name.size();i++){
+// 		attrName.push_back(name[i]);
+// 		attrType.push_back(type[i]);
+// 	}
+// 	attrNum=name.size();
+// 	return true;
+// }

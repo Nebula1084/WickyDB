@@ -1,5 +1,4 @@
 #include <WickyPointer.h>
-#include <Tuple.h>
 #include <Table.h>
 #include <vector>
 
@@ -10,8 +9,8 @@ using namespace std;
 
 class RecordManger{
 public:
-	WickyPointer insertTuple(Table table, Tuple tuple);
-	int deleteTuple(Table table, WickyPointer pointer);
+	bool insertTuple(Table* table, Tuple tuple，int offset);					//return true if insertion successed
+	bool deleteTuple(Table* table, WickyPointer pointer);					//return true if deletion successed
 	Tuple selectTuple(Table table, WickyPointer pointer,int number = 1);  
 };
 

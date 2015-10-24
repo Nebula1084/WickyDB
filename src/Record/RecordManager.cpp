@@ -1,10 +1,10 @@
 #include <RecordManager.h>
 
-WickyPointer RecordManger::insertTuple(Table table, Tuple tuple){
-	
+bool RecordManger::insertTuple(Table* table, Tuple tuple, int offset){
+    int rawSize = table->rows.size();
 }
 
-int RecordManger::deleteTuple(Table table, WickyPointer pointer){
+bool RecordManger::deleteTuple(Table* table, WickyPointer pointer){
 	
 }
 
