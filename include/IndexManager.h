@@ -5,8 +5,6 @@
 #ifndef _INDEXMANAGER_H
 #define _INDEXMANGAER_H
 
-using namespace std;
-
 class IndexManager{
 public:
 	Index createIndex(const Table *table, int column, int type);

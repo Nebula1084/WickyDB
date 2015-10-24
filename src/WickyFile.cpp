@@ -1,6 +1,6 @@
 #include "WickyFile.h"
 
-WickyFile::WickyFile(string fileName)
+WickyFile::WickyFile(std::string fileName)
 	:fileName(fileName){
 		
 }
@@ -9,6 +9,6 @@ WickyFile::~WickyFile(){
 	
 }
 
-string WickyFile::getFileName(){
+std::string WickyFile::getFileName(){
 	return fileName;
 }

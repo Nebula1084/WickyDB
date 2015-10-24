@@ -7,8 +7,6 @@
 #ifndef _BUFFERMANAGER_H
 #define _BUFFERMANAGER_H
 
-using namespace std;
-
 class BufferManager{
 private:
 	static BufferManager* instance;

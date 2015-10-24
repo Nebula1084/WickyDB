@@ -10,15 +10,13 @@
 #ifndef _WICKYENGINE_H
 #define _WICKYENGINE_H
 
-using namespace std;
-
 class WickyEngine{
 private:
 	Parser mParser;
 	Optimizer mOptimizer;
 	Evaluator mEvaluator;
 public:
-	ResultSet execute(string query);
+	ResultSet execute(std::string query);
 	void setParser(Parser& parser);
 	void setOptimizer(Optimizer& optimizer);
 	void setEvaluator(Evaluator& evaluator);

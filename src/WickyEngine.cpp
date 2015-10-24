@@ -5,7 +5,7 @@
 #include "WickyTuple.h"
 #include "Item.h"
 
-ResultSet WickyEngine::execute(string query){
+ResultSet WickyEngine::execute(std::string query){
 	Expression expression;
 	expression = mParser.parse(query);
 	Plan plan;

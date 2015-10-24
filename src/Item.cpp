@@ -27,7 +27,7 @@ int Item::getLength(){
 	return length;
 }
 
-void Item::add(string str){
+void Item::add(std::string str){
 	for (int i = 0; i < str.size(); i++){
 		bytes[rear] = str[i];
 		rear++;

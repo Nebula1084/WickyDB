@@ -4,10 +4,10 @@ void Index::insertKey(Key key, WickyPointer pointer){
 	
 }
 
-vector<WickyPointer> Index::search(){
+std::vector<WickyPointer> Index::search(){
 	
 }
 
-vector<WickyPointer> Index::dropKey(){
+std::vector<WickyPointer> Index::dropKey(){
 	
 }

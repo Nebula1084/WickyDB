@@ -19,10 +19,8 @@ BufferManager* BufferManager::getInstance(){
 
 void BufferManager::write(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){
 	FILE *fp = fopen(wf->getFileName().c_str(), "ab");
-	cout << fseek(fp, ptr->getAddress(), SEEK_SET) << endl;
-	unsigned char* buffer = wt->dump();
-	cout << buffer << endl;
-	cout << ptr->getAddress() << endl;
+	fseek(fp, ptr->getAddress(), SEEK_SET);
+	unsigned char* buffer = wt->dump();	
 	fwrite(buffer, wt->getLength(), 1, fp);
 	delete[] buffer;
 	fclose(fp);

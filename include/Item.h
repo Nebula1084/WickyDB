@@ -4,8 +4,6 @@
 #ifndef _ITEM_H
 #define _ITEM_H
 
-using namespace std;
-
 class Item : public WickyTuple{
 protected:
 	unsigned char* bytes;
@@ -17,7 +15,7 @@ public:
 	virtual unsigned char* dump();
 	virtual void load(unsigned char* buffer);
 	virtual int getLength();
-	void add(string str);
+	void add(std::string str);
 };
 
 #endif

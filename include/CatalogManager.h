@@ -6,8 +6,6 @@
 #ifndef _CATALOGMANAGER_H
 #define _CATALOGMANAGER_H
 
-using namespace std;
-
 class CatalogManager{
 public:
 	/*

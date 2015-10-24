@@ -1,5 +1,5 @@
 #include <Evaluator.h>
 
 ResultSet Evaluator::evaluate(Plan plan){
-	cout << "Evaluator" << endl;
+	std::cout << "Evaluator" << std::endl;
 }

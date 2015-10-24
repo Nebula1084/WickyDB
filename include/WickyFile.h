@@ -3,15 +3,13 @@
 #ifndef _WICKYFILE_H
 #define _WICKYFILE_H
 
-using namespace std;
-
 class WickyFile{
 protected:
-	string fileName;	
+	std::string fileName;	
 public:
-	WickyFile(string fileName);
+	WickyFile(std::string fileName);
 	virtual ~WickyFile();
-	virtual string getFileName();
+	virtual std::string getFileName();
 };
 
 #endif
