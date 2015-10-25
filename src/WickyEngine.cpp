@@ -1,9 +1,5 @@
-#include <WickyEngine.h>
-#include "BufferManager.h"
-#include "WickyFile.h"
-#include "WickyPointer.h"
-#include "WickyTuple.h"
-#include "Item.h"
+#include "WickyEngine.h"
+
 
 ResultSet WickyEngine::execute(std::string query){
 	Expression expression;
@@ -12,24 +8,17 @@ ResultSet WickyEngine::execute(std::string query){
 	plan = mOptimizer.optimize(expression);
 	ResultSet resultSet;
 	resultSet = mEvaluator.evaluate(plan);
-	BufferManager* bm = BufferManager::getInstance();
-	WickyFile* wf = new WickyFile("test.txt");
-	Item* item = new Item(6);
-	item->add("abcdef");
-	for (int i = 0; i < 10; i++){
-		WickyPointer* wp = new WickyPointer();
-		bm->write(wf, wp, item);
-	}
 }
 
-void WickyEngine::setParser(Parser& parser){
-	mParser = parser;
+Table* WickyEngine::Select(Table* t, Condition* c){
+	
 }
 
-void WickyEngine::setOptimizer(Optimizer& optimizer){
-	mOptimizer = optimizer;
+Table* WickyEngine::Project(Table* t, std::vector<std::string> cs){
+	
 }
 
-void WickyEngine::setEvaluator(Evaluator& evaluator){
-	mEvaluator = evaluator;
+Table* WickyEngine::Join(Table* t1, Table* t2){
+	
 }
+

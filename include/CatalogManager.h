@@ -1,5 +1,6 @@
+#include "Table.h"
+
 #include <string>
-#include <Table.h>
 #include <vector>
 #include <map>
 
@@ -13,9 +14,9 @@ public:
 	respectively. Especially, the key-value-map's key is attribute name and it's value is
 	attribute type. 
 	*/
-	Table createTable(string name, map<string, string> atrs);
+	Table createTable(std::string name, std::map<std::string, std::string> atrs);
 	void dropTable(Table* table);
-	Table getTable(string name);
+	Table getTable(std::string name);
 };
 
 #endif

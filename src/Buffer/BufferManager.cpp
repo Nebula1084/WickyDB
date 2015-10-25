@@ -1,5 +1,4 @@
 #include "BufferManager.h"
-#include <stdio.h>
 
 BufferManager* BufferManager::instance = NULL;
 
@@ -17,23 +16,32 @@ BufferManager* BufferManager::getInstance(){
 	return instance;
 }
 
-void BufferManager::write(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){
-	FILE *fp = fopen(wf->getFileName().c_str(), "ab");
-	fseek(fp, ptr->getAddress(), SEEK_SET);
+void BufferManager::write(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){	
+	fseek(wf->getFile(), ptr->getAddress(), SEEK_SET);
 	unsigned char* buffer = wt->dump();	
-	fwrite(buffer, wt->getLength(), 1, fp);
+	fwrite(buffer, wt->getLength(), 1, wf->getFile());
 	delete[] buffer;
-	fclose(fp);
 	ptr->advance(wt->getLength());
 }
 
-void BufferManager::read(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){
-	FILE *fp = fopen(wf->getFileName().c_str(), "rb");
-	fseek(fp, ptr->getAddress(), SEEK_SET);
-	unsigned char* buffer = new unsigned char[wt->getLength()]; 
-	fread(buffer, wt->getLength(), 1, fp);
+void BufferManager::read(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){	
+	fseek(wf->getFile(), ptr->getAddress(), SEEK_SET);
+	unsigned char* buffer = new unsigned char[wt->getLength()];
+	fread(buffer, wt->getLength(), 1, wf->getFile());
 	wt->load(buffer);
 	delete[] buffer;
-	fclose(fp);
 	ptr->advance(wt->getLength());
+}
+
+void BufferManager::write(WickyFile* wf, WickyTuple* wt) {
+	unsigned char* buffer = wt->dump();	
+	fwrite(buffer, wt->getLength(), 1, wf->getFile());
+	delete[] buffer;
+}
+
+void BufferManager::read(WickyFile* wf, WickyTuple* wt) {
+	unsigned char* buffer = new unsigned char[wt->getLength()];
+	fread(buffer, wt->getLength(), 1, wf->getFile());	
+	wt->load(buffer);
+	delete[] buffer;	
 }

@@ -1,5 +1,6 @@
-#include <CatalogManager.h>
-Table CatalogManager::createTable(string name, map<string, string> atrs){
+#include "CatalogManager.h"
+
+Table CatalogManager::createTable(std::string name, std::map<std::string, std::string> atrs){
 	
 }
 
@@ -7,6 +8,6 @@ void CatalogManager::dropTable(Table* table){
 	
 }
 
-Table CatalogManager::getTable(string name){
+Table CatalogManager::getTable(std::string name){
 	
 }

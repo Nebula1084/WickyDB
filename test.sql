@@ -17,7 +17,7 @@ CREATE TABLE student (
 
 SELECT * FROM student;
 SELECT * FROM student WHERE sno = '88888888';
-SELECT * FROM student WHERE sage > 20 AND sgender = 'F';
+SELECT * FROM student WHERE sage > 201 AND sgender = 'FF';
 
 DELETE FROM student;
 DELETE FROM student WHERE sno = '88888888';

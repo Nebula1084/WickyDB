@@ -1,6 +1,6 @@
 #include <vector>
-#include <WickyPointer.h>
-#include <Key.h>
+#include "WickyPointer.h"
+#include "Key.h"
 
 #ifndef _INDEX_H
 #define _INDEX_H

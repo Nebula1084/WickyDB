@@ -1,12 +1,13 @@
-#include <Expression.h>
-
 #include <iostream>
 #include <string>
+
+#include "Expression.h"
+#include "y.tab.h"
 
 #ifndef _PARSER_H
 #define _PARSER_H
 
-# include "y.tab.h"
+
 
 // Tell Flex the lexer's prototype ...
 # define YY_DECL										\

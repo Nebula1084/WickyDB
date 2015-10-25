@@ -1,6 +1,6 @@
-#include <WickyPointer.h>
-#include <Tuple.h>
-#include <Table.h>
+#include "WickyPointer.h"
+#include "Tuple.h"
+#include "Table.h"
 #include <vector>
 
 #ifndef _RECORDMANAGER_H

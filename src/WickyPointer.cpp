@@ -1,4 +1,4 @@
-#include <WickyPointer.h>
+#include "WickyPointer.h"
 
 WickyPointer::WickyPointer(int address):address(address){
 	
@@ -6,6 +6,10 @@ WickyPointer::WickyPointer(int address):address(address){
 
 WickyPointer::~WickyPointer(){
 	
+}
+
+void WickyPointer::redirect(int address){
+	this->address = address;
 }
 
 int WickyPointer::getAddress(){

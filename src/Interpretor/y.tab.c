@@ -486,7 +486,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 /* Line 678 of lalr1.cc  */
 #line 254 "src/Interpretor/SqlParser.y"
-    { std::cout << "Table:Name:" << *(yysemantic_stack_[(1) - (1)].strval) << std::endl; }
+    { std::cout << "Index:Name:" << *(yysemantic_stack_[(1) - (1)].strval) << std::endl; }
     break;
 
 

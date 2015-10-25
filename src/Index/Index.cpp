@@ -1,4 +1,4 @@
-#include <Index.h>
+#include "Index.h"
 
 void Index::insertKey(Key key, WickyPointer pointer){
 	
