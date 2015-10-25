@@ -1,4 +1,4 @@
-#include <RecordManager.h>
+#include "RecordManager.h"
 
 bool RecordManager::insertTuple(Table* table, Tuple tuple, int offset){
 	int rawSize = table->rows.size();
