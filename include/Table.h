@@ -21,7 +21,6 @@ public:
 	attribute(int datatype, std::string attrName, bool isPrimary=false, bool isUnique=false);
 };
 
-
 class Table{
 private:
 	std::string tableName;			//the name of table

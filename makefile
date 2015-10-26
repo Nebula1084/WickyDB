@@ -1,37 +1,142 @@
 WICKYDB = wickydb
-WICKY = main.o WickyEngine.o WickyPointer.o WickyFile.o WickyTuple.o Item.o ResultSet.o
-BUFFER = BufferManager.o
-CATALOG = CatalogManager.o
-INDEX = Index.o Key.o IndexManager.o
-INTERPRETOR = Parser.o Expression.o Optimizer.o Plan.o Evaluator.o  
-ALOGRITHM = BTree.o
-RECORD = RecordManager.o Table.o
+WICKY = bin/main.o bin/WickyEngine.o bin/WickyPointer.o bin/WickyFile.o bin/WickyTuple.o bin/Item.o bin/ResultSet.o
+BUFFER = bin/BufferManager.o 
+CATALOG = bin/CatalogManager.o
+INDEX = bin/Index.o bin/Key.o bin/IndexManager.o
+INTERPRETOR = bin/Parser.o bin/Expression.o bin/Optimizer.o bin/Plan.o bin/Evaluator.o bin/lex.yy.o bin/y.tab.o
+ALOGRITHM = bin/BTree.o
+RECORD = bin/RecordManager.o bin/Table.o
+LIB = lib/libfl.a lib/liby.a
 
-WickyEngine: Buffer Catalog Index Interpretor Record Algorithm
-	g++ -c src/main.cpp -Iinclude
-	g++ -c src/WickyEngine.cpp -Iinclude
-	g++ -c src/WickyPointer.cpp -Iinclude
-	g++ -c src/WickyFile.cpp -Iinclude
-	g++ -c src/WickyTuple.cpp -Iinclude
-	g++ -c src/Item.cpp -Iinclude
-	g++ -c src/ResultSet.cpp -Iinclude
-	g++ -o $(WICKYDB) $(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
-Buffer:
-	g++ -c src/Buffer/BufferManager.cpp -Iinclude
-Catalog:
-	g++ -c src/Catalog/CatalogManager.cpp -Iinclude
-Index:
-	g++ -c src/Index/Index.cpp -Iinclude
-	g++ -c src/Index/Key.cpp -Iinclude
-	g++ -c src/Index/IndexManager.cpp -Iinclude
-Interpretor:
-	g++ -c src/Interpretor/Evaluator.cpp -Iinclude
-	g++ -c src/Interpretor/Expression.cpp -Iinclude
-	g++ -c src/Interpretor/Optimizer.cpp -Iinclude
-	g++ -c src/Interpretor/Parser.cpp -Iinclude
-	g++ -c src/Interpretor/Plan.cpp -Iinclude
-Algorithm:
-	g++ -c src/Algorithm/BTree.cpp -Iinclude
-Record:
-	g++ -c src/Record/RecordManager.cpp -Iinclude
-	g++ -c src/Record/Table.cpp -Iinclude
+RM 		= rm
+CC		= g++
+SRC		= src
+
+wickydb.exe: $(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
+	g++ -o $(WICKYDB)\
+		$(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
+		
+###################WICKY###############
+bin/main.o: src/main.cpp \
+	include/WickyEngine.h
+	g++ -c -o bin/main.o src/main.cpp -Iinclude
+bin/WickyEngine.o: src/WickyEngine.cpp include/WickyEngine.h \
+	include/Parser.h \
+	include/Expression.h \
+	include/Optimizer.h \
+	include/Plan.h \
+	include/Evaluator.h \
+	include/ResultSet.h \
+	include/Table.h \
+	include/Condition.h \
+	include/BufferManager.h \
+	include/WickyFile.h \
+	include/WickyPointer.h \
+	include/WickyTuple.h \
+	include/Item.h
+	g++ -c -o bin/WickyEngine.o src/WickyEngine.cpp -Iinclude
+	
+bin/WickyPointer.o: src/WickyPointer.cpp include/WickyPointer.h
+	g++ -c -o bin/WickyPointer.o src/WickyPointer.cpp -Iinclude
+	 
+bin/WickyFile.o: src/WickyFile.cpp include/WickyFile.h
+	g++ -c -o bin/WickyFile.o src/WickyFile.cpp -Iinclude
+	 
+bin/WickyTuple.o: src/WickyTuple.cpp include/WickyTuple.h
+	g++ -c -o bin/WickyTuple.o src/WickyTuple.cpp -Iinclude
+	
+bin/Item.o: src/Item.cpp include/Item.h \
+	include/WickyTuple.h
+	g++ -c -o bin/Item.o src/Item.cpp -Iinclude
+	 
+bin/ResultSet.o: src/ResultSet.cpp include/ResultSet.h
+	g++ -c -o bin/ResultSet.o src/ResultSet.cpp -Iinclude	
+	
+###################BUFFER##############
+bin/BufferManager.o: src/Buffer/BufferManager.cpp include/BufferManager.h \
+	include/WickyFile.h \
+	include/WickyPointer.h \
+	include/WickyTuple.h
+	g++ -c -o bin/BufferManager.o src/Buffer/BufferManager.cpp -Iinclude
+
+###################Catalog#############
+bin/CatalogManager.o: src/Catalog/CatalogManager.cpp include/CatalogManager.h \
+	include/Table.h
+	g++ -c -o bin/CatalogManager.o src/Catalog/CatalogManager.cpp -Iinclude
+	
+###################Index###############
+bin/Index.o: src/Index/Index.cpp include/Index.h \
+	include/WickyPointer.h \
+	include/Key.h
+	g++ -c -o bin/Index.o src/Index/Index.cpp -Iinclude
+	
+bin/Key.o: src/Index/Key.cpp include/Key.h
+	g++ -c -o bin/Key.o src/Index/Key.cpp -Iinclude
+	
+bin/IndexManager.o: src/Index/IndexManager.cpp include/IndexManager.h \
+	include/Table.h \
+	include/Index.h
+	g++ -c -o bin/IndexManager.o src/Index/IndexManager.cpp -Iinclude
+	
+###################Interpretor: Sql####
+bin/Evaluator.o: src/Interpretor/Evaluator.cpp include/Evaluator.h \
+	include/Plan.h \
+	include/ResultSet.h
+	g++ -c -o bin/Evaluator.o src/Interpretor/Evaluator.cpp -Iinclude
+	
+bin/Expression.o: src/Interpretor/Expression.cpp include/Expression.h
+	g++ -c -o bin/Expression.o src/Interpretor/Expression.cpp -Iinclude
+	
+bin/Optimizer.o: src/Interpretor/Optimizer.cpp include/Optimizer.h
+	g++ -c -o bin/Optimizer.o src/Interpretor/Optimizer.cpp -Iinclude
+	
+bin/Parser.o: src/Interpretor/Parser.cpp include/Parser.h \
+	include/Expression.h \
+	include/y.tab.h
+	g++ -c -o bin/Parser.o src/Interpretor/Parser.cpp -Iinclude
+	
+bin/Plan.o: src/Interpretor/Plan.cpp include/Plan.h
+	g++ -c -o bin/Plan.o src/Interpretor/Plan.cpp -Iinclude
+	
+bin/lex.yy.o:src/Interpretor/lex.yy.c \
+	include/Parser.h \
+	include/y.tab.h
+	g++ -c -o bin/lex.yy.o src/Interpretor/lex.yy.c -Iinclude
+	 
+bin/y.tab.o:src/Interpretor/y.tab.c include/y.tab.h \
+	include/stack.hh \
+	include/location.hh \
+	include/position.hh
+	g++ -c -o bin/y.tab.o src/Interpretor/y.tab.c -Iinclude
+	
+###################Algorithm###########
+bin/BTree.o:
+	g++ -c -o bin/BTree.o src/Algorithm/BTree.cpp -Iinclude
+	
+###################Record##############
+bin/RecordManager.o:src/Record/RecordManager.cpp include/RecordManager.h \
+	include/WickyPointer.h \
+	include/Table.h
+	g++ -c -o bin/RecordManager.o src/Record/RecordManager.cpp -Iinclude
+bin/Table.o:src/Record/Table.cpp include/Table.h
+	g++ -c -o bin/Table.o src/Record/Table.cpp -Iinclude
+
+###################Sql#################
+src/Interpretor/lex.yy.c: src/Interpretor/SqlScanner.l \
+	include/Parser.h \
+	include/y.tab.h
+	flex src/Interpretor/SqlScanner.l
+	mv lex.yy.c src/Interpretor/lex.yy.c
+	
+src/Interpretor/y.tab.c: src/Interpretor/SqlParser.y \
+	include/Parser.h
+	bison -y src/Interpretor/SqlParser.y	
+	mv y.tab.c src/Interpretor/y.tab.c
+	mv y.tab.h include/y.tab.h	
+	mv location.hh include/location.hh
+	mv position.hh include/position.hh
+	mv stack.hh include/stack.hh
+
+.PHONY: clean
+clean:
+	$(RM) bin/*.o $(WICKYDB) $(WICKYDB).exe

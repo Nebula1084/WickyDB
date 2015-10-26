@@ -3,8 +3,6 @@
 #ifndef _WICKYTUPLE_H
 #define _WICKYTUPLE_H
 
-using namespace std;
-
 class WickyTuple{
 public:
 	/*
