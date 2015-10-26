@@ -2,12 +2,14 @@
 
 BufferManager* BufferManager::instance = NULL;
 
-BufferManager::BufferManager(){
-	
+BufferManager::BufferManager(){	
 }
 
 BufferManager::~BufferManager(){
-	
+	std::map<std::string, WickyFile*>::iterator itr;
+	for (itr = filePile.begin(); itr != filePile.end(); itr++){
+		delete itr->second;
+	}
 }
 
 BufferManager* BufferManager::getInstance(){
@@ -16,32 +18,136 @@ BufferManager* BufferManager::getInstance(){
 	return instance;
 }
 
-void BufferManager::write(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){	
-	fseek(wf->getFile(), ptr->getAddress(), SEEK_SET);
-	unsigned char* buffer = wt->dump();	
-	fwrite(buffer, wt->getLength(), 1, wf->getFile());
-	delete[] buffer;
-	ptr->advance(wt->getLength());
+void BufferManager::redirect(std::string name, int offset){
+	FILE* fp = getFile(name);
+	fseek(fp, offset, SEEK_SET);
 }
 
-void BufferManager::read(WickyFile* wf, WickyPointer* ptr, WickyTuple* wt){	
-	fseek(wf->getFile(), ptr->getAddress(), SEEK_SET);
-	unsigned char* buffer = new unsigned char[wt->getLength()];
-	fread(buffer, wt->getLength(), 1, wf->getFile());
-	wt->load(buffer);
-	delete[] buffer;
-	ptr->advance(wt->getLength());
+void BufferManager::write(std::string name, int offset, int len, unsigned char* buf){
+	FILE* fp = getFile(name);
+	fseek(fp, offset, SEEK_SET);	
+	fwrite(buf, len, 1, fp);	
 }
 
-void BufferManager::write(WickyFile* wf, WickyTuple* wt) {
-	unsigned char* buffer = wt->dump();	
-	fwrite(buffer, wt->getLength(), 1, wf->getFile());
-	delete[] buffer;
+void BufferManager::read(std::string name, int offset, int len, unsigned char* buf){
+	if (!isFileExists(name))
+		throw std::runtime_error("file " + name + " doesn't exist");
+	FILE* fp = getFile(name);
+	fseek(fp, offset, SEEK_SET);	
+	fread(buf, len, 1, fp);	
 }
 
-void BufferManager::read(WickyFile* wf, WickyTuple* wt) {
-	unsigned char* buffer = new unsigned char[wt->getLength()];
-	fread(buffer, wt->getLength(), 1, wf->getFile());	
-	wt->load(buffer);
-	delete[] buffer;	
+void BufferManager::write(std::string name, int len, unsigned char* buf){
+	FILE* fp = getFile(name);
+	fwrite(buf, len, 1, fp);
+}
+
+void BufferManager::read(std::string name, int len, unsigned char* buf){
+	if (!isFileExists(name))
+		throw std::runtime_error("file " + name + " doesn't exist");
+	FILE* fp = getFile(name);
+	fread(buf, len, 1, fp);	
+}
+
+FILE* BufferManager::getFile(std::string name){
+	std::map<std::string, WickyFile*>::iterator itr = filePile.find(name);
+	if (itr == filePile.end()){
+		WickyFile* wf = new WickyFile(name);
+		filePile.insert(std::map<std::string, WickyFile*>::value_type(name, wf));
+		return wf->getFile();
+	}
+	return itr->second->getFile();
+}
+
+bool BufferManager::isFileExists(std::string name){
+	return access(name.c_str(), 0)==0;
+}
+
+void BufferManager::write(std::string name, int offset, int n){
+	unsigned char buf[Schema::INT_LENGTH];
+	intToBytes(n, buf);
+	write(name, offset, Schema::INT_LENGTH, buf);
+}
+
+void BufferManager::read(std::string name, int offset, int *n){
+	read(name, offset, Schema::INT_LENGTH, (unsigned char *)n);
+}
+
+void BufferManager::write(std::string name, int n){
+	unsigned char buf[Schema::INT_LENGTH];
+	intToBytes(n, buf);
+	write(name, Schema::INT_LENGTH, buf);
+}
+
+void BufferManager::read(std::string name, int *n){	
+	read(name, Schema::INT_LENGTH, (unsigned char *)n);	
+}
+
+void BufferManager::write(std::string name, int offset, double n){
+	unsigned char buf[Schema::FLOAT_LENGTH];
+	doubleToBytes(n, buf);
+	write(name, offset, Schema::FLOAT_LENGTH, buf);
+}
+
+void BufferManager::read(std::string name, int offset, double *n){
+	read(name, offset,Schema::FLOAT_LENGTH, (unsigned char *)n);
+}
+
+void BufferManager::write(std::string name, double n){
+	unsigned char buf[Schema::FLOAT_LENGTH];
+	doubleToBytes(n, buf);
+	write(name, Schema::FLOAT_LENGTH, buf);
+}
+
+void BufferManager::read(std::string name, double *n){
+	read(name, Schema::FLOAT_LENGTH, (unsigned char *)n);
+}
+
+void BufferManager::write(std::string name, int offset, std::string str){
+	write(name, offset, str.length(), (unsigned char*)str.c_str());
+}
+
+void BufferManager::read(std::string name, int offset, std::string *str, int len){	
+	unsigned char *buf = new unsigned char[len+1];
+	read(name, offset, len, buf);
+	buf[len] = 0;
+	*str = (char *)buf;
+	delete[] buf;
+}
+
+void BufferManager::write(std::string name, std::string str){
+	write(name, str.length(), (unsigned char*)str.c_str());
+}
+
+void BufferManager::read(std::string name, std::string *str, int len){
+	unsigned char *buf = new unsigned char[len+1];
+	read(name, len, buf);
+	buf[len] = 0;
+	*str = (char *)buf;
+	delete[] buf;
+}
+
+/*
+@n: input integer
+@bytes: destination pointer
+@return: bytes length
+*/
+void BufferManager::intToBytes(int n, unsigned char* bytes){
+	memcpy(bytes, &n, Schema::INT_LENGTH);	
+}
+
+/*
+@n: input float
+@bytes: destination pointer
+@return: bytes length
+*/	
+void BufferManager::doubleToBytes(double n, unsigned char* bytes){
+	memcpy(bytes, &n, Schema::FLOAT_LENGTH);	
+}
+
+
+void BufferManager::stringToBytes(std::string str, unsigned char* bytes){
+	int len = str.length();
+	memcpy(bytes, str.c_str(), len);
+	bytes[len] = 0;
 }

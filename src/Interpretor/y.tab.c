@@ -482,6 +482,13 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
     { std::cout << "Intnum:" << (yysemantic_stack_[(1) - (1)].intval) << std::endl; }
     break;
 
+  case 69:
+
+/* Line 678 of lalr1.cc  */
+#line 246 "src/Interpretor/SqlParser.y"
+    { std::cout << "Approxnum:" << (yysemantic_stack_[(1) - (1)].floatval) << std::endl; }
+    break;
+
   case 71:
 
 /* Line 678 of lalr1.cc  */
@@ -492,7 +499,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 
 /* Line 678 of lalr1.cc  */
-#line 496 "y.tab.c"
+#line 503 "y.tab.c"
 	default:
           break;
       }
@@ -1038,7 +1045,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 } // yy
 
 /* Line 1054 of lalr1.cc  */
-#line 1042 "y.tab.c"
+#line 1049 "y.tab.c"
 
 
 /* Line 1056 of lalr1.cc  */

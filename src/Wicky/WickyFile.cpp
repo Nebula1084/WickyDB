@@ -11,9 +11,11 @@ WickyFile::WickyFile(std::string fileName)
 	}
 	if (file == NULL)
 		throw std::runtime_error("file " + fileName + " create faile");
+	std::cout << "WickyFile() " << fileName << std::endl;
 }
 
 WickyFile::~WickyFile(){
+	std::cout << "~WickyFile() " << fileName << std::endl;
 	fclose(file);
 }
 

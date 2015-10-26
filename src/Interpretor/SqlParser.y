@@ -243,7 +243,7 @@ table:
 literal:
 		STRING { std::cout << "String:" << *$1 <<std::endl; }
 	|	INTNUM { std::cout << "Intnum:" << $1 << std::endl; }
-	|	APPROXNUM
+	|	APPROXNUM { std::cout << "Approxnum:" << $1 << std::endl; }
 	;	
 	
 column:

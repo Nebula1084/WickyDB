@@ -1,9 +1,10 @@
+#ifndef _WICKYFILE_H
+#define _WICKYFILE_H
+
+#include <iostream>
 #include <string>
 #include <stdexcept>
 #include <stdio.h>
-
-#ifndef _WICKYFILE_H
-#define _WICKYFILE_H
 
 class WickyFile{
 protected:

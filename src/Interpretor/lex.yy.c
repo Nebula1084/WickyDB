@@ -616,11 +616,11 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[42] =
     {   0,
-       40,   41,   42,   43,   44,   45,   46,   47,   48,   49,
-       50,   51,   52,   53,   54,   55,   56,   57,   58,   59,
-       60,   61,   62,   63,   64,   68,   69,   70,   71,   72,
-       73,   75,   79,   85,   93,   94,   98,  103,  105,  107,
-      109
+       42,   43,   44,   45,   46,   47,   48,   49,   50,   51,
+       52,   53,   54,   55,   56,   57,   58,   59,   60,   61,
+       62,   63,   64,   65,   66,   70,   71,   72,   73,   74,
+       75,   77,   81,   87,   95,   96,  106,  111,  113,  115,
+      117
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -637,6 +637,8 @@ char *yytext;
 # include <cerrno>
 # include <climits>
 # include <string>
+# include <iostream>
+
 # include "Parser.h"
 # include "y.tab.h"
 
@@ -653,9 +655,9 @@ int lineno = 1;
 	Unfortunately yyterminate by default returns 0, which is
 	not of token_type.  */
 #define yyterminate() return token::END
-#line 27 "src/Interpretor/SqlScanner.l"
+#line 29 "src/Interpretor/SqlScanner.l"
 # define YY_USER_ACTION  yylloc->columns (yyleng);
-#line 659 "lex.yy.c"
+#line 661 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -900,7 +902,7 @@ YY_DECL
 	register int yy_act;
     
 /* %% [7.0] user's declarations go here */
-#line 30 "src/Interpretor/SqlScanner.l"
+#line 32 "src/Interpretor/SqlScanner.l"
 
 
   
@@ -911,7 +913,7 @@ YY_DECL
     typedef yy::SqlParser::token token;  
 
 
-#line 915 "lex.yy.c"
+#line 917 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1023,154 +1025,154 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 40 "src/Interpretor/SqlScanner.l"
+#line 42 "src/Interpretor/SqlScanner.l"
 { return token::SELECT; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 41 "src/Interpretor/SqlScanner.l"
+#line 43 "src/Interpretor/SqlScanner.l"
 { return token::INSERT; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 42 "src/Interpretor/SqlScanner.l"
+#line 44 "src/Interpretor/SqlScanner.l"
 { return token::DELETE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 43 "src/Interpretor/SqlScanner.l"
+#line 45 "src/Interpretor/SqlScanner.l"
 { return token::CREATE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 44 "src/Interpretor/SqlScanner.l"
+#line 46 "src/Interpretor/SqlScanner.l"
 { return token::DROP; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 45 "src/Interpretor/SqlScanner.l"
+#line 47 "src/Interpretor/SqlScanner.l"
 { return token::TABLE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 46 "src/Interpretor/SqlScanner.l"
+#line 48 "src/Interpretor/SqlScanner.l"
 { return token::INDEX; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 47 "src/Interpretor/SqlScanner.l"
+#line 49 "src/Interpretor/SqlScanner.l"
 { return token::VALUES; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 48 "src/Interpretor/SqlScanner.l"
+#line 50 "src/Interpretor/SqlScanner.l"
 { return token::NULLX; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 49 "src/Interpretor/SqlScanner.l"
+#line 51 "src/Interpretor/SqlScanner.l"
 { return token::COMPARISON; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 50 "src/Interpretor/SqlScanner.l"
+#line 52 "src/Interpretor/SqlScanner.l"
 { return token::FROM; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 51 "src/Interpretor/SqlScanner.l"
+#line 53 "src/Interpretor/SqlScanner.l"
 { return token::WHERE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 52 "src/Interpretor/SqlScanner.l"
+#line 54 "src/Interpretor/SqlScanner.l"
 { return token::OR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 53 "src/Interpretor/SqlScanner.l"
+#line 55 "src/Interpretor/SqlScanner.l"
 { return token::AND; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 54 "src/Interpretor/SqlScanner.l"
+#line 56 "src/Interpretor/SqlScanner.l"
 { return token::NOT; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 55 "src/Interpretor/SqlScanner.l"
+#line 57 "src/Interpretor/SqlScanner.l"
 { return token::PRIMARY; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 56 "src/Interpretor/SqlScanner.l"
+#line 58 "src/Interpretor/SqlScanner.l"
 { return token::KEY; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 57 "src/Interpretor/SqlScanner.l"
+#line 59 "src/Interpretor/SqlScanner.l"
 { return token::ALL; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 58 "src/Interpretor/SqlScanner.l"
+#line 60 "src/Interpretor/SqlScanner.l"
 {return token::DISTINCT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 59 "src/Interpretor/SqlScanner.l"
+#line 61 "src/Interpretor/SqlScanner.l"
 { return token::ON; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 60 "src/Interpretor/SqlScanner.l"
+#line 62 "src/Interpretor/SqlScanner.l"
 { return token::UNIQUE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 61 "src/Interpretor/SqlScanner.l"
+#line 63 "src/Interpretor/SqlScanner.l"
 { return token::INTO; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 62 "src/Interpretor/SqlScanner.l"
+#line 64 "src/Interpretor/SqlScanner.l"
 { return token::INT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 63 "src/Interpretor/SqlScanner.l"
+#line 65 "src/Interpretor/SqlScanner.l"
 { return token::CHAR; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 64 "src/Interpretor/SqlScanner.l"
+#line 66 "src/Interpretor/SqlScanner.l"
 { return token::FLOAT; }
 	YY_BREAK
 /* punctuation */
 case 26:
-#line 69 "src/Interpretor/SqlScanner.l"
-case 27:
-#line 70 "src/Interpretor/SqlScanner.l"
-case 28:
 #line 71 "src/Interpretor/SqlScanner.l"
-case 29:
+case 27:
 #line 72 "src/Interpretor/SqlScanner.l"
-case 30:
+case 28:
 #line 73 "src/Interpretor/SqlScanner.l"
+case 29:
+#line 74 "src/Interpretor/SqlScanner.l"
+case 30:
+#line 75 "src/Interpretor/SqlScanner.l"
 case 31:
 YY_RULE_SETUP
-#line 73 "src/Interpretor/SqlScanner.l"
+#line 75 "src/Interpretor/SqlScanner.l"
 { return token::COMPARISON; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "src/Interpretor/SqlScanner.l"
+#line 77 "src/Interpretor/SqlScanner.l"
 { return yy::SqlParser::token_type(yytext[0]); }
 	YY_BREAK
 /* names */
 case 33:
 YY_RULE_SETUP
-#line 79 "src/Interpretor/SqlScanner.l"
+#line 81 "src/Interpretor/SqlScanner.l"
 {
 	yylval->strval = new std::string (yytext);   
 	return token::NAME; 
@@ -1179,26 +1181,32 @@ YY_RULE_SETUP
 /* numbers */
 case 34:
 YY_RULE_SETUP
-#line 85 "src/Interpretor/SqlScanner.l"
+#line 87 "src/Interpretor/SqlScanner.l"
 {
 	long n = strtol (yytext, NULL, 10);  
 	if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))  
-		driver.error (*yylloc, "integer is out of range");  
+		driver.error (*yylloc, "integer is out of range");
 	yylval->intval = n;
 	return token::INTNUM; 
 }
 	YY_BREAK
 case 35:
-#line 94 "src/Interpretor/SqlScanner.l"
+#line 96 "src/Interpretor/SqlScanner.l"
 case 36:
 YY_RULE_SETUP
-#line 94 "src/Interpretor/SqlScanner.l"
-{ return token::APPROXNUM; }
+#line 96 "src/Interpretor/SqlScanner.l"
+{
+	double n = strtod (yytext, NULL);	
+	if (errno == ERANGE)  
+		driver.error (*yylloc, "float is out of range");
+	yylval->floatval = n;
+	return token::APPROXNUM; 
+}
 	YY_BREAK
 /* strings */
 case 37:
 YY_RULE_SETUP
-#line 98 "src/Interpretor/SqlScanner.l"
+#line 106 "src/Interpretor/SqlScanner.l"
 {
 	yylval->strval = new std::string (yytext);    
 	return token::STRING;
@@ -1209,18 +1217,18 @@ case 38:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 103 "src/Interpretor/SqlScanner.l"
+#line 111 "src/Interpretor/SqlScanner.l"
 { driver.error("Unterminated string"); }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 105 "src/Interpretor/SqlScanner.l"
+#line 113 "src/Interpretor/SqlScanner.l"
 lineno++; yylloc->lines (yyleng); yylloc->step ();
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 107 "src/Interpretor/SqlScanner.l"
+#line 115 "src/Interpretor/SqlScanner.l"
 ;	/* white space */
 	YY_BREAK
 case 41:
@@ -1228,15 +1236,15 @@ case 41:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 109 "src/Interpretor/SqlScanner.l"
+#line 117 "src/Interpretor/SqlScanner.l"
 ;	/* comment */
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 112 "src/Interpretor/SqlScanner.l"
+#line 120 "src/Interpretor/SqlScanner.l"
 ECHO;
 	YY_BREAK
-#line 1240 "lex.yy.c"
+#line 1248 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2325,7 +2333,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 112 "src/Interpretor/SqlScanner.l"
+#line 120 "src/Interpretor/SqlScanner.l"
 
 
 

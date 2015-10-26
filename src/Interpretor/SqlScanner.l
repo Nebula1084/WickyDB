@@ -3,6 +3,8 @@
 # include <cerrno>
 # include <climits>
 # include <string>
+# include <iostream>
+
 # include "Parser.h"
 # include "y.tab.h"
 
@@ -85,13 +87,19 @@ FLOAT	{ return token::FLOAT; }
 [0-9]+	{
 	long n = strtol (yytext, NULL, 10);  
 	if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))  
-		driver.error (*yylloc, "integer is out of range");  
+		driver.error (*yylloc, "integer is out of range");
 	yylval->intval = n;
 	return token::INTNUM; 
 }
 
 [0-9]+"."[0-9]* |
-"."[0-9]*	{ return token::APPROXNUM; }
+"."[0-9]*	{
+	double n = strtod (yytext, NULL);	
+	if (errno == ERANGE)  
+		driver.error (*yylloc, "float is out of range");
+	yylval->floatval = n;
+	return token::APPROXNUM; 
+}
 
 	/* strings */
 
