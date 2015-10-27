@@ -10,11 +10,18 @@ class WickyFile{
 protected:
 	std::string fileName;	
 	FILE* file;
+	int flag;
 public:
-	WickyFile(std::string fileName);
+	WickyFile(std::string fileName, int flag);
 	virtual ~WickyFile();
 	virtual std::string getFileName();
 	FILE* getFile();
+	void setFlag(int flag);
+	int getFlag();
+	
+	const static int FILE_READ;
+	const static int FILE_WRITE;
+	const static int FILE_REDIRECT;
 };
 
 #endif

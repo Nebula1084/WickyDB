@@ -24,7 +24,7 @@ void BufferManager::redirect(std::string name, int offset){
 }
 
 void BufferManager::write(std::string name, int offset, int len, unsigned char* buf){
-	FILE* fp = getFile(name);
+	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
 	fseek(fp, offset, SEEK_SET);	
 	fwrite(buf, len, 1, fp);	
 }
@@ -32,31 +32,38 @@ void BufferManager::write(std::string name, int offset, int len, unsigned char* 
 void BufferManager::read(std::string name, int offset, int len, unsigned char* buf){
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
-	FILE* fp = getFile(name);
+	FILE* fp = getFile(name, WickyFile::FILE_READ);
 	fseek(fp, offset, SEEK_SET);	
 	fread(buf, len, 1, fp);	
 }
 
 void BufferManager::write(std::string name, int len, unsigned char* buf){
-	FILE* fp = getFile(name);
+	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
 	fwrite(buf, len, 1, fp);
 }
 
 void BufferManager::read(std::string name, int len, unsigned char* buf){
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
-	FILE* fp = getFile(name);
+	FILE* fp = getFile(name, WickyFile::FILE_READ);
 	fread(buf, len, 1, fp);	
 }
 
-FILE* BufferManager::getFile(std::string name){
+FILE* BufferManager::getFile(std::string name, int flag){
 	std::map<std::string, WickyFile*>::iterator itr = filePile.find(name);
+	WickyFile* wf;
 	if (itr == filePile.end()){
-		WickyFile* wf = new WickyFile(name);
+		wf = new WickyFile(name, flag);
 		filePile.insert(std::map<std::string, WickyFile*>::value_type(name, wf));
 		return wf->getFile();
 	}
-	return itr->second->getFile();
+	wf = itr->second;
+	if (flag != WickyFile::FILE_REDIRECT)
+		if (flag != wf->getFlag()){
+			wf->setFlag(flag);			
+			fseek(wf->getFile(), SEEK_SET, ftell(wf->getFile()));
+		}
+	return wf->getFile();
 }
 
 bool BufferManager::isFileExists(std::string name){

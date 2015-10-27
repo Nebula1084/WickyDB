@@ -6,30 +6,9 @@ const std::string CatalogManager::CATALOG = "WICKY_CATALOG.wk";
 CatalogManager::CatalogManager(){
 	BufferManager* bm = BufferManager::getInstance();
 	if (bm->isFileExists(CATALOG)){	
-		int n;
-		double d;
-		std::string str;
-		bm->read(CATALOG, &d);
-		std::cout << "double:" << d << std::endl;
-		bm->read(CATALOG, &n);
-		std::cout << "int:" << n << std::endl;
-		bm->read(CATALOG, &str, 6);
-		std::cout << "string:" << str << std::endl;
-		bm->redirect(CATALOG);
-		
-		bm->write(CATALOG, 142123.123);	
-		bm->write(CATALOG, 1412232);
-		bm->write(CATALOG, "dsxx&*kldjf");
-		
-		bm->redirect(CATALOG);
-		bm->read(CATALOG, &d);
-		std::cout << "double:" << d << std::endl;
-		bm->read(CATALOG, &n);
-		std::cout << "int:" << n << std::endl;
-		bm->read(CATALOG, &str, 6);
-		std::cout << "string:" << str << std::endl;
-	} else {		
-		bm->write(CATALOG, 254.55454d);
+				
+	} else {
+				
 	}
 }
 

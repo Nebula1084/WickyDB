@@ -23,6 +23,37 @@ int main(int argc, char* argv[]){
 	
 	BufferManager* bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
+	/// this is for test
+	int n;
+	double d;
+	std::string str;	
+	bm->write("test.bin", 12);
+	bm->write("test.bin", 0.5);
+	bm->write("test.bin", 14);
+	bm->write("test.bin", 0.5);
+	bm->write("test.bin", 12);
+	bm->write("test.bin", 0.7);
+	bm->write("test.bin", 14);
+	bm->write("test.bin", 0.8);
+	bm->write("test.bin", 124);
+	bm->write("test.bin", 0.02);
+	bm->redirect("test.bin");
+	bm->write("test.bin", 15);
+	bm->write("test.bin", 0.6);	
+	bm->read("test.bin", &n);	
+	bm->read("test.bin", &d);
+	std::cout << "n:" << n << std::endl;
+	std::cout << "d:" << d << std::endl;
+	bm->write("test.bin", 55);
+	bm->write("test.bin", 0.55);
+	bm->read("test.bin", &n);	
+	bm->read("test.bin", &d);
+	std::cout << "n:" << n << std::endl;
+	std::cout << "d:" << d << std::endl;
+	bm->read("test.bin", &n);	
+	bm->read("test.bin", &d);
+	std::cout << "n:" << n << std::endl;
+	std::cout << "d:" << d << std::endl;	
 	delete cm;
 	delete bm;
 }
