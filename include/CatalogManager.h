@@ -15,11 +15,7 @@ class Schema;
 class CatalogManager{
 
 public:
-	/*
-	we pass two arguments into this function, which are table name and column defination
-	respectively. Especially, the key-value-map's key is attribute name and it's value is
-	attribute type. 
-	*/
+	
 	static CatalogManager* getInstance();
 	void store(Schema sch);
 	void drop(Schema sch);
@@ -31,6 +27,7 @@ public:
 private:
 	static CatalogManager* instance;
 	std::map<std::string, Schema> schemaQueue;
+	void writeBack(std::map<std::string, Schema> schemaQueue); 
 	CatalogManager();			
 };
 
