@@ -1,7 +1,11 @@
 #include "WickyFile.h"
 
-WickyFile::WickyFile(std::string fileName)
-	:fileName(fileName){
+const int WickyFile::FILE_REDIRECT = 0;
+const int WickyFile::FILE_READ = 1;
+const int WickyFile::FILE_WRITE = 2;
+
+WickyFile::WickyFile(std::string fileName, int flag)
+	:fileName(fileName), flag(flag){
 	//open file and create file if not exists
 	file = fopen(fileName.c_str(), "rb+");
 	if (file == NULL) {
@@ -10,12 +14,10 @@ WickyFile::WickyFile(std::string fileName)
 		file = fopen(fileName.c_str(), "rb+");
 	}
 	if (file == NULL)
-		throw std::runtime_error("file " + fileName + " create faile");
-	std::cout << "WickyFile() " << fileName << std::endl;
+		throw std::runtime_error("file " + fileName + " create faile");	
 }
 
-WickyFile::~WickyFile(){
-	std::cout << "~WickyFile() " << fileName << std::endl;
+WickyFile::~WickyFile(){	
 	fclose(file);
 }
 
@@ -23,6 +25,14 @@ std::string WickyFile::getFileName(){
 	return fileName;
 }
 
-FILE* WickyFile:: getFile(){
+FILE* WickyFile::getFile(){
 	return file;
+}
+
+void WickyFile::setFlag(int flag){
+	this->flag = flag;
+}
+
+int WickyFile::getFlag(){
+	return flag;
 }

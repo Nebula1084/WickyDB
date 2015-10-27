@@ -18,7 +18,7 @@ private:
 	std::map<std::string, WickyFile*> filePile;
 	
 	BufferManager();	
-	FILE* getFile(std::string name);
+	FILE* getFile(std::string name, int flag = WickyFile::FILE_REDIRECT);
 public:
 	virtual ~BufferManager();
 	//single instance mode making sure only one buffer exists among global
