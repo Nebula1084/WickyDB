@@ -133,5 +133,5 @@ std::string Schema::intToString(int i){
 }
 
 int Schema::stringToInt(std::string str){
-	return std::atoi(str.c_str());
+	return atoi(str.c_str());
 }

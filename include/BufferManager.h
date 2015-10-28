@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <stdio.h>
+#include <string.h>
 #include <io.h>
 
 #include "WickyFile.h"

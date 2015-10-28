@@ -25,13 +25,13 @@ CatalogManager* CatalogManager::getInstance(){
 void CatalogManager::store(Schema sch){
 	if (isExist(sch.getName()))
 		throw std::runtime_error("table " + sch.getName() + " already exists");
-	schemaQueue[sch.getName()] = sch;
+	// schemaQueue[sch.getName()] = sch;
 }
 
 void CatalogManager::drop(Schema sch){
 	if (!isExist(sch.getName()))
 		throw std::runtime_error("table " + sch.getName() + " doesn't exists");
-	schemaQueue.erase(sch.getName());
+	// schemaQueue.erase(sch.getName());
 }
 
 Schema CatalogManager::get(std::string name){
