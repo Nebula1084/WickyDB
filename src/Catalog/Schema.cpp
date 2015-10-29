@@ -30,6 +30,7 @@ Schema::Attribute::Attribute(std::string name, std::list<std::string> properties
 
 Schema::Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs){
      this->tableName = tableName;
+     this->primaryKey = "NULL";
 	 std::map<std::string, std::list<std::string> >::iterator iter;
      for (iter = attrs.begin(); iter != attrs.end(); iter++)
      {
@@ -90,12 +91,12 @@ std::string Schema::toString(){
             str += " " + DUPLIC;
         str += ",\n"; 
     }
-    if(primaryKey == ""){
-        str += "PRIMARY KEY " + SP + Q+"NULL"+Q + ",\n" + RB;
-    }else{
-        str += "PRIMARY KEY " + SP + Q+primaryKey+Q + ",\n" + RB;
-    }
+    str += "PRIMARY KEY " + SP + Q+primaryKey+Q + ",\n" + RB;
 	return str;
+}
+
+bool Schema::isAttrExists(std::string attrName){
+    return attributes.count(attrName);
 }
 
 int Schema::getIndex(std::string attrName){
@@ -108,9 +109,8 @@ int Schema::getIndex(std::string attrName){
 }
 
 void Schema::addIndex(std::string attrName){
-	Attribute attr = attributes[attrName];
-    if(attr.index.compare(NOINDEX) == 0){
-    	attr.index = BTREE;
+    if(attributes[attrName].index.compare(NOINDEX) == 0){
+    	attributes[attrName].index = BTREE;
     }else{
     	throw std::runtime_error("Index on column " + attrName + "already exist");
     }
@@ -118,11 +118,10 @@ void Schema::addIndex(std::string attrName){
 }
 
 void Schema::deleteIndex(std::string attrName){
-	Attribute attr = attributes[attrName];
-    if(attr.index.compare(NOINDEX) == 0){
+    if(attributes[attrName].index.compare(NOINDEX) == 0){
     	throw std::runtime_error("Index on column " + attrName + "not exist");
     }else{
-    	attr.index = NOINDEX;
+    	attributes[attrName].index = NOINDEX;
     }
 }
 

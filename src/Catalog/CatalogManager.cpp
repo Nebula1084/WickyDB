@@ -36,10 +36,10 @@ void CatalogManager::store(Schema sch){
 	schemaQueue[sch.getName()] = sch;
 }
 
-void CatalogManager::drop(Schema sch){
-	if (!isExist(sch.getName()))
-		throw std::runtime_error("table " + sch.getName() + " doesn't exists");
-	schemaQueue.erase(sch.getName());
+void CatalogManager::drop(std::string tableName){
+	if (!isExist(tableName))
+		throw std::runtime_error("table " + tableName + " doesn't exists");
+	schemaQueue.erase(tableName);
 }
 
 Schema CatalogManager::get(std::string name){

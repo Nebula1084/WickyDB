@@ -52,6 +52,7 @@ public:
 
 	std::string getName(); //return table name
 	std::string toString(); //convert the schema to a string for the convenience of print or store
+	bool isAttrExists(std::string attrName);
 	int getIndex(std::string attrName); //return 0 for no index, 1 for b+ Tree index on certain attrbute
 	void addIndex(std::string attrName); //add b+ Tree index to the attribute
 	void deleteIndex(std::string attrName);

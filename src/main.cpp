@@ -50,17 +50,42 @@ int main(int argc, char* argv[]){
 
     Schema table("city", attrbutes);
     cm->store(table);
-
-    std::list<std::string> tables = cm->getTables();
-    std::cout << "Table list:" << std::endl;
-    for(std::list<std::string>::iterator iter = tables.begin(); iter != tables.end(); iter++){
-    	std::cout << *iter << std::endl;
-    }
     
-    std::cout << cm->isExist("city") << std::endl;
+    std::cout << "Table city exit? :" <<cm->isExist("city") << std::endl;
     Schema sch = cm->get("city");
     std::cout << sch.toString() << std::endl;
 
+    std::list<std::string> attrs = sch.getAttributes();
+    std::cout << "Attribute list:" << std::endl;
+    for(std::list<std::string>::iterator iter = attrs.begin(); iter != attrs.end(); iter++){
+    	std::cout << *iter << std::endl;
+    }
+
+    std::cout << "Attribute name exit? :" << sch.isAttrExists("name") << std::endl;
+    std::cout << "Attribute null exit? :" << sch.isAttrExists("null") << std::endl;
+
+	std::cout <<  sch.getType("name") <<std::endl;
+    std::cout << sch.getLength("name") <<std::endl;
+    std::cout << sch.getIndex("name") <<std::endl;
+    std::cout << sch.isUnique("name") <<std::endl;
+    std::cout << sch.getPrimaryKey() <<std::endl;
+
+	sch.setType("name", Schema::INT);
+    sch.setLength("name", 40);
+    sch.addIndex("name");
+    sch.setUnique("name");
+    sch.setPrimaryKey("name");
+
+    std::cout <<  sch.getType("name") <<std::endl;
+    std::cout << sch.getLength("name") <<std::endl;
+    std::cout << sch.getIndex("name") <<std::endl;
+    std::cout << sch.isUnique("name") <<std::endl;
+    std::cout << sch.getPrimaryKey() <<std::endl;
+    
+    cm->drop("city");
+    std::cout << "After drop table city: " << cm->isExist("city") << std::endl;
+
+	/*------------End Test CatalogManager-----------*/
 
 	delete cm;
 	delete bm;
