@@ -4,28 +4,40 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <list>
 #include <stdio.h>
 #include <string.h>
 #include <io.h>
 
 #include "WickyFile.h"
-#include "WickyPointer.h"
-#include "WickyTuple.h"
 #include "Schema.h"
+#include "Block.h"
 
+class Block;
 class BufferManager{
 private:
 	static BufferManager* instance;
 	std::map<std::string, WickyFile*> filePile;
+	friend class Block;
+	std::list<Block*> buffer;
+	std::map<WickyFile*, std::map<int, Block*> > blockIndex;
 	
 	BufferManager();	
 	FILE* getFile(std::string name, int flag = WickyFile::FILE_REDIRECT);
+	void writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf);
+	void readDisk(WickyFile* wf, int offset, int len, unsigned char* buf);
 public:
 	virtual ~BufferManager();
 	//single instance mode making sure only one buffer exists among global
 	static BufferManager* getInstance();
 	bool isFileExists(std::string name);
 	void redirect(std::string name, int offset=0);
+	void removeFile(std::string name);
+	
+	int eof(std::string name);
+	
+	int readAll(std::string name, int offset, unsigned char* buf);
+	
 	//all parameters are pointer
 	//and the data specified by wickypointer would be operated, onece
 	void write(std::string name, int offset, int len, unsigned char* buf);
@@ -71,6 +83,8 @@ public:
 	@return: bytes length
 	*/
 	static void stringToBytes(std::string str, unsigned char* bytes);
+	
+	const static int READ_ALL;
 };
 
 #endif

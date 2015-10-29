@@ -1,6 +1,6 @@
 WICKYDB = wickydb
-WICKY = bin/main.o bin/WickyEngine.o bin/WickyPointer.o bin/WickyFile.o bin/WickyTuple.o bin/Item.o bin/ResultSet.o
-BUFFER = bin/BufferManager.o 
+WICKY = bin/main.o bin/WickyEngine.o bin/WickyFile.o bin/ResultSet.o
+BUFFER = bin/BufferManager.o bin/block.o
 CATALOG = bin/CatalogManager.o bin/Schema.o
 INDEX = bin/Index.o bin/Key.o bin/IndexManager.o
 INTERPRETOR = bin/Parser.o bin/Expression.o bin/Optimizer.o bin/Plan.o bin/Evaluator.o bin/lex.yy.o bin/y.tab.o
@@ -31,24 +31,11 @@ bin/WickyEngine.o: src/Wicky/WickyEngine.cpp include/WickyEngine.h \
 	include/Table.h \
 	include/Condition.h \
 	include/BufferManager.h \
-	include/WickyFile.h \
-	include/WickyPointer.h \
-	include/WickyTuple.h \
-	include/Item.h
+	include/WickyFile.h 
 	g++ -c -o bin/WickyEngine.o src/Wicky/WickyEngine.cpp -Iinclude
-	
-bin/WickyPointer.o: src/Wicky/WickyPointer.cpp include/WickyPointer.h
-	g++ -c -o bin/WickyPointer.o src/Wicky/WickyPointer.cpp -Iinclude
 	 
 bin/WickyFile.o: src/Wicky/WickyFile.cpp include/WickyFile.h
 	g++ -c -o bin/WickyFile.o src/Wicky/WickyFile.cpp -Iinclude
-	 
-bin/WickyTuple.o: src/Wicky/WickyTuple.cpp include/WickyTuple.h
-	g++ -c -o bin/WickyTuple.o src/Wicky/WickyTuple.cpp -Iinclude
-	
-bin/Item.o: src/Item.cpp include/Item.h \
-	include/WickyTuple.h
-	g++ -c -o bin/Item.o src/Item.cpp -Iinclude
 	 
 bin/ResultSet.o: src/ResultSet.cpp include/ResultSet.h
 	g++ -c -o bin/ResultSet.o src/ResultSet.cpp -Iinclude	
@@ -56,10 +43,14 @@ bin/ResultSet.o: src/ResultSet.cpp include/ResultSet.h
 ###################BUFFER##############
 bin/BufferManager.o: src/Buffer/BufferManager.cpp include/BufferManager.h \
 	include/WickyFile.h \
-	include/WickyPointer.h \
-	include/WickyTuple.h \
-	include/Schema.h
+	include/Schema.h \
+	include/Block.h
 	g++ -c -o bin/BufferManager.o src/Buffer/BufferManager.cpp -Iinclude
+
+bin/block.o: src/Buffer/Block.cpp include/Block.h \
+	include/WickyFile.h \
+	include/BufferManager.h
+	g++ -c -o bin/Block.o src/Buffer/Block.cpp -Iinclude
 
 ###################Catalog#############
 bin/CatalogManager.o: src/Catalog/CatalogManager.cpp include/CatalogManager.h \
@@ -73,7 +64,6 @@ bin/Schema.o: src/Catalog/Schema.cpp include/Schema.h \
 	
 ###################Index###############
 bin/Index.o: src/Index/Index.cpp include/Index.h \
-	include/WickyPointer.h \
 	include/Key.h
 	g++ -c -o bin/Index.o src/Index/Index.cpp -Iinclude
 	
@@ -122,7 +112,6 @@ bin/BTree.o:
 	
 ###################Record##############
 bin/RecordManager.o:src/Record/RecordManager.cpp include/RecordManager.h \
-	include/WickyPointer.h \
 	include/Table.h
 	g++ -c -o bin/RecordManager.o src/Record/RecordManager.cpp -Iinclude
 bin/Table.o:src/Record/Table.cpp include/Table.h

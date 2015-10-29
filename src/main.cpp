@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "WickyEngine.h"
 #include "CatalogManager.h"
@@ -24,37 +25,13 @@ int main(int argc, char* argv[]){
 	BufferManager* bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	/// this is for test
-	int n;
-	double d;
-	std::string str_out;
-	bm->write("test.bin", 12);
-	bm->write("test.bin", 0.5);
-	bm->write("test.bin", 14);
-	bm->write("test.bin", 0.5);
-	bm->write("test.bin", 12);
-	bm->write("test.bin", 0.7);
-	bm->write("test.bin", 14);
-	bm->write("test.bin", 0.8);
-	bm->write("test.bin", 124);
-	bm->write("test.bin", 0.02);
-	bm->redirect("test.bin");
-	bm->write("test.bin", 15);
-	bm->write("test.bin", 0.6);	
-	bm->read("test.bin", &n);	
-	bm->read("test.bin", &d);
-	std::cout << "n:" << n << std::endl;
-	std::cout << "d:" << d << std::endl;
-	bm->write("test.bin", 55);
-	bm->write("test.bin", 0.55);
-	bm->read("test.bin", &n);	
-	bm->read("test.bin", &d);
-	std::cout << "n:" << n << std::endl;
-	std::cout << "d:" << d << std::endl;
-	bm->read("test.bin", &n);	
-	bm->read("test.bin", &d);
-	std::cout << "n:" << n << std::endl;
-	std::cout << "d:" << d << std::endl;
 
+	std::string str;
+	unsigned char* buffer = new unsigned char[1000];	
+	bm->write("test.bit", "asdff");
+	bm->readAll("test.bit", 0, buffer);
+	std::cout << buffer << std::endl;
+	
 	/*------------Test CatalogManager-----------*/
     std::map<std::string,std::list<std::string> > attrbutes;
     std::list<std::string> properties;
@@ -84,6 +61,9 @@ int main(int argc, char* argv[]){
     Schema sch = cm->get("city");
     std::cout << sch.toString() << std::endl;
 
+
 	delete cm;
 	delete bm;
+	
+	
 }

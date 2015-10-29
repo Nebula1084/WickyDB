@@ -1,4 +1,3 @@
-#include "WickyPointer.h"
 #include "Table.h"
 
 #include <vector>
