@@ -81,7 +81,14 @@ int main(int argc, char* argv[]){
     std::cout << sch.getIndex("name") <<std::endl;
     std::cout << sch.isUnique("name") <<std::endl;
     std::cout << sch.getPrimaryKey() <<std::endl;
-    
+
+    Attribute a = sch.getAttribute("id");
+    std::cout << a.getName() <<std::endl;
+    std::cout << a.getType() <<std::endl;
+    std::cout << a.getLength() <<std::endl;
+    std::cout << a.getIndex() <<std::endl;
+    std::cout << a.isUnique() <<std::endl;
+
     cm->drop("city");
     std::cout << "After drop table city: " << cm->isExist("city") << std::endl;
 
