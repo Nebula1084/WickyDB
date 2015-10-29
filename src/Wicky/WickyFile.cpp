@@ -14,11 +14,14 @@ WickyFile::WickyFile(std::string fileName, int flag)
 		file = fopen(fileName.c_str(), "rb+");
 	}
 	if (file == NULL)
-		throw std::runtime_error("file " + fileName + " create faile");	
+		throw std::runtime_error("file " + fileName + " create faile");
+	fseek(file, 0, SEEK_END);
+	size = ftell(file);
+	fseek(file, 0, SEEK_SET);	
 }
 
 WickyFile::~WickyFile(){	
-	fclose(file);
+	fclose(file);	
 }
 
 std::string WickyFile::getFileName(){

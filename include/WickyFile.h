@@ -11,6 +11,7 @@ protected:
 	std::string fileName;	
 	FILE* file;
 	int flag;
+	int size;
 public:
 	WickyFile(std::string fileName, int flag);
 	virtual ~WickyFile();

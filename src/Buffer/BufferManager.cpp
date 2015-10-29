@@ -1,6 +1,7 @@
 #include "BufferManager.h"
 
 BufferManager* BufferManager::instance = NULL;
+const int BufferManager::READ_ALL = -1;
 
 BufferManager::BufferManager(){	
 }
@@ -32,28 +33,72 @@ void BufferManager::redirect(std::string name, int offset){
 	fseek(fp, offset, SEEK_SET);
 }
 
+void BufferManager::removeFile(std::string name){
+	if (!isFileExists(name)) {
+		throw std::runtime_error("file " + name + " doesn't exist");
+	}
+	std::map<std::string, WickyFile*>::iterator itr = filePile.find(name);
+	WickyFile* wf;	
+	if (itr != filePile.end()){
+		wf = itr->second;
+		delete wf;
+	}
+	remove(name.c_str());
+}
+
+int BufferManager::eof(std::string name){
+	FILE* fp = getFile(name);
+	return feof(fp);
+}
+
+int BufferManager::readAll(std::string name, int offset, unsigned char* buf){
+	if (!isFileExists(name))
+		throw std::runtime_error("file " + name + " doesn't exist");
+	FILE* fp = getFile(name);
+	fseek(fp, offset, SEEK_SET);
+	int i=0;
+	int fl=1;
+	while(fl){
+		fl=fread(buf+i, 1, 1, fp);
+		i+=fl;	
+	}
+	return i;
+}
+
 void BufferManager::write(std::string name, int offset, int len, unsigned char* buf){
 	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
-	fseek(fp, offset, SEEK_SET);	
+	fseek(fp, offset, SEEK_SET);
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , length is out of range");
 	fwrite(buf, len, 1, fp);	
 }
 
 void BufferManager::read(std::string name, int offset, int len, unsigned char* buf){
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
-	FILE* fp = getFile(name, WickyFile::FILE_READ);
-	fseek(fp, offset, SEEK_SET);	
-	fread(buf, len, 1, fp);	
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , length is out of range");	
+	if (len == READ_ALL) {
+		readAll(name, offset, buf);
+	} else {
+		FILE* fp = getFile(name, WickyFile::FILE_READ);
+		fseek(fp, offset, SEEK_SET);
+		fread(buf, len, 1, fp);		
+	}				
 }
 
 void BufferManager::write(std::string name, int len, unsigned char* buf){
 	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , length is out of range");
 	fwrite(buf, len, 1, fp);
 }
 
 void BufferManager::read(std::string name, int len, unsigned char* buf){
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , length is out of range");
 	FILE* fp = getFile(name, WickyFile::FILE_READ);
 	fread(buf, len, 1, fp);	
 }
@@ -123,7 +168,9 @@ void BufferManager::write(std::string name, int offset, std::string str){
 	write(name, offset, str.length(), (unsigned char*)str.c_str());
 }
 
-void BufferManager::read(std::string name, int offset, std::string *str, int len){	
+void BufferManager::read(std::string name, int offset, std::string *str, int len){
+	if (len < 0)
+		throw std::runtime_error("write str into file " + name + " , whose length is out of range");	
 	unsigned char *buf = new unsigned char[len+1];
 	read(name, offset, len, buf);
 	buf[len] = 0;
@@ -136,6 +183,8 @@ void BufferManager::write(std::string name, std::string str){
 }
 
 void BufferManager::read(std::string name, std::string *str, int len){
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , length is out of range");
 	unsigned char *buf = new unsigned char[len+1];
 	read(name, len, buf);
 	buf[len] = 0;
