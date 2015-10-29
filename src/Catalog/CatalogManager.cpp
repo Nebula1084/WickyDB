@@ -13,7 +13,7 @@ CatalogManager::CatalogManager(){
 }
 
 CatalogManager::~CatalogManager(){
-	
+	writeBack(schemaQueue);
 }
 
 CatalogManager* CatalogManager::getInstance(){
@@ -25,11 +25,13 @@ CatalogManager* CatalogManager::getInstance(){
 void CatalogManager::store(Schema sch){
 	if (isExist(sch.getName()))
 		throw std::runtime_error("table " + sch.getName() + " already exists");
+	schemaQueue[sch.getName()] = sch;
 }
 
 void CatalogManager::drop(Schema sch){
 	if (!isExist(sch.getName()))
 		throw std::runtime_error("table " + sch.getName() + " doesn't exists");
+	schemaQueue.erase(sch.getName());
 }
 
 Schema CatalogManager::get(std::string name){
@@ -49,4 +51,8 @@ std::list<std::string> CatalogManager::getTables(){
 
 bool CatalogManager::isExist(std::string name){
 	return schemaQueue.find(name)!=schemaQueue.end();
+}
+
+void CatalogManager::writeBack(std::map<std::string, Schema> schemaQueue){
+    //write back the schemas to file when destructor is executing
 }
