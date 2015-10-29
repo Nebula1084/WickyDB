@@ -11,9 +11,6 @@
 #include "Condition.h"
 #include "BufferManager.h"
 #include "WickyFile.h"
-#include "WickyPointer.h"
-#include "WickyTuple.h"
-#include "Item.h"
 
 #ifndef _WICKYENGINE_H
 #define _WICKYENGINE_H

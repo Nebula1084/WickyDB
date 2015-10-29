@@ -1,13 +1,13 @@
 #include "Index.h"
 
-void Index::insertKey(Key key, WickyPointer pointer){
+void Index::insertKey(Key key, int pointer){
 	
 }
 
-std::vector<WickyPointer> Index::search(){
+std::vector<int> Index::search(){
 	
 }
 
-std::vector<WickyPointer> Index::dropKey(){
+std::vector<int> Index::dropKey(){
 	
 }

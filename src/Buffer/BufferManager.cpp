@@ -17,6 +17,15 @@ BufferManager* BufferManager::getInstance(){
 		instance = new BufferManager();
 	return instance;
 }
+void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
+	fseek(wf->getFile(), offset, SEEK_SET);	
+	fwrite(buf, len, 1, wf->getFile());	
+}
+
+void BufferManager::readDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
+	fseek(wf->getFile(), offset, SEEK_SET);	
+	fread(buf, len, 1, wf->getFile());	
+}
 
 void BufferManager::redirect(std::string name, int offset){
 	FILE* fp = getFile(name);

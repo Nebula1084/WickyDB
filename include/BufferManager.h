@@ -4,21 +4,27 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <list>
 #include <stdio.h>
 #include <io.h>
 
 #include "WickyFile.h"
-#include "WickyPointer.h"
-#include "WickyTuple.h"
 #include "Schema.h"
+#include "Block.h"
 
+class Block;
 class BufferManager{
 private:
 	static BufferManager* instance;
 	std::map<std::string, WickyFile*> filePile;
+	friend class Block;
+	std::list<Block*> buffer;
+	std::map<WickyFile*, std::map<int, Block*> > blockIndex;
 	
 	BufferManager();	
 	FILE* getFile(std::string name, int flag = WickyFile::FILE_REDIRECT);
+	void writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf);
+	void readDisk(WickyFile* wf, int offset, int len, unsigned char* buf);
 public:
 	virtual ~BufferManager();
 	//single instance mode making sure only one buffer exists among global
