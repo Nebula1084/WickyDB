@@ -3,34 +3,39 @@
 
 #include <map>
 #include <list>
+#include <vector>
 #include <string>
+#include <iostream>
 #include <stdexcept>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 
 
-class Attribute
-{
-private:
-	std::string attrName;
-	std::string type;
-	int length;
-	std::string index;
-	bool unique;
-    friend class Schema;
-
-public:
-	Attribute(){};
-	Attribute(std::string name, std::list<std::string> properties);
-	~Attribute(){};
-};
-
 class Schema {
+
+private:
+	class Attribute
+	{
+	private:
+		std::string attrName;
+		std::string type;
+		int length;
+		std::string index;
+		bool unique;
+	    friend class Schema;
+
+	public:
+		Attribute(){};
+		Attribute(std::string name, std::list<std::string> properties);
+		~Attribute(){};
+	};
+
 private:
 	std::string tableName;
 	std::map<std::string, Attribute> attributes;
 	std::string primaryKey;
+
 	friend class CatalogManager;
 
 public:
@@ -40,8 +45,10 @@ public:
 	*        the value of each parameter can be: type{INT, CHAR, FLOAT}, length {string consists of integer}, 
 	*        index{NOINDEX, BTREE}, isunique{UNIQUE, DUPLIC} 
 	*/
+	Schema(){};
 	Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs);
-	~Schema();
+	Schema(std::string schString);
+	~Schema(){};
 
 	std::string getName(); //return table name
 	std::string toString(); //convert the schema to a string for the convenience of print or store
@@ -58,9 +65,10 @@ public:
 	int getLength(std::string attrName);
 	std::list<std::string> getAttributes(); //return a list of all attributes' name
 	
-
 	static std::string intToString(int i);
 	static int stringToInt(std::string str);
+    static std::vector<std::string> Split(std::string str,std::string pattern);
+
 
 	const static std::string INT;
 	const static std::string CHAR;

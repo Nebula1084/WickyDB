@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 	/// this is for test
 	int n;
 	double d;
-	std::string str;	
+	std::string str_out;
 	bm->write("test.bin", 12);
 	bm->write("test.bin", 0.5);
 	bm->write("test.bin", 14);
@@ -53,7 +53,37 @@ int main(int argc, char* argv[]){
 	bm->read("test.bin", &n);	
 	bm->read("test.bin", &d);
 	std::cout << "n:" << n << std::endl;
-	std::cout << "d:" << d << std::endl;	
+	std::cout << "d:" << d << std::endl;
+
+	/*------------Test CatalogManager-----------*/
+    std::map<std::string,std::list<std::string> > attrbutes;
+    std::list<std::string> properties;
+    properties.push_back(Schema::CHAR); //type
+    properties.push_back("20"); //length
+    properties.push_back(Schema::NOINDEX); //index
+    properties.push_back(Schema::DUPLIC); //isunique
+    attrbutes["name"] = properties;
+    
+    properties.clear();
+    properties.push_back(Schema::INT); //type
+    properties.push_back("10"); //length
+    properties.push_back(Schema::BTREE); //index
+    properties.push_back(Schema::UNIQUE); //isunique
+    attrbutes["id"] = properties;
+
+    Schema table("city", attrbutes);
+    cm->store(table);
+
+    std::list<std::string> tables = cm->getTables();
+    std::cout << "Table list:" << std::endl;
+    for(std::list<std::string>::iterator iter = tables.begin(); iter != tables.end(); iter++){
+    	std::cout << *iter << std::endl;
+    }
+    
+    std::cout << cm->isExist("city") << std::endl;
+    Schema sch = cm->get("city");
+    std::cout << sch.toString() << std::endl;
+
 	delete cm;
 	delete bm;
 }

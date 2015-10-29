@@ -2,6 +2,7 @@
 #define _CATALOGMANAGER_H
 
 #include <string>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <list>
@@ -23,6 +24,7 @@ public:
 	std::list<std::string> getTables();
 	bool isExist(std::string name);
 	const static std::string CATALOG;
+	const static int ENDFILE;
 	virtual ~CatalogManager();
 private:
 	static CatalogManager* instance;

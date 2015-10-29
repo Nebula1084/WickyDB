@@ -13,7 +13,7 @@ const std::string Schema::BTREE = "BTREE";
 const std::string Schema::UNIQUE = "UNIQUE";
 const std::string Schema::DUPLIC = "DUPLIC";
 
-Attribute::Attribute(std::string name, std::list<std::string> properties){
+Schema::Attribute::Attribute(std::string name, std::list<std::string> properties){
 	if(properties.size() == 4){
         attrName = name;
 		std::list<std::string>::iterator iter;
@@ -44,7 +44,29 @@ Schema::Schema(std::string tableName, std::map<std::string, std::list<std::strin
      }
 }
 
-Schema::~Schema(){};
+Schema::Schema(std::string schString){
+    std::vector<std::string> attrStrings = Split(schString, "\n");
+    int size = attrStrings.size();
+    std::string tname;
+    std::map<std::string, std::list<std::string> > attrs;
+    tname = Split(attrStrings[0], " ")[1];
+    for(int i=1; i<=size-3; i++){
+        std::list<std::string> attr;
+        std::string attrName;
+        std::string attrString = attrStrings[i].replace(attrStrings[i].find(","), 1, " ");
+        std::vector<std::string> properties = Split(attrStrings[i], " ");
+        attrName = Split(properties[0], "'")[0];
+        attr.push_back(Split(properties[1], "(")[0]);
+        attr.push_back(Split(Split(properties[1], "(")[1], ")")[0]);
+        attr.push_back(properties[2]);
+        attr.push_back(properties[3]);
+        attrs[attrName] = attr;
+    }
+    std::string key = Split(Split(attrStrings[size-2], " ")[2], "'")[0];
+    this->primaryKey = key;
+    new (this)Schema(tname, attrs);
+}
+
 
 std::string Schema::getName(){
 	return tableName;
@@ -52,6 +74,27 @@ std::string Schema::getName(){
 
 std::string Schema::toString(){
 	std::string str = "";
+    std::string LB = "(";
+    std::string RB = ")";
+    std::string Q = "'";
+    std::string SP = " ";
+    str += "TABLE " + SP + tableName + SP + LB + "\n";
+    std::map<std::string, Attribute>::reverse_iterator iter1;
+    for (iter1 = attributes.rbegin(); iter1 != attributes.rend(); iter1++){
+        std::string attrName = iter1->first;
+        Attribute attr = iter1->second;
+        str += Q+attrName+Q+" "+attr.type+LB+intToString(attr.length)+RB+" "+attr.index;
+        if(attr.unique)
+            str += " " + UNIQUE;
+        else
+            str += " " + DUPLIC;
+        str += ",\n"; 
+    }
+    if(primaryKey == ""){
+        str += "PRIMARY KEY " + SP + Q+"NULL"+Q + ",\n" + RB;
+    }else{
+        str += "PRIMARY KEY " + SP + Q+primaryKey+Q + ",\n" + RB;
+    }
 	return str;
 }
 
@@ -134,4 +177,18 @@ std::string Schema::intToString(int i){
 
 int Schema::stringToInt(std::string str){
 	return atoi(str.c_str());
+}
+
+std::vector<std::string> Schema::Split(std::string str,std::string pattern)
+{
+    std::vector<std::string> result;
+
+    int i = str.find_first_not_of(pattern);
+    int j;
+    while(i != std::string::npos){
+        j = str.find(pattern, i);
+        result.push_back(str.substr(i, j-i));
+        i = str.find_first_not_of(pattern, j);
+    }
+    return result;
 }
