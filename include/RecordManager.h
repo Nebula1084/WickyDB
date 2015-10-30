@@ -1,7 +1,9 @@
 #include "Table.h"
+#include "BufferManager.h"
 
 #include <vector>
 #include <iostream>
+#include <stdio.h>
 
 #ifndef _RECORDMANAGER_H
 #define _RECORDMANGAER_H
@@ -17,6 +19,11 @@ public:
 
 	//return a vector containing the tuples indicated by offsets
 	std::vector<Tuple> selectTuple(Table* table, std::vector<int> offset);  
+
+	Table readTable(const Schema& s, BufferManager *b);
+	bool writeTable(const Table& table, BufferManager *b);
+
+	void Split(std::string src, std::string separator, std::vector<std::string>& v);
 };
 
 #endif

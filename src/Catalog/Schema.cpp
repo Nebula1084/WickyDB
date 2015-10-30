@@ -170,6 +170,15 @@ std::list<std::string> Schema::getAttributes(){
     return attrList;
 }
 
+void Schema::copyAttributes(std::vector<Attribute>& container){
+    container.clear();
+    std::map<std::string, Attribute>::iterator it;
+    for(it=attributes.begin; it!=attributes.end(); it++){
+        container.push_back(it->second);
+    }
+}
+
+
 std::string Schema::intToString(int i){
 	std::stringstream ss;
 	std::string s;

@@ -1,6 +1,13 @@
 #include "RecordManager.h"
+#include <iostream>
+#include <vector>
 
 bool RecordManager::insertTuple(Table* table, Tuple tuple, int offset){
+	int tupleSize = tuple.col.size();
+	if(table->getAttrNum()!=tupleSize){
+		std::cout<<"The tuple can't fit in the table!"<<std::endl;
+		return false;
+	}
 	int rawSize = table->rows.size();
 	if(offset>rawSize){
 		std::cout<<"Error: the index is wrong! Insertion failed!"<<std::endl;
@@ -46,3 +53,70 @@ std::vector<Tuple> RecordManager::selectTuple(Table* table, std::vector<int> off
 	}
 	return result;
 } 
+
+Table RecordManager::readTable(const Schema& s, BufferManager *b){
+	std::string filename = s.getName();	//get table name 
+	Table result(s);
+	std::vector<Attribute> temp;
+	s.copyAttributes(temp);				//get the Attributes from schema
+	result.CreateTable(temp);
+
+	std::vector<std::string> rawVec;
+
+	unsigned char buf[1000000];
+	b->readAll(filename, 0, buf);
+	std::string raw = buf;
+
+	Split(raw, " ", rawVec);
+	int attrNum = rawVec[0];
+	if (attrNum != result.attrNum)
+		std::cout<<"WARNING! the data is unsafe!"<<std::endl;
+
+	int count = 1;
+	while(count < rawVec.size()){
+		Tuple x;
+		x.clear();
+		for(int i = 0; i < attrNum; i++){
+			x.col.push_back(rawVec[count++]);
+		}
+		result.rows.push_back(x);
+	}
+	return result;
+}
+
+bool RecordManager::writeTable(const Table& table, BufferManager *b){
+	char buf[10];
+	sprintf(buf, "%d", table.getAttrNum());
+	std::string filename = table.getTableName();
+	std::string output = buf;
+	for(int i = 0; i < table.rows.size(); i++){
+		for(int j = 0; j < talbe.rows[i].col.size(); j++){
+			output = output + " " + table.rows[i].col[j];
+		}
+	}
+	b->write(filename, output);
+}
+
+void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)
+{
+	dest.clear();
+    std::string str = src;
+    std::string substring;
+    std::string::size_type start = 0, index;
+
+    do
+    {
+        index = str.find_first_of(separator,start);
+        if (index != string::npos)
+        {    
+            substring = str.substr(start,index-start);
+            dest.push_back(substring);
+            start = str.find_first_not_of(separator,index);
+            if (start == string::npos) return;
+        }
+    }while(index != string::npos);
+    
+    //the last token
+    substring = str.substr(start);
+    dest.push_back(substring);
+}

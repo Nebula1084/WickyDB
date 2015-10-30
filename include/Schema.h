@@ -68,7 +68,8 @@ public:
 	int getLength(std::string attrName);
 	Attribute getAttribute(std::string attrName);
 	std::list<std::string> getAttributes(); //return a list of all attributes' name
-	
+	void copyAttributes(std::vector<Attribute>& container)
+
 	static std::string intToString(int i);
 	static int stringToInt(std::string str);
     static std::vector<std::string> Split(std::string str,std::string pattern);
