@@ -13,7 +13,7 @@ const std::string Schema::BTREE = "BTREE";
 const std::string Schema::UNIQUE = "UNIQUE";
 const std::string Schema::DUPLIC = "DUPLIC";
 
-Schema::Attribute::Attribute(std::string name, std::list<std::string> properties){
+Attribute::Attribute(std::string name, std::list<std::string> properties){
 	if(properties.size() == 4){
         attrName = name;
 		std::list<std::string>::iterator iter;
@@ -155,6 +155,10 @@ void Schema::setLength(std::string attrName, int length){
 
 int Schema::getLength(std::string attrName){
     return attributes[attrName].length;
+}
+
+Attribute Schema::getAttribute(std::string attrName){
+    return attributes[attrName];
 }
 
 std::list<std::string> Schema::getAttributes(){

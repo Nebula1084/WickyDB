@@ -11,26 +11,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+class Attribute
+{
+private:
+	std::string attrName;
+	std::string type;
+	int length;
+	std::string index;
+	bool unique;
+    friend class Schema;
+
+public:
+	Attribute(){};
+	Attribute(std::string name, std::list<std::string> properties);
+	~Attribute(){};
+	std::string getName(){return attrName;}
+	std::string getType(){return type;}
+	int getLength(){return length;}
+	std::string getIndex(){return index;}
+	bool isUnique(){return unique;}
+};
 
 class Schema {
-
-private:
-	class Attribute
-	{
-	private:
-		std::string attrName;
-		std::string type;
-		int length;
-		std::string index;
-		bool unique;
-	    friend class Schema;
-
-	public:
-		Attribute(){};
-		Attribute(std::string name, std::list<std::string> properties);
-		~Attribute(){};
-	};
-
 private:
 	std::string tableName;
 	std::map<std::string, Attribute> attributes;
@@ -64,6 +66,7 @@ public:
 	std::string getType(std::string attrName);
 	void setLength(std::string attrName, int length);
 	int getLength(std::string attrName);
+	Attribute getAttribute(std::string attrName);
 	std::list<std::string> getAttributes(); //return a list of all attributes' name
 	
 	static std::string intToString(int i);
