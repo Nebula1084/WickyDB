@@ -1,6 +1,8 @@
 #include <Table.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <iomanip>
 
 Table::Table(std::string name){
 	tableName = name;
@@ -13,4 +15,17 @@ bool Table::CreateTable(std::vector<Attribute> v){
 		return false;
 	attrNum = attrList.size();
 	return true;
+}
+
+void Table::printTable(){
+	for(int i=0; i<attrList.size(); i++){
+		std::cout<<std::setw(10)<<attrList[i].getName();
+	}
+	std::cout<<std::endl;
+	for(int i=0; i<rows.size(); i++){
+		for(int j=0; j<rows[i].col.size(); j++){
+			std::cout<<std::setw(10)<<rows[i].col[j];
+		}
+		std::cout<<std::endl;
+	}
 }
