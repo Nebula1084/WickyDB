@@ -4,7 +4,7 @@ BUFFER = bin/BufferManager.o bin/block.o
 CATALOG = bin/CatalogManager.o bin/Schema.o
 INDEX = bin/Index.o bin/Key.o bin/IndexManager.o
 INTERPRETOR = bin/Parser.o bin/Expression.o bin/Optimizer.o bin/Plan.o bin/Evaluator.o bin/lex.yy.o bin/y.tab.o
-ALOGRITHM = bin/BTree.o
+#ALOGRITHM = bin/BTree.o
 RECORD = bin/RecordManager.o bin/Table.o
 LIB = lib/libfl.a lib/liby.a
 
@@ -107,8 +107,6 @@ bin/y.tab.o:src/Interpretor/y.tab.c include/y.tab.h \
 	g++ -c -o bin/y.tab.o src/Interpretor/y.tab.c -Iinclude
 	
 ###################Algorithm###########
-bin/BTree.o:
-	g++ -c -o bin/BTree.o src/Algorithm/BTree.cpp -Iinclude
 	
 ###################Record##############
 bin/RecordManager.o:src/Record/RecordManager.cpp include/RecordManager.h \
