@@ -6,18 +6,19 @@
 
 class Block {
 public:
-	Block(WickyFile* wf, int start);
+	Block(WickyFile* wf, int index);
 	~Block();
 	const static int BLOCK_SIZE;
 	int getStart();
-	std::string getFileName();
+	int getIndex();
+	WickyFile* getFile();	
 private:
 	friend class BufferManager;
-	int start;
+	int start, index;
 	WickyFile* wf;
 	unsigned char* mem;
-	void write(int position, int len, unsigned char* buf);
-	void read(int position, int len, unsigned char* buf);
+	int write(int position, int len, unsigned char* buf);
+	int read(int position, int len, unsigned char* buf);
 };
 
 #endif

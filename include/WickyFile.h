@@ -12,6 +12,7 @@ protected:
 	FILE* file;
 	int flag;
 	int size;
+	int fptr;	
 public:
 	WickyFile(std::string fileName, int flag);
 	virtual ~WickyFile();
@@ -19,6 +20,9 @@ public:
 	FILE* getFile();
 	void setFlag(int flag);
 	int getFlag();
+	int setFptr(int);
+	int getFptr();
+	int getSize();
 	
 	const static int FILE_READ;
 	const static int FILE_WRITE;

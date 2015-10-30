@@ -1,17 +1,21 @@
 #include "Block.h"
 
-const int Block::BLOCK_SIZE = 1024*1024;
+const int Block::BLOCK_SIZE = 8*1024;
 
-Block::Block(WickyFile* wf, int start){
+Block::Block(WickyFile* wf, int index){
 	this->wf = wf;
-	this->start = start;
-	this->mem = new unsigned char[BLOCK_SIZE];
+	this->index = index;
+	this->start = index * BLOCK_SIZE;
+	this->mem = new unsigned char[BLOCK_SIZE];		
+	
 	BufferManager* bm = BufferManager::getInstance();
+	bm->block_load += 1;				
 	bm->readDisk(wf, start, BLOCK_SIZE, mem);
 }
 
 Block::~Block(){
-	BufferManager* bm = BufferManager::getInstance();
+	BufferManager* bm = BufferManager::getInstance();		
+	bm->block_dump += 1;
 	bm->writeDisk(wf, start, BLOCK_SIZE, mem);
 	delete[] this->mem;
 }
@@ -20,14 +24,36 @@ int Block::getStart(){
 	return start;
 }
 
-std::string Block::getFileName(){
-	return wf->getFileName();
+int Block::getIndex(){
+	return index;
 }
 
-void Block::write(int position, int len, unsigned char* buf){
+WickyFile* Block::getFile(){
+	return wf;
+}
+
+int Block::write(int position, int len, unsigned char* buf){			
+	if (position < start) 
+		throw std::runtime_error("Block::write():couldn't reach that reach within this block");
+	if (position - start + len > BLOCK_SIZE)
+		len = BLOCK_SIZE - (position - start);
 	memcpy(mem + position - start, buf, len);
+	wf->setFptr(position + len);
+	return len;
 }
 
-void Block::read(int position, int len, unsigned char* buf){
-	memcpy(buf, mem + position - start, len);
+int Block::read(int position, int len, unsigned char* buf){	
+	if (position < start)
+		throw std::runtime_error("Block::read():couldn't reach that reach within this block");	
+	if (position - start + len > BLOCK_SIZE)
+		len = BLOCK_SIZE - (position - start);
+	if (wf->getSize() < position + len){
+		memcpy(buf, mem + position - start, wf->getSize() - position);		
+		wf->setFptr(wf->getSize());			
+		return wf->getSize() - position;
+	} else {
+		memcpy(buf, mem + position - start, len);		
+		wf->setFptr(position + len);		
+		return len;	
+	}
 }

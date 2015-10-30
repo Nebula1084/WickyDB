@@ -27,9 +27,11 @@ int main(int argc, char* argv[]){
 	/// this is for test
 
 	std::string str;
-	unsigned char* buffer = new unsigned char[1000];	
-	bm->write("test.bit", "asdff");
-	bm->readAll("test.bit", 0, buffer);
+	unsigned char* buffer = new unsigned char[2000*1000];	
+	bm->write("test.bit", "asdff");    
+	int len = bm->readAll("test.bit", 0, buffer);
+    buffer[len] = 0;
+    std::cout << len << std::endl;    
 	std::cout << buffer << std::endl;
 	
 	/*------------Test CatalogManager-----------*/
@@ -87,6 +89,19 @@ int main(int argc, char* argv[]){
 
 	/*------------End Test CatalogManager-----------*/
 
+    /*-----------*-Test BufferManager---------------
+    for (int i = 0; i < 100000; i++)
+        bm->write("big.test", "this is a big test");
+    for (int i = 0; i< 10; i++){
+        bm->redirect("big.test", 5000);
+        for (int j = 0; j < 50000; j++)
+            bm->write("big.test", "again and again");
+    }
+    std::string big_str;
+    
+    bm->read("big.test", 0, &big_str, 1000);
+    std::cout << big_str << std::endl;
+    -------------End Test BufferManager*/
 	delete cm;
 	delete bm;
 	

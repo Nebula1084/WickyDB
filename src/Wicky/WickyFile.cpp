@@ -5,7 +5,7 @@ const int WickyFile::FILE_READ = 1;
 const int WickyFile::FILE_WRITE = 2;
 
 WickyFile::WickyFile(std::string fileName, int flag)
-	:fileName(fileName), flag(flag){
+	:fileName(fileName), flag(flag), fptr(0){
 	//open file and create file if not exists
 	file = fopen(fileName.c_str(), "rb+");
 	if (file == NULL) {
@@ -17,10 +17,10 @@ WickyFile::WickyFile(std::string fileName, int flag)
 		throw std::runtime_error("file " + fileName + " create faile");
 	fseek(file, 0, SEEK_END);
 	size = ftell(file);
-	fseek(file, 0, SEEK_SET);	
+	fseek(file, 0, SEEK_SET);
 }
 
-WickyFile::~WickyFile(){	
+WickyFile::~WickyFile(){		
 	fclose(file);	
 }
 
@@ -38,4 +38,18 @@ void WickyFile::setFlag(int flag){
 
 int WickyFile::getFlag(){
 	return flag;
+}
+
+int WickyFile::setFptr(int ptr){
+	fptr = ptr;	
+	if (fptr > size)
+		size = fptr; 
+}
+
+int WickyFile::getFptr(){
+	return fptr;
+}
+
+int WickyFile::getSize(){
+	return size;
 }

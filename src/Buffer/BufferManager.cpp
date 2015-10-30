@@ -2,11 +2,22 @@
 
 BufferManager* BufferManager::instance = NULL;
 const int BufferManager::READ_ALL = -1;
+const int BufferManager::MEM_LIMIT = 64*1024;
 
-BufferManager::BufferManager(){	
+BufferManager::BufferManager():
+	mem_size(0), block_load(0), block_dump(0){	
 }
 
 BufferManager::~BufferManager(){
+	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;
+	for (fileItr = blockIndex.begin(); fileItr != blockIndex.end(); fileItr++){
+		std::map<int, Block*>* eachFile = fileItr->second;
+		std::map<int, Block*>::iterator blockItr;
+		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){
+			delete blockItr->second;
+		}
+		delete eachFile;
+	}
 	std::map<std::string, WickyFile*>::iterator itr;
 	for (itr = filePile.begin(); itr != filePile.end(); itr++){
 		delete itr->second;
@@ -18,7 +29,44 @@ BufferManager* BufferManager::getInstance(){
 		instance = new BufferManager();
 	return instance;
 }
-void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
+
+Block* BufferManager::getBlock(WickyFile* wf, int n){
+	std::map<int, Block*>* fileBlockIndex;
+	std::map<WickyFile*, std::map<int, Block*>* >::iterator itr;
+	itr = blockIndex.find(wf);	
+	if (itr == blockIndex.end()){
+		fileBlockIndex = new std::map<int, Block*>;
+		blockIndex.insert(std::map<WickyFile*, std::map<int, Block*>* >::value_type(wf, fileBlockIndex));
+	} else {
+		fileBlockIndex = itr->second;
+	}		
+	
+	Block* block;
+	std::map<int, Block*>::iterator blockItr = fileBlockIndex->find(n);
+	if (blockItr == fileBlockIndex->end()){
+		block = new Block(wf, n);		
+		fileBlockIndex->insert(std::map<int, Block*>::value_type(n, block));
+		mem_size += 1;
+		buffer.push_back(block);
+	} else {
+		block = blockItr->second;
+	}
+		
+	return block;
+}
+
+void BufferManager::sweep(){
+	while (mem_size > MEM_LIMIT) {
+		Block* block = buffer.front();
+		buffer.pop_front();
+		mem_size -= 1;
+		std::map<int, Block*>* fileBlockIndex = blockIndex.find(block->getFile())->second;
+		fileBlockIndex->erase(block->getIndex());
+		delete block;
+	}
+}
+
+void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){		
 	fseek(wf->getFile(), offset, SEEK_SET);	
 	fwrite(buf, len, 1, wf->getFile());	
 }
@@ -29,8 +77,8 @@ void BufferManager::readDisk(WickyFile* wf, int offset, int len, unsigned char* 
 }
 
 void BufferManager::redirect(std::string name, int offset){
-	FILE* fp = getFile(name);
-	fseek(fp, offset, SEEK_SET);
+	WickyFile* wf = getFile(name);
+	wf->setFptr(offset);
 }
 
 void BufferManager::removeFile(std::string name){
@@ -47,69 +95,78 @@ void BufferManager::removeFile(std::string name){
 }
 
 int BufferManager::eof(std::string name){
-	FILE* fp = getFile(name);
-	return feof(fp);
+	WickyFile* wf = getFile(name);
+	return wf->getSize() == wf->getFptr();
 }
 
 int BufferManager::readAll(std::string name, int offset, unsigned char* buf){
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
-	FILE* fp = getFile(name);
-	fseek(fp, offset, SEEK_SET);
-	int i=0;
-	int fl=1;
-	while(fl){
-		fl=fread(buf+i, 1, 1, fp);
-		i+=fl;	
+	WickyFile* wf = getFile(name);	
+	wf->setFptr(offset);
+	return read(name, offset, wf->getSize() - offset, buf);	
+}
+
+int BufferManager::write(std::string name, int offset, int len, unsigned char* buf){
+	WickyFile* wf = getFile(name, WickyFile::FILE_WRITE);
+	int ret=0;
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , index is out of range");
+	int position = offset;
+	while (len > 0){
+		Block* block = getBlock(wf, position / Block::BLOCK_SIZE);
+		sweep();
+		int tmp = block->write(position, len, buf);
+		position += tmp;		
+		len -= tmp;
+		ret += tmp;		
 	}
-	return i;
+	return ret;
 }
 
-void BufferManager::write(std::string name, int offset, int len, unsigned char* buf){
-	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
-	fseek(fp, offset, SEEK_SET);
+int BufferManager::read(std::string name, int offset, int len, unsigned char* buf){	
+	WickyFile* wf = getFile(name, WickyFile::FILE_READ);	 
+	int ret=0;
+	if (!isFileExists(name))
+		throw std::runtime_error("file " + name + " doesn't exist");	
+	if (len < 0)
+		throw std::runtime_error("write file " + name + " , index is out of range");			
+	int position = offset;
+	while (len > 0){
+		Block* block = getBlock(wf, position / Block::BLOCK_SIZE);
+		sweep();						
+		int tmp = block->read(position, len, buf);				
+		if (tmp == 0) break;
+		position += tmp;		
+		len -= tmp;
+		ret += tmp;
+	}	
+	return ret;
+}
+
+int BufferManager::write(std::string name, int len, unsigned char* buf){
+	WickyFile* wf = getFile(name, WickyFile::FILE_WRITE);	
 	if (len < 0)
 		throw std::runtime_error("write file " + name + " , length is out of range");
-	fwrite(buf, len, 1, fp);	
+	return write(name, wf->getFptr(), len, buf);
 }
 
-void BufferManager::read(std::string name, int offset, int len, unsigned char* buf){
+int BufferManager::read(std::string name, int len, unsigned char* buf){
+	WickyFile* wf = getFile(name, WickyFile::FILE_WRITE);
 	if (!isFileExists(name))
 		throw std::runtime_error("file " + name + " doesn't exist");
 	if (len < 0)
-		throw std::runtime_error("write file " + name + " , length is out of range");	
-	if (len == READ_ALL) {
-		readAll(name, offset, buf);
-	} else {
-		FILE* fp = getFile(name, WickyFile::FILE_READ);
-		fseek(fp, offset, SEEK_SET);
-		fread(buf, len, 1, fp);		
-	}				
-}
-
-void BufferManager::write(std::string name, int len, unsigned char* buf){
-	FILE* fp = getFile(name, WickyFile::FILE_WRITE);
-	if (len < 0)
 		throw std::runtime_error("write file " + name + " , length is out of range");
-	fwrite(buf, len, 1, fp);
+	return read(name, wf->getFptr(), len, buf);
 }
 
-void BufferManager::read(std::string name, int len, unsigned char* buf){
-	if (!isFileExists(name))
-		throw std::runtime_error("file " + name + " doesn't exist");
-	if (len < 0)
-		throw std::runtime_error("write file " + name + " , length is out of range");
-	FILE* fp = getFile(name, WickyFile::FILE_READ);
-	fread(buf, len, 1, fp);	
-}
-
-FILE* BufferManager::getFile(std::string name, int flag){
+WickyFile* BufferManager::getFile(std::string name, int flag){
 	std::map<std::string, WickyFile*>::iterator itr = filePile.find(name);
 	WickyFile* wf;
 	if (itr == filePile.end()){
 		wf = new WickyFile(name, flag);
 		filePile.insert(std::map<std::string, WickyFile*>::value_type(name, wf));
-		return wf->getFile();
+		return wf;
 	}
 	wf = itr->second;
 	if (flag != WickyFile::FILE_REDIRECT)
@@ -117,58 +174,58 @@ FILE* BufferManager::getFile(std::string name, int flag){
 			wf->setFlag(flag);			
 			fseek(wf->getFile(), SEEK_SET, ftell(wf->getFile()));
 		}
-	return wf->getFile();
+	return wf;
 }
 
 bool BufferManager::isFileExists(std::string name){
 	return access(name.c_str(), 0)==0;
 }
 
-void BufferManager::write(std::string name, int offset, int n){
+int BufferManager::write(std::string name, int offset, int n){
 	unsigned char buf[Schema::INT_LENGTH];
 	intToBytes(n, buf);
 	write(name, offset, Schema::INT_LENGTH, buf);
 }
 
-void BufferManager::read(std::string name, int offset, int *n){
+int BufferManager::read(std::string name, int offset, int *n){
 	read(name, offset, Schema::INT_LENGTH, (unsigned char *)n);
 }
 
-void BufferManager::write(std::string name, int n){
+int BufferManager::write(std::string name, int n){
 	unsigned char buf[Schema::INT_LENGTH];
 	intToBytes(n, buf);
 	write(name, Schema::INT_LENGTH, buf);
 }
 
-void BufferManager::read(std::string name, int *n){	
+int BufferManager::read(std::string name, int *n){	
 	read(name, Schema::INT_LENGTH, (unsigned char *)n);	
 }
 
-void BufferManager::write(std::string name, int offset, double n){
+int BufferManager::write(std::string name, int offset, double n){
 	unsigned char buf[Schema::FLOAT_LENGTH];
 	doubleToBytes(n, buf);
 	write(name, offset, Schema::FLOAT_LENGTH, buf);
 }
 
-void BufferManager::read(std::string name, int offset, double *n){
+int BufferManager::read(std::string name, int offset, double *n){
 	read(name, offset,Schema::FLOAT_LENGTH, (unsigned char *)n);
 }
 
-void BufferManager::write(std::string name, double n){
+int BufferManager::write(std::string name, double n){
 	unsigned char buf[Schema::FLOAT_LENGTH];
 	doubleToBytes(n, buf);
 	write(name, Schema::FLOAT_LENGTH, buf);
 }
 
-void BufferManager::read(std::string name, double *n){
+int BufferManager::read(std::string name, double *n){
 	read(name, Schema::FLOAT_LENGTH, (unsigned char *)n);
 }
 
-void BufferManager::write(std::string name, int offset, std::string str){
+int BufferManager::write(std::string name, int offset, std::string str){
 	write(name, offset, str.length(), (unsigned char*)str.c_str());
 }
 
-void BufferManager::read(std::string name, int offset, std::string *str, int len){
+int BufferManager::read(std::string name, int offset, std::string *str, int len){
 	if (len < 0)
 		throw std::runtime_error("write str into file " + name + " , whose length is out of range");	
 	unsigned char *buf = new unsigned char[len+1];
@@ -178,11 +235,11 @@ void BufferManager::read(std::string name, int offset, std::string *str, int len
 	delete[] buf;
 }
 
-void BufferManager::write(std::string name, std::string str){
+int BufferManager::write(std::string name, std::string str){
 	write(name, str.length(), (unsigned char*)str.c_str());
 }
 
-void BufferManager::read(std::string name, std::string *str, int len){
+int BufferManager::read(std::string name, std::string *str, int len){
 	if (len < 0)
 		throw std::runtime_error("write file " + name + " , length is out of range");
 	unsigned char *buf = new unsigned char[len+1];
