@@ -46,7 +46,7 @@ class Parser;
 
 %token END 0 "end of file"  
 
-%token SELECT INSERT DELETE CREATE DROP
+%token SELECT INSERT DELETE CREATE DROP EXIT
 %token TABLE INDEX VALUES NULLX COMPARISON
 %token FROM WHERE OR AND NOT PRIMARY KEY
 %token ALL DISTINCT ON UNIQUE INTO
@@ -60,8 +60,10 @@ class Parser;
 %%
 
 sql_list:
-		sql ';' { std::cout << "wickydb>"; }
-	|	sql_list sql ';' { std::cout << "wickydb>"; }
+		sql ';' { driver.setNewSmt(true); }
+	|	sql_list sql ';' { driver.setNewSmt(true); }
+	|	EXIT { return Parser::EXIT; }
+	|	sql_list EXIT { return Parser::EXIT; }
 	;
 	
 	/* schema definition language */	

@@ -23,7 +23,7 @@ int lineno = 1;
 #define yyterminate() return token::END
 %}
 
-%option noyywrap nounput batch debug
+%option noyywrap nounput debug
 
 %{
 # define YY_USER_ACTION  yylloc->columns (yyleng);
@@ -32,38 +32,39 @@ int lineno = 1;
 %%
 
 %{  
-    yylloc->step ();  
+	yylloc->step ();	
 %}  
   
 %{  
     typedef yy::SqlParser::token token;  
 %}
 
-SELECT	{ return token::SELECT; }
-INSERT	{ return token::INSERT; }
-DELETE	{ return token::DELETE; }
-CREATE	{ return token::CREATE; }
-DROP	{ return token::DROP; }
-TABLE	{ return token::TABLE; }
-INDEX	{ return token::INDEX; }
-VALUES	{ return token::VALUES; }
-NULL	{ return token::NULLX; }
+select	{ return token::SELECT; }
+insert	{ return token::INSERT; }
+delete	{ return token::DELETE; }
+create	{ return token::CREATE; }
+drop	{ return token::DROP; }
+table	{ return token::TABLE; }
+index	{ return token::INDEX; }
+values	{ return token::VALUES; }
+null	{ return token::NULLX; }
 COMPARISON { return token::COMPARISON; }
-FROM	{ return token::FROM; }
-WHERE	{ return token::WHERE; }
-OR		{ return token::OR; }
-AND		{ return token::AND; }
-NOT 	{ return token::NOT; }
-PRIMARY	{ return token::PRIMARY; }
-KEY 	{ return token::KEY; }
-ALL		{ return token::ALL; }
-DISTINCT	{return token::DISTINCT; }
-ON		{ return token::ON; }
-UNIQUE	{ return token::UNIQUE; }
-INTO	{ return token::INTO; }
-INT		{ return token::INT; }
-CHAR	{ return token::CHAR; }
-FLOAT	{ return token::FLOAT; }
+from	{ return token::FROM; }
+where	{ return token::WHERE; }
+or		{ return token::OR; }
+and		{ return token::AND; }
+not 	{ return token::NOT; }
+primary	{ return token::PRIMARY; }
+key 	{ return token::KEY; }
+all		{ return token::ALL; }
+distinct	{return token::DISTINCT; }
+on		{ return token::ON; }
+unique	{ return token::UNIQUE; }
+into	{ return token::INTO; }
+int		{ return token::INT; }
+char	{ return token::CHAR; }
+float	{ return token::FLOAT; }
+exit	{ return token::EXIT; }
 
 	/* punctuation */
 
@@ -74,50 +75,56 @@ FLOAT	{ return token::FLOAT; }
 "<="	|
 ">="		{ return token::COMPARISON; }
 
-[-+*/:(),.;]	{ return yy::SqlParser::token_type(yytext[0]); }
+[-+*/:(),.;]	{	
+	return yy::SqlParser::token_type(yytext[0]); 
+};
 
 	/* names */
 
 [A-Za-z][A-Za-z0-9_]*	{
 	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
-}
+};
 
 	/* numbers */
-[0-9]+	{
+[0-9]+	{	
 	long n = strtol (yytext, NULL, 10);  
 	if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))  
 		driver.error (*yylloc, "integer is out of range");
 	yylval->intval = n;
 	return token::INTNUM; 
-}
+};
 
 [0-9]+"."[0-9]* |
-"."[0-9]*	{
+"."[0-9]*	{	
 	double n = strtod (yytext, NULL);	
 	if (errno == ERANGE)  
 		driver.error (*yylloc, "float is out of range");
 	yylval->floatval = n;
 	return token::APPROXNUM; 
-}
+};
 
 	/* strings */
 
-'[^'\n]*'	{	
+'[^'\n]*'	{		
 	yylval->strval = new std::string (yytext);    
-	return token::STRING;
-}
+	return token::STRING;	
+};
 		
-'[^'\n]*$	{ driver.error("Unterminated string"); }
+'[^'\n]*$	{	
+	driver.error("Unterminated string"); 
+};
 
 \n	{
-	lineno++; yylloc->lines (yyleng); yylloc->step ();
-	std::cout << "------->";
-}
+	lineno++; yylloc->lines (yyleng); yylloc->step ();	
+	driver.printHead();
+};
 
-[ \t\r]+	;	/* white space */
+[ \t\r]+ {	
+};	/* white space */
 
-"--".*$		;	/* comment */
+"--".*$	{
+};	/* comment */
 
 
 %%
@@ -138,5 +145,9 @@ Parser::scan_begin ()
 void
 Parser::scan_end ()
 {
-	fclose (yyin);
+	if (file.empty () || file == "-") {
+	
+	} else {
+		fclose (yyin);
+	}	
 }

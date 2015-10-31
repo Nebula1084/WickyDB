@@ -119,6 +119,7 @@ bin/Table.o:src/Record/Table.cpp include/Table.h
 
 ###################Sql#################
 src/Interpretor/lex.yy.c: src/Interpretor/SqlScanner.l \
+	src/Interpretor/y.tab.c \
 	include/Parser.h \
 	include/y.tab.h
 	flex src/Interpretor/SqlScanner.l
