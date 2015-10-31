@@ -1,4 +1,5 @@
 #include "WickyEngine.h"
+#include <set>
 
 WickyEngine* WickyEngine::instance = NULL;
 
@@ -23,7 +24,46 @@ Table* WickyEngine::Select(Table* t, Condition c){
 
 Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){
 	std::cout << "WickyEngine::Project()" << std::endl;
-	return new Table("test");
+	using std::string;
+	using std::set;
+	using std::vector;
+	vector<Attribute> attrOri = t->getAttrList();
+	vector<Attribute> attrRes;
+	set<int> targetNum;
+	bool flag;
+	int size = attrOri.size();
+
+	for(int i = 0; i < size; i++){
+		string temp = attrOri[i].getName();
+		flag = false;
+		for(int j = 0; j < cs.size(); j++){
+			if(temp == cs[i].second){
+				flag = true;
+				break;
+			}
+		}
+		if(flag)
+			targetNum.insert(i);
+		else
+			attrRes.push_back(attrOri[i]);
+	}
+
+	Table* result = new Table(t->getTableName());
+	result->CreateTable(attrRes);
+	vector<Tuple> rowsRes;
+	vector<string> tempCol;
+	for(int i = 0; i < t->rows.size(); i++){
+		tempCol.clear();
+		for(int j = 0; j < size; j++){
+			if(targetNum.count(j) <= 0){
+				tempCol.push_back(t->rows[i].col[j]);
+			}
+		}
+		Tuple tempTup(tempCol);
+		rowsRes.push_back(tempTup);
+	}
+
+	return result;
 }
 
 Table* WickyEngine::Join(Table* t1, Table* t2){

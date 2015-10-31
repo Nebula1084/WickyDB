@@ -31,6 +31,9 @@
 class Tuple{
 public:
 	std::vector<std::string> col; //each column
+	Tuple(std::vector<std::string> v){
+		col = v;
+	}
 };
 
 
@@ -49,6 +52,8 @@ public:
 	std::string getTableName(){return tableName;}
 
 	void printTable();
+
+	std::vector<Attribute> getAttrList(){return attrList;}
 };
 
 #endif
