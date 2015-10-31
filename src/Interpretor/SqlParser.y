@@ -60,8 +60,8 @@ class Parser;
 %%
 
 sql_list:
-		sql ';' { std::cout << "SQL" << std::endl; }
-	|	sql_list sql ';' { std::cout << "SQL" << std::endl; }
+		sql ';' { std::cout << "wickydb>"; }
+	|	sql_list sql ';' { std::cout << "wickydb>"; }
 	;
 	
 	/* schema definition language */	
@@ -73,7 +73,9 @@ sql:
 	;
 	
 base_table_def:
-		CREATE TABLE table '(' base_table_element_commalist ')'
+		CREATE TABLE table '(' base_table_element_commalist ')' {
+		
+		}
 	;
 	
 base_table_element_commalist:
@@ -122,7 +124,7 @@ column_commalist:
 	;
 
 opt_column_commalist:
-		/* empty */ { std::cout << "Empty" << std::endl; }
+		/* empty */ {}
 	|	'(' column_commalist ')'
 	;
 	
@@ -141,11 +143,11 @@ delete_statement_searched:
 	;
 	
 insert_statement:
-		INSERT INTO table opt_column_commalist values_or_query_spec { std::cout << "Insert Statement" << std::endl; }
+		INSERT INTO table opt_column_commalist values_or_query_spec {  }
 	;
 	
 values_or_query_spec:
-		VALUES '(' insert_atom_commalist ')' {std::cout << "VALUES" << std::endl; }
+		VALUES '(' insert_atom_commalist ')' {}
 	;
 	
 insert_atom_commalist:
@@ -237,13 +239,13 @@ atom:
 	;
 	
 table:
-		NAME { std::cout << "Table:Name:" << *$1 << std::endl; }
+		NAME {  }
 	;
 	
 literal:
-		STRING { std::cout << "String:" << *$1 <<std::endl; }
-	|	INTNUM { std::cout << "Intnum:" << $1 << std::endl; }
-	|	APPROXNUM { std::cout << "Approxnum:" << $1 << std::endl; }
+		STRING { }
+	|	INTNUM {  }
+	|	APPROXNUM { }
 	;	
 	
 column:
@@ -251,7 +253,7 @@ column:
 	;
 	
 index:
-		NAME { std::cout << "Index:Name:" << *$1 << std::endl; }
+		NAME { }
 	;
 	
 data_type:

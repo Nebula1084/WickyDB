@@ -619,8 +619,8 @@ static yyconst flex_int16_t yy_rule_linenum[42] =
        42,   43,   44,   45,   46,   47,   48,   49,   50,   51,
        52,   53,   54,   55,   56,   57,   58,   59,   60,   61,
        62,   63,   64,   65,   66,   70,   71,   72,   73,   74,
-       75,   77,   81,   87,   95,   96,  106,  111,  113,  115,
-      117
+       75,   77,   81,   87,   95,   96,  106,  111,  113,  118,
+      120
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1174,7 +1174,7 @@ case 33:
 YY_RULE_SETUP
 #line 81 "src/Interpretor/SqlScanner.l"
 {
-	yylval->strval = new std::string (yytext);   
+	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
 }
 	YY_BREAK
@@ -1207,7 +1207,7 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 106 "src/Interpretor/SqlScanner.l"
-{
+{	
 	yylval->strval = new std::string (yytext);    
 	return token::STRING;
 }
@@ -1224,11 +1224,14 @@ case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
 #line 113 "src/Interpretor/SqlScanner.l"
-lineno++; yylloc->lines (yyleng); yylloc->step ();
+{
+	lineno++; yylloc->lines (yyleng); yylloc->step ();
+	std::cout << "------->";
+}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 115 "src/Interpretor/SqlScanner.l"
+#line 118 "src/Interpretor/SqlScanner.l"
 ;	/* white space */
 	YY_BREAK
 case 41:
@@ -1236,15 +1239,15 @@ case 41:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 117 "src/Interpretor/SqlScanner.l"
+#line 120 "src/Interpretor/SqlScanner.l"
 ;	/* comment */
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 120 "src/Interpretor/SqlScanner.l"
+#line 123 "src/Interpretor/SqlScanner.l"
 ECHO;
 	YY_BREAK
-#line 1248 "lex.yy.c"
+#line 1251 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1818,6 +1821,10 @@ static void yy_load_buffer_state  (void)
 
 /* %if-c-only */
 
+#ifndef __cplusplus
+extern int isatty (int );
+#endif /* __cplusplus */
+    
 /* %endif */
 
 /* %if-c++-only */
@@ -1852,7 +1859,7 @@ static void yy_load_buffer_state  (void)
 
 /* %if-c-only */
 
-        b->yy_is_interactive = 0;
+        b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
     
 /* %endif */
 /* %if-c++-only */
@@ -2333,7 +2340,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 120 "src/Interpretor/SqlScanner.l"
+#line 123 "src/Interpretor/SqlScanner.l"
 
 
 
@@ -2341,9 +2348,9 @@ void
 Parser::scan_begin ()
 {
 	yy_flex_debug = trace_scanning;
-	if (file.empty () || file == "-")
-		yyin = stdin;
-	else if (!(yyin = fopen (file.c_str (), "r")))
+	if (file.empty () || file == "-") {
+		yyin = stdin;		
+	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file + ": " + strerror(errno));
 		exit (EXIT_FAILURE);

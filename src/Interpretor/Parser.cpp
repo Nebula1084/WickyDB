@@ -10,13 +10,13 @@ Parser::~Parser ()
 {
 }
 
-Expression Parser::parse(const std::string &f){
-	std::cout << "Parser" << std::endl;
+Expression Parser::parse(const std::string &f){	
 	file = f;
 	scan_begin ();
+	std::cout << "wickydb>";
 	yy::SqlParser parser (*this);
 	parser.set_debug_level (trace_parsing);
-	int res = parser.parse ();
+	int res = parser.parse ();	
 	scan_end ();
 }
 

@@ -23,7 +23,7 @@ int lineno = 1;
 #define yyterminate() return token::END
 %}
 
-%option noyywrap nounput batch debug never-interactive
+%option noyywrap nounput batch debug
 
 %{
 # define YY_USER_ACTION  yylloc->columns (yyleng);
@@ -79,7 +79,7 @@ FLOAT	{ return token::FLOAT; }
 	/* names */
 
 [A-Za-z][A-Za-z0-9_]*	{
-	yylval->strval = new std::string (yytext);   
+	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
 }
 
@@ -103,14 +103,17 @@ FLOAT	{ return token::FLOAT; }
 
 	/* strings */
 
-'[^'\n]*'	{
+'[^'\n]*'	{	
 	yylval->strval = new std::string (yytext);    
 	return token::STRING;
 }
 		
 '[^'\n]*$	{ driver.error("Unterminated string"); }
 
-\n		lineno++; yylloc->lines (yyleng); yylloc->step ();
+\n	{
+	lineno++; yylloc->lines (yyleng); yylloc->step ();
+	std::cout << "------->";
+}
 
 [ \t\r]+	;	/* white space */
 
@@ -123,9 +126,9 @@ void
 Parser::scan_begin ()
 {
 	yy_flex_debug = trace_scanning;
-	if (file.empty () || file == "-")
-		yyin = stdin;
-	else if (!(yyin = fopen (file.c_str (), "r")))
+	if (file.empty () || file == "-") {
+		yyin = stdin;		
+	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file + ": " + strerror(errno));
 		exit (EXIT_FAILURE);

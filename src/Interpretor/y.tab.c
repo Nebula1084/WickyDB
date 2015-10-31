@@ -430,76 +430,85 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 /* Line 678 of lalr1.cc  */
 #line 63 "src/Interpretor/SqlParser.y"
-    { std::cout << "SQL" << std::endl; }
+    { std::cout << "wickydb>"; }
     break;
 
   case 3:
 
 /* Line 678 of lalr1.cc  */
 #line 64 "src/Interpretor/SqlParser.y"
-    { std::cout << "SQL" << std::endl; }
+    { std::cout << "wickydb>"; }
+    break;
+
+  case 8:
+
+/* Line 678 of lalr1.cc  */
+#line 76 "src/Interpretor/SqlParser.y"
+    {
+		
+		}
     break;
 
   case 24:
 
 /* Line 678 of lalr1.cc  */
-#line 125 "src/Interpretor/SqlParser.y"
-    { std::cout << "Empty" << std::endl; }
+#line 127 "src/Interpretor/SqlParser.y"
+    {}
     break;
 
   case 31:
 
 /* Line 678 of lalr1.cc  */
-#line 144 "src/Interpretor/SqlParser.y"
-    { std::cout << "Insert Statement" << std::endl; }
+#line 146 "src/Interpretor/SqlParser.y"
+    {  }
     break;
 
   case 32:
 
 /* Line 678 of lalr1.cc  */
-#line 148 "src/Interpretor/SqlParser.y"
-    {std::cout << "VALUES" << std::endl; }
+#line 150 "src/Interpretor/SqlParser.y"
+    {}
     break;
 
   case 66:
 
 /* Line 678 of lalr1.cc  */
-#line 240 "src/Interpretor/SqlParser.y"
-    { std::cout << "Table:Name:" << *(yysemantic_stack_[(1) - (1)].strval) << std::endl; }
+#line 242 "src/Interpretor/SqlParser.y"
+    {  }
     break;
 
   case 67:
 
 /* Line 678 of lalr1.cc  */
-#line 244 "src/Interpretor/SqlParser.y"
-    { std::cout << "String:" << *(yysemantic_stack_[(1) - (1)].strval) <<std::endl; }
+#line 246 "src/Interpretor/SqlParser.y"
+    { }
     break;
 
   case 68:
 
 /* Line 678 of lalr1.cc  */
-#line 245 "src/Interpretor/SqlParser.y"
-    { std::cout << "Intnum:" << (yysemantic_stack_[(1) - (1)].intval) << std::endl; }
+#line 247 "src/Interpretor/SqlParser.y"
+    {  }
     break;
 
   case 69:
 
 /* Line 678 of lalr1.cc  */
-#line 246 "src/Interpretor/SqlParser.y"
-    { std::cout << "Approxnum:" << (yysemantic_stack_[(1) - (1)].floatval) << std::endl; }
+#line 248 "src/Interpretor/SqlParser.y"
+    { }
     break;
 
   case 71:
 
 /* Line 678 of lalr1.cc  */
-#line 254 "src/Interpretor/SqlParser.y"
-    { std::cout << "Index:Name:" << *(yysemantic_stack_[(1) - (1)].strval) << std::endl; }
+#line 256 "src/Interpretor/SqlParser.y"
+    { }
     break;
 
 
 
 /* Line 678 of lalr1.cc  */
-#line 503 "y.tab.c"
+#line 512 "y.tab.c"
 	default:
           break;
       }
@@ -943,14 +952,14 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const unsigned short int
   SqlParser::yyrline_[] =
   {
-         0,    63,    63,    64,    69,    70,    71,    72,    76,    80,
-      81,    85,    86,    90,    94,    98,   102,   105,   107,   111,
-     115,   116,   120,   121,   125,   126,   130,   134,   135,   136,
-     140,   144,   148,   152,   153,   157,   158,   162,   166,   168,
-     169,   173,   174,   178,   183,   184,   187,   189,   193,   197,
-     198,   202,   206,   209,   210,   211,   212,   213,   214,   218,
-     222,   226,   227,   231,   232,   236,   240,   244,   245,   246,
-     250,   254,   258,   259,   260
+         0,    63,    63,    64,    69,    70,    71,    72,    76,    82,
+      83,    87,    88,    92,    96,   100,   104,   107,   109,   113,
+     117,   118,   122,   123,   127,   128,   132,   136,   137,   138,
+     142,   146,   150,   154,   155,   159,   160,   164,   168,   170,
+     171,   175,   176,   180,   185,   186,   189,   191,   195,   199,
+     200,   204,   208,   211,   212,   213,   214,   215,   216,   220,
+     224,   228,   229,   233,   234,   238,   242,   246,   247,   248,
+     252,   256,   260,   261,   262
   };
 
   // Print the state stack on the debug stream.
@@ -1045,11 +1054,11 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 } // yy
 
 /* Line 1054 of lalr1.cc  */
-#line 1049 "y.tab.c"
+#line 1058 "y.tab.c"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 263 "src/Interpretor/SqlParser.y"
+#line 265 "src/Interpretor/SqlParser.y"
 
 
 void
