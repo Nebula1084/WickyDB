@@ -12,7 +12,7 @@
 class WickyEngine{
 private:
 public:	
-	Table* Select(Table* t, Condition* c);
+	Table* Select(Table* t, Condition c);
 	Table* Project(Table* t, std::vector<std::string> cs);
 	Table* Join(Table* t1, Table* t2);
 };

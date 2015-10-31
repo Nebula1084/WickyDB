@@ -1,6 +1,6 @@
 #include "WickyEngine.h"
 
-Table* WickyEngine::Select(Table* t, Condition* c){
+Table* WickyEngine::Select(Table* t, Condition c){
 	
 }
 
