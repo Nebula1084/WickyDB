@@ -35,6 +35,11 @@ class Parser;
 %token <intval> INTNUM 
 %token <floatval> APPROXNUM
 
+%type <strval> column
+%type <strval> index
+%type <strval> column_def_opt
+%type <strval> data_type
+
 	/* operators */
 
 %left OR
@@ -54,6 +59,7 @@ class Parser;
 
 %code {
 # include "Parser.h"
+# include "Schema.h"
 }
 
 
@@ -108,11 +114,15 @@ column_def:
 	
 column_def_opt_list:
 		/* empty */
-	|	column_def_opt_list column_def_opt
+	|	column_def_opt_list column_def_opt {
+	
+	}
 	;
 	
 column_def_opt:
-	UNIQUE
+	UNIQUE {
+		$$ = new std::string(Schema::UNIQUE);
+	}
 	;	
 	
 table_constraint_def:
@@ -251,17 +261,26 @@ literal:
 	;	
 	
 column:
-		NAME
+		NAME { 
+			$$ = $1;
+			std::cout << *$$ << std::endl; 
+		}
 	;
 	
 index:
-		NAME { }
+		NAME { $$ = $1; }
 	;
 	
 data_type:
-		INT 
-	|	CHAR'(' INTNUM ')'
-	|	FLOAT
+		INT {
+			std::cout << "int" << std::endl; 
+		}
+	|	CHAR'(' INTNUM ')' {
+			std::cout << "char(" << $3 << ")" << std::endl;
+		}
+	|	FLOAT {
+			std::cout << "float" << std::endl; 
+		}
 	;
 	
 %%
