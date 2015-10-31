@@ -1,16 +1,22 @@
 #include "WickyEngine.h"
 
+WickyEngine* WickyEngine::instance = NULL;
 
-ResultSet WickyEngine::execute(std::string query){
-	Expression expression;
-	expression = mParser.parse(query);
-	Plan plan;
-	plan = mOptimizer.optimize(expression);
-	ResultSet resultSet;
-	resultSet = mEvaluator.evaluate(plan);
+WickyEngine::WickyEngine(){
+	
 }
 
-Table* WickyEngine::Select(Table* t, Condition* c){
+WickyEngine::~WickyEngine(){
+	
+}
+
+WickyEngine* WickyEngine::getInstance(){
+	if (instance == NULL)
+		instance = new WickyEngine();
+	return instance;
+}
+
+Table* WickyEngine::Select(Table* t, Condition c){
 	
 }
 
@@ -22,3 +28,14 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 	
 }
 
+int WickyEngine::Insert(Table* t, Tuple tuple){
+	
+}
+
+int WickyEngine::Delete(Table* t, Condition c){
+	
+}
+
+int WickyEngine::Update(Table* t, Condition c){
+	
+}

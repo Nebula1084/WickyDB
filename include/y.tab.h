@@ -168,22 +168,23 @@ namespace yy {
      DELETE = 268,
      CREATE = 269,
      DROP = 270,
-     TABLE = 271,
-     INDEX = 272,
-     VALUES = 273,
-     NULLX = 274,
-     FROM = 275,
-     WHERE = 276,
-     PRIMARY = 277,
-     KEY = 278,
-     ALL = 279,
-     DISTINCT = 280,
-     ON = 281,
-     UNIQUE = 282,
-     INTO = 283,
-     INT = 284,
-     CHAR = 285,
-     FLOAT = 286
+     EXIT = 271,
+     TABLE = 272,
+     INDEX = 273,
+     VALUES = 274,
+     NULLX = 275,
+     FROM = 276,
+     WHERE = 277,
+     PRIMARY = 278,
+     KEY = 279,
+     ALL = 280,
+     DISTINCT = 281,
+     ON = 282,
+     UNIQUE = 283,
+     INTO = 284,
+     INT = 285,
+     CHAR = 286,
+     FLOAT = 287
    };
 
     };
@@ -360,7 +361,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 364 "y.tab.h"
+#line 365 "y.tab.h"
 
 
 

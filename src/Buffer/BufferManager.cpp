@@ -5,11 +5,12 @@ const int BufferManager::READ_ALL = -1;
 const int BufferManager::MEM_LIMIT = 64*1024;
 
 BufferManager::BufferManager():
-	mem_size(0), block_load(0), block_dump(0){	
+	mem_size(0), block_load(0), block_dump(0){
+		
 }
 
 BufferManager::~BufferManager(){
-	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;
+	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;	
 	for (fileItr = blockIndex.begin(); fileItr != blockIndex.end(); fileItr++){
 		std::map<int, Block*>* eachFile = fileItr->second;
 		std::map<int, Block*>::iterator blockItr;
