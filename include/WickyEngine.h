@@ -11,10 +11,17 @@
 
 class WickyEngine{
 private:
+	static WickyEngine* instance;
+	WickyEngine();
+	~WickyEngine();
 public:	
+	static WickyEngine* getInstance();
 	Table* Select(Table* t, Condition c);
 	Table* Project(Table* t, std::vector<std::string> cs);
 	Table* Join(Table* t1, Table* t2);
+	int Insert(Table* t, Tuple tuple);
+	int Delete(Table* t, Condition c);
+	int Update(Table* t, Condition c);
 };
 
 #endif

@@ -5,8 +5,7 @@
 #include "CatalogManager.h"
 #include "Parser.h"
 
-int main(int argc, char* argv[]){
-	WickyEngine wickydb;
+int main(int argc, char* argv[]){	
 	Parser parser;	
 	BufferManager* bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
