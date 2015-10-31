@@ -1,23 +1,23 @@
-SELECT c1, c2 FROM t1;
-DELETE FROM t2;
+select c1, c2 from t1;
+delete from t2;
 
-DROP INDEX stunameidx;
+drop index stunameidx;
 
-CREATE INDEX stunameidx ON student ( sname );
+create index stunameidx on student ( sname );
 
-DROP TABLE student;
+drop table student;
 
-CREATE TABLE student (
-		sno CHAR(8),
-		sname CHAR(16) UNIQUE,
-		sage INT,
-		sgender CHAR (1),
-		PRIMARY KEY ( sno )
+create table student (
+		sno char(8),
+		sname char(16) unique,
+		sage int,
+		sgender char (1),
+		primary key ( sno )
 );
 
-SELECT * FROM student;
-SELECT * FROM student WHERE sno = '88888888';
-SELECT * FROM student WHERE sage > 20.1 AND sgender = 'FF';
+select * from student;
+select * from student where sno = '88888888';
+select * from student where sage > 20.1 and sgender = 'FF';
 
-DELETE FROM student;
-DELETE FROM student WHERE sno = '88888888';
+delete from student;
+delete from student where sno = '88888888';

@@ -35,6 +35,11 @@ class Parser;
 %token <intval> INTNUM 
 %token <floatval> APPROXNUM
 
+%type <strval> column
+%type <strval> index
+%type <strval> column_def_opt
+%type <strval> data_type
+
 	/* operators */
 
 %left OR
@@ -46,7 +51,7 @@ class Parser;
 
 %token END 0 "end of file"  
 
-%token SELECT INSERT DELETE CREATE DROP
+%token SELECT INSERT DELETE CREATE DROP EXIT
 %token TABLE INDEX VALUES NULLX COMPARISON
 %token FROM WHERE OR AND NOT PRIMARY KEY
 %token ALL DISTINCT ON UNIQUE INTO
@@ -54,14 +59,17 @@ class Parser;
 
 %code {
 # include "Parser.h"
+# include "Schema.h"
 }
 
 
 %%
 
 sql_list:
-		sql ';' { std::cout << "SQL" << std::endl; }
-	|	sql_list sql ';' { std::cout << "SQL" << std::endl; }
+		sql ';' { driver.setNewSmt(true); }
+	|	sql_list sql ';' { driver.setNewSmt(true); }
+	|	EXIT { return Parser::EXIT; }
+	|	sql_list EXIT { return Parser::EXIT; }
 	;
 	
 	/* schema definition language */	
@@ -73,7 +81,9 @@ sql:
 	;
 	
 base_table_def:
-		CREATE TABLE table '(' base_table_element_commalist ')'
+		CREATE TABLE table '(' base_table_element_commalist ')' {
+		
+		}
 	;
 	
 base_table_element_commalist:
@@ -104,11 +114,15 @@ column_def:
 	
 column_def_opt_list:
 		/* empty */
-	|	column_def_opt_list column_def_opt
+	|	column_def_opt_list column_def_opt {
+	
+	}
 	;
 	
 column_def_opt:
-	UNIQUE
+	UNIQUE {
+		$$ = new std::string(Schema::UNIQUE);
+	}
 	;	
 	
 table_constraint_def:
@@ -122,7 +136,7 @@ column_commalist:
 	;
 
 opt_column_commalist:
-		/* empty */ { std::cout << "Empty" << std::endl; }
+		/* empty */ {}
 	|	'(' column_commalist ')'
 	;
 	
@@ -141,11 +155,11 @@ delete_statement_searched:
 	;
 	
 insert_statement:
-		INSERT INTO table opt_column_commalist values_or_query_spec { std::cout << "Insert Statement" << std::endl; }
+		INSERT INTO table opt_column_commalist values_or_query_spec {  }
 	;
 	
 values_or_query_spec:
-		VALUES '(' insert_atom_commalist ')' {std::cout << "VALUES" << std::endl; }
+		VALUES '(' insert_atom_commalist ')' {}
 	;
 	
 insert_atom_commalist:
@@ -237,27 +251,36 @@ atom:
 	;
 	
 table:
-		NAME { std::cout << "Table:Name:" << *$1 << std::endl; }
+		NAME {  }
 	;
 	
 literal:
-		STRING { std::cout << "String:" << *$1 <<std::endl; }
-	|	INTNUM { std::cout << "Intnum:" << $1 << std::endl; }
-	|	APPROXNUM { std::cout << "Approxnum:" << $1 << std::endl; }
+		STRING { }
+	|	INTNUM {  }
+	|	APPROXNUM { }
 	;	
 	
 column:
-		NAME
+		NAME { 
+			$$ = $1;
+			std::cout << *$$ << std::endl; 
+		}
 	;
 	
 index:
-		NAME { std::cout << "Index:Name:" << *$1 << std::endl; }
+		NAME { $$ = $1; }
 	;
 	
 data_type:
-		INT 
-	|	CHAR'(' INTNUM ')'
-	|	FLOAT
+		INT {
+			std::cout << "int" << std::endl; 
+		}
+	|	CHAR'(' INTNUM ')' {
+			std::cout << "char(" << $3 << ")" << std::endl;
+		}
+	|	FLOAT {
+			std::cout << "float" << std::endl; 
+		}
 	;
 	
 %%
