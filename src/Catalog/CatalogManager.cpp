@@ -13,7 +13,7 @@ CatalogManager::CatalogManager(){
 		bm->read(CATALOG, &strLength);
 		while(strLength != ENDFILE){
 			bm->read(CATALOG, &schString, strLength);
-			Schema sch = Schema(schString);
+			Schema sch = Schema::createSchema(schString);
 			schemaQueue[sch.getName()] = sch;
 			bm->read(CATALOG, &strLength);
 		}	
@@ -33,6 +33,8 @@ CatalogManager* CatalogManager::getInstance(){
 void CatalogManager::store(Schema sch){
 	if (isExist(sch.getName()))
 		throw std::runtime_error("table " + sch.getName() + " already exists");
+	if (sch.attributes.size() == 0)
+		throw std::runtime_error("A table should have at least one attribute");
 	schemaQueue[sch.getName()] = sch;
 }
 
