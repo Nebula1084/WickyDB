@@ -43,3 +43,7 @@ int WickyEngine::Update(Table* t, Condition c){
 int WickyEngine::CreateTable(Schema sch){
 	
 }
+
+Table* WickyEngine::GetTable(std::string name){
+	
+}
