@@ -44,11 +44,13 @@
 
 # include <string>
 class Parser;
+class Schema;
+class Condition;
 
 
 
 /* Line 35 of lalr1.cc  */
-#line 52 "y.tab.h"
+#line 54 "y.tab.h"
 
 
 #include <string>
@@ -62,7 +64,7 @@ class Parser;
 namespace yy {
 
 /* Line 35 of lalr1.cc  */
-#line 66 "y.tab.h"
+#line 68 "y.tab.h"
   class position;
   class location;
 
@@ -72,7 +74,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 76 "y.tab.h"
+#line 78 "y.tab.h"
 
 #include "location.hh"
 
@@ -120,7 +122,7 @@ do {							\
 namespace yy {
 
 /* Line 35 of lalr1.cc  */
-#line 124 "y.tab.h"
+#line 126 "y.tab.h"
 
   /// A Bison parser.
   class SqlParser
@@ -132,17 +134,19 @@ namespace yy {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 26 "src/Interpretor/SqlParser.y"
+#line 28 "src/Interpretor/SqlParser.y"
 
 	int intval;
 	double floatval;
 	std::string *strval;
 	int subtok;
+	Condition* condition;
+	Schema* schema;
 
 
 
 /* Line 35 of lalr1.cc  */
-#line 146 "y.tab.h"
+#line 150 "y.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -361,7 +365,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 365 "y.tab.h"
+#line 369 "y.tab.h"
 
 
 

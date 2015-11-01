@@ -1,5 +1,4 @@
 #include "Plan.h"
-#include "ResultSet.h"
 
 #include <iostream>
 
@@ -8,7 +7,7 @@
 
 class Evaluator{
 public:
-	ResultSet evaluate(Plan plan);
+	
 };
 
 #endif

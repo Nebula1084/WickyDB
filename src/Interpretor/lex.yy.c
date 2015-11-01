@@ -631,8 +631,8 @@ static yyconst flex_int16_t yy_rule_linenum[43] =
        42,   43,   44,   45,   46,   47,   48,   49,   50,   51,
        52,   53,   54,   55,   56,   57,   58,   59,   60,   61,
        62,   63,   64,   65,   66,   67,   71,   72,   73,   74,
-       75,   76,   78,   84,   90,   98,   99,  109,  114,  118,
-      123,  126
+       75,   76,   81,   87,   93,  101,  102,  112,  117,  121,
+      126,  129
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1183,19 +1183,22 @@ case 31:
 case 32:
 YY_RULE_SETUP
 #line 76 "src/Interpretor/SqlScanner.l"
-{ return token::COMPARISON; }
+{ 
+	yylval->strval = new std::string (yytext);
+	return token::COMPARISON; 
+}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 78 "src/Interpretor/SqlScanner.l"
-{	
+#line 81 "src/Interpretor/SqlScanner.l"
+{
 	return yy::SqlParser::token_type(yytext[0]); 
 };
 	YY_BREAK
 /* names */
 case 34:
 YY_RULE_SETUP
-#line 84 "src/Interpretor/SqlScanner.l"
+#line 87 "src/Interpretor/SqlScanner.l"
 {
 	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
@@ -1204,32 +1207,32 @@ YY_RULE_SETUP
 /* numbers */
 case 35:
 YY_RULE_SETUP
-#line 90 "src/Interpretor/SqlScanner.l"
+#line 93 "src/Interpretor/SqlScanner.l"
 {	
 	long n = strtol (yytext, NULL, 10);  
 	if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))  
 		driver.error (*yylloc, "integer is out of range");
-	yylval->intval = n;
+	yylval->strval = new std::string (yytext);
 	return token::INTNUM; 
 };
 	YY_BREAK
 case 36:
-#line 99 "src/Interpretor/SqlScanner.l"
+#line 102 "src/Interpretor/SqlScanner.l"
 case 37:
 YY_RULE_SETUP
-#line 99 "src/Interpretor/SqlScanner.l"
+#line 102 "src/Interpretor/SqlScanner.l"
 {	
 	double n = strtod (yytext, NULL);	
 	if (errno == ERANGE)  
 		driver.error (*yylloc, "float is out of range");
-	yylval->floatval = n;
+	yylval->strval = new std::string (yytext);	
 	return token::APPROXNUM; 
 };
 	YY_BREAK
 /* strings */
 case 38:
 YY_RULE_SETUP
-#line 109 "src/Interpretor/SqlScanner.l"
+#line 112 "src/Interpretor/SqlScanner.l"
 {		
 	yylval->strval = new std::string (yytext);    
 	return token::STRING;	
@@ -1240,7 +1243,7 @@ case 39:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 114 "src/Interpretor/SqlScanner.l"
+#line 117 "src/Interpretor/SqlScanner.l"
 {	
 	driver.error("Unterminated string"); 
 };
@@ -1248,7 +1251,7 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 118 "src/Interpretor/SqlScanner.l"
+#line 121 "src/Interpretor/SqlScanner.l"
 {
 	lineno++; yylloc->lines (yyleng); yylloc->step ();	
 	driver.printHead();
@@ -1256,7 +1259,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 123 "src/Interpretor/SqlScanner.l"
+#line 126 "src/Interpretor/SqlScanner.l"
 {	
 };	/* white space */
 	YY_BREAK
@@ -1265,16 +1268,16 @@ case 42:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 126 "src/Interpretor/SqlScanner.l"
+#line 129 "src/Interpretor/SqlScanner.l"
 {
 };	/* comment */
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 130 "src/Interpretor/SqlScanner.l"
+#line 133 "src/Interpretor/SqlScanner.l"
 ECHO;
 	YY_BREAK
-#line 1278 "lex.yy.c"
+#line 1281 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2366,7 +2369,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 130 "src/Interpretor/SqlScanner.l"
+#line 133 "src/Interpretor/SqlScanner.l"
 
 
 

@@ -1,5 +1,5 @@
 WICKYDB = wickydb
-WICKY = bin/main.o bin/WickyEngine.o bin/WickyFile.o bin/ResultSet.o
+WICKY = bin/main.o bin/WickyEngine.o bin/WickyFile.o bin/Condition.o
 BUFFER = bin/BufferManager.o bin/block.o
 CATALOG = bin/CatalogManager.o bin/Schema.o
 INDEX = bin/Index.o bin/Key.o bin/IndexManager.o
@@ -21,13 +21,8 @@ bin/main.o: src/main.cpp \
 	include/WickyEngine.h \
 	include/CatalogManager.h
 	g++ -c -o bin/main.o src/main.cpp -Iinclude
+	
 bin/WickyEngine.o: src/Wicky/WickyEngine.cpp include/WickyEngine.h \
-	include/Parser.h \
-	include/Expression.h \
-	include/Optimizer.h \
-	include/Plan.h \
-	include/Evaluator.h \
-	include/ResultSet.h \
 	include/Table.h \
 	include/Condition.h \
 	include/BufferManager.h \
@@ -36,9 +31,9 @@ bin/WickyEngine.o: src/Wicky/WickyEngine.cpp include/WickyEngine.h \
 	 
 bin/WickyFile.o: src/Wicky/WickyFile.cpp include/WickyFile.h
 	g++ -c -o bin/WickyFile.o src/Wicky/WickyFile.cpp -Iinclude
-	 
-bin/ResultSet.o: src/ResultSet.cpp include/ResultSet.h
-	g++ -c -o bin/ResultSet.o src/ResultSet.cpp -Iinclude	
+	
+bin/Condition.o: src/Wicky/Condition.cpp include/Condition.h
+	g++ -c -o bin/Condition.o src/Wicky/Condition.cpp -Iinclude
 	
 ###################BUFFER##############
 bin/BufferManager.o: src/Buffer/BufferManager.cpp include/BufferManager.h \
@@ -77,8 +72,7 @@ bin/IndexManager.o: src/Index/IndexManager.cpp include/IndexManager.h \
 	
 ###################Interpretor: Sql####
 bin/Evaluator.o: src/Interpretor/Evaluator.cpp include/Evaluator.h \
-	include/Plan.h \
-	include/ResultSet.h
+	include/Plan.h \	
 	g++ -c -o bin/Evaluator.o src/Interpretor/Evaluator.cpp -Iinclude
 	
 bin/Expression.o: src/Interpretor/Expression.cpp include/Expression.h
@@ -89,6 +83,8 @@ bin/Optimizer.o: src/Interpretor/Optimizer.cpp include/Optimizer.h
 	
 bin/Parser.o: src/Interpretor/Parser.cpp include/Parser.h \
 	include/Expression.h \
+	src/Interpretor/lex.yy.c \
+	src/Interpretor/y.tab.c \
 	include/y.tab.h
 	g++ -c -o bin/Parser.o src/Interpretor/Parser.cpp -Iinclude
 	
@@ -112,6 +108,7 @@ bin/y.tab.o:src/Interpretor/y.tab.c include/y.tab.h \
 bin/RecordManager.o:src/Record/RecordManager.cpp include/RecordManager.h \
 	include/Table.h
 	g++ -c -o bin/RecordManager.o src/Record/RecordManager.cpp -Iinclude
+	
 bin/Table.o:src/Record/Table.cpp include/Table.h
 	g++ -c -o bin/Table.o src/Record/Table.cpp -Iinclude
 
@@ -119,12 +116,13 @@ bin/Table.o:src/Record/Table.cpp include/Table.h
 src/Interpretor/lex.yy.c: src/Interpretor/SqlScanner.l \
 	src/Interpretor/y.tab.c \
 	include/Parser.h \
-	include/y.tab.h
+	include/y.tab.h	
 	flex src/Interpretor/SqlScanner.l
 	mv lex.yy.c src/Interpretor/lex.yy.c
 	
 src/Interpretor/y.tab.c: src/Interpretor/SqlParser.y \
-	include/Parser.h
+	include/Parser.h \
+	include/Condition.h
 	bison -y src/Interpretor/SqlParser.y	
 	mv y.tab.c src/Interpretor/y.tab.c
 	mv y.tab.h include/y.tab.h	

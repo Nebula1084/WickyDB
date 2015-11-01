@@ -17,7 +17,7 @@ create table student (
 
 select * from student;
 select * from student where sno = '88888888';
-select * from student where sage > 20.1 and sgender = 'FF';
+select * from student where sage > 20.1 and sgender = 'FsdfF' and sgender = 'FF';
 
 delete from student;
 delete from student where sno = '88888888';
