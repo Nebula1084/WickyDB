@@ -2,6 +2,8 @@
 #include <string>
 
 #include "Expression.h"
+#include "Condition.h"
+#include "Schema.h"
 #include "y.tab.h"
 
 #ifndef _PARSER_H
@@ -22,12 +24,16 @@ YY_DECL;
 
 class Parser{
 private:
+	int line;
 	bool echoEn;
 	bool newSmt;
+	bool err;
+	Condition* condition;
+	Schema* schema;
 public:
 	Parser();
 	virtual ~Parser();
-
+	
 	int result;
 
 	// Handling the scanner.
@@ -51,6 +57,11 @@ public:
 	// Error handling.
 	void error (const yy::location& l, const std::string& m);
 	void error (const std::string& m);
+	
+	void setErr(bool err);
+	bool getErr();
+	
+	Condition* getCondition();
 	
 	const static int SYNTAX_ERR;
 	const static int EXIT;

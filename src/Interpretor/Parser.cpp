@@ -5,8 +5,13 @@ const int Parser::EXIT=-1;
 const int Parser::SYNTAX_ERR=-2;
 	
 Parser::Parser ()
-	: trace_scanning (false), trace_parsing (false), echoEn(true), newSmt(true)
-{	
+	: trace_scanning (false), trace_parsing (false), echoEn(true), err(false)
+{
+	line=0;
+	condition = NULL;
+	schema = NULL;	
+	setNewSmt(true);
+	
 }
 
 Parser::~Parser ()
@@ -15,7 +20,9 @@ Parser::~Parser ()
 
 int Parser::parse(const std::string &f){
 	echoEn = true; 
-	newSmt = true;	
+	if (line != 1 || err) {
+		setNewSmt(true);		
+	}
 	file = f;
 	scan_begin ();	
 	yy::SqlParser parser (*this);
@@ -46,7 +53,13 @@ bool Parser::getEcho(){
 }
 
 void Parser::setNewSmt(bool smt){
-	newSmt = smt;
+	newSmt = smt;	
+	if (smt) {				
+		if (condition != NULL)
+			delete condition;
+		condition = new Condition;
+		err = false;
+	}	
 }
 
 bool Parser::getNewSmt(){
@@ -54,12 +67,25 @@ bool Parser::getNewSmt(){
 }
 
 void Parser::printHead(){
+	line++;
 	if (echoEn){
-		if (newSmt){
+		if (newSmt){			
 			std::cout << "wickydb>";
 			newSmt = false;
 		} else {
 			std::cout << "------->";
 		}
 	}
+}
+
+void Parser::setErr(bool err){
+	this->err = err;
+}
+
+bool Parser::getErr(){
+	return err;
+}
+
+Condition* Parser::getCondition(){
+	return condition;
 }

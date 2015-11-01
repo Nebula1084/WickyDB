@@ -73,9 +73,12 @@ exit	{ return token::EXIT; }
 "<"		|
 ">"		|
 "<="	|
-">="		{ return token::COMPARISON; }
+">="		{ 
+	yylval->strval = new std::string (yytext);
+	return token::COMPARISON; 
+}
 
-[-+*/:(),.;]	{	
+[-+*/:(),.;]	{
 	return yy::SqlParser::token_type(yytext[0]); 
 };
 
@@ -91,7 +94,7 @@ exit	{ return token::EXIT; }
 	long n = strtol (yytext, NULL, 10);  
 	if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))  
 		driver.error (*yylloc, "integer is out of range");
-	yylval->intval = n;
+	yylval->strval = new std::string (yytext);
 	return token::INTNUM; 
 };
 
@@ -100,7 +103,7 @@ exit	{ return token::EXIT; }
 	double n = strtod (yytext, NULL);	
 	if (errno == ERANGE)  
 		driver.error (*yylloc, "float is out of range");
-	yylval->floatval = n;
+	yylval->strval = new std::string (yytext);	
 	return token::APPROXNUM; 
 };
 

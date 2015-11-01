@@ -6,6 +6,8 @@
 %code requires {
 # include <string>
 class Parser;
+class Schema;
+class Condition;
 }
 
 // The parsing context.
@@ -28,24 +30,30 @@ class Parser;
 	double floatval;
 	std::string *strval;
 	int subtok;
+	Condition* condition;
+	Schema* schema;
 }
 
 %token <strval> NAME
 %token <strval> STRING
-%token <intval> INTNUM 
-%token <floatval> APPROXNUM
+%token <strval> INTNUM 
+%token <strval> APPROXNUM
 
 %type <strval> column
 %type <strval> index
 %type <strval> column_def_opt
 %type <strval> data_type
+%type <strval> scalar_exp
+%type <strval> atom
+%type <strval> literal
+%type <strval> column_ref
 
 	/* operators */
 
 %left OR
 %left AND
 %left NOT
-%left <int> COMPARISON /* = <> < > <= >= */
+%left <strval> COMPARISON /* = <> < > <= >= */
 %left '+' '-'
 %left '*' '/'
 
@@ -60,6 +68,7 @@ class Parser;
 %code {
 # include "Parser.h"
 # include "Schema.h"
+# include "Condition.h"
 }
 
 
@@ -217,14 +226,20 @@ table_ref:
 	;
 
 where_clause:
-		WHERE search_condition
+		WHERE search_condition {
+			driver.getCondition()->popCondition();
+			std::list< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
+			
+			std::list< std::pair<std::string, std::string> >::iterator itr;
+			for (itr = cond.begin(); itr != cond.end(); itr++){
+				std::cout << itr->first << ":" << itr->second << std::endl;
+			}
+		}
 	;
 	
-search_condition:
-	|	search_condition OR search_condition
-	|	search_condition AND search_condition
-	|	NOT search_condition
-	|	'(' search_condition ')'
+search_condition:	
+	|	search_condition AND search_condition {		
+	}
 	|	predicate
 	;
 
@@ -233,21 +248,40 @@ predicate:
 	;
 
 comparison_predicate:
-		scalar_exp COMPARISON scalar_exp
+		scalar_exp COMPARISON scalar_exp {									
+			driver.getCondition()->pushCondition($1[0], $1[1], *$2, $3[0], $3[1]);			
+			delete[] $1;			
+			delete $2;			
+			delete[] $3;						
+		}
 	;
 	
 scalar_exp:
-		atom
-	|	column_ref	
+		atom { $$ = $1; }
+	|	column_ref {			
+			$$ = $1; 
+		}
 	;
 
 column_ref:
-		NAME
-	|	NAME '.' NAME	/* needs semantics */
+		NAME {			
+			std::string* ret = new std::string[2];
+			ret[0] = "COLUMN";
+			ret[1] = *$1;			
+			$$ = ret;
+		}
+	|	NAME '.' NAME	/* needs semantics */ {
+			std::string* ret = new std::string[2];
+			ret[0] = "COLUMN";
+			ret[1] = *$1 + "." + *$3;			
+			$$ = ret;
+		}
 	;
 	
 atom:
-		literal
+		literal { 
+			$$ = $1;			
+		}
 	;
 	
 table:
@@ -255,15 +289,29 @@ table:
 	;
 	
 literal:
-		STRING { }
-	|	INTNUM {  }
-	|	APPROXNUM { }
+		STRING {			
+			std::string* ret = new std::string[2];
+			ret[0] = "STRING";
+			ret[1] = *$1;
+			$$=ret;						
+		}
+	|	INTNUM {
+			std::string* ret = new std::string[2];
+			ret[0] = "INTNUM";
+			ret[1] = *$1;
+			$$=ret;				
+		}
+	|	APPROXNUM {
+			std::string* ret = new std::string[2];
+			ret[0] = "FLOAT";
+			ret[1] = *$1;
+			$$=ret;			
+		}
 	;	
 	
 column:
 		NAME { 
-			$$ = $1;
-			std::cout << *$$ << std::endl; 
+			$$ = $1;			 
 		}
 	;
 	
