@@ -1,3 +1,6 @@
+#ifndef _WICKYENGINE_H
+#define _WICKYENGINE_H
+
 #include <string>
 #include <list>
 
@@ -5,9 +8,6 @@
 #include "Condition.h"
 #include "BufferManager.h"
 #include "WickyFile.h"
-
-#ifndef _WICKYENGINE_H
-#define _WICKYENGINE_H
 
 class WickyEngine{
 private:
@@ -17,9 +17,13 @@ private:
 public:	
 	static WickyEngine* getInstance();
 	Table* Select(Table* t, Condition c);
-	Table* Project(Table* t, std::list<std::string> cs);
+	Table* Project(Table* t, std::list<std::pair<std::string, std::string> > cs);
 	Table* Join(Table* t1, Table* t2);
-	int Insert(Table* t, std::list<std::string> values);
+	/*
+	@values: the list contains the value information composing of {type, value}.
+	In other words, string[0] is type, and string[1] is value
+	*/
+	int Insert(Table* t, std::list<std::pair<std::string, std::string> > values);
 	int Delete(Table* t, Condition c);
 	int Update(Table* t, Condition c);
 	int CreateTable(Schema sch);

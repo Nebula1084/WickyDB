@@ -8,6 +8,7 @@
 #include "Expression.h"
 #include "Condition.h"
 #include "Schema.h"
+#include "Table.h"
 #include "y.tab.h"
 
 // Tell Flex the lexer's prototype ...
@@ -33,7 +34,9 @@ public:
 	virtual ~Parser();
 	
 	Schema* schema;
-	std::list<std::string>* values;
+	Table* table;
+	std::list<std::pair<std::string, std::string> >* values;
+	std::list<std::pair<std::string, std::string> >* cs;
 	int result;
 
 	// Handling the scanner.

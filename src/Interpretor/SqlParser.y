@@ -52,7 +52,8 @@ class Condition;
 %type <strval> literal
 %type <strval> column_ref
 %type <strval> table
-
+%type <intval> selection
+%type <strval> table_ref
 	/* operators */
 
 %left OR
@@ -75,6 +76,7 @@ class Condition;
 # include "Schema.h"
 # include "Condition.h"
 # include "WickyEngine.h"
+# include "Table.h"
 }
 
 
@@ -215,12 +217,12 @@ values_or_query_spec:
 	
 insert_atom_commalist:
 		insert_atom {			
-			driver.values = new std::list<std::string>;
-			driver.values->push_back($1[1]);
-			delete[] $1;			
+			driver.values = new std::list<std::pair<std::string, std::string> >;		
+			driver.values->push_back(std::pair<std::string, std::string>($1[0], $1[1]));
+			delete[] $1;
 		}
 	|	insert_atom_commalist ',' insert_atom {
-			driver.values->push_back($3[1]);
+			driver.values->push_back(std::pair<std::string, std::string>($3[0], $3[1]));
 			delete[] $3;
 		}
 	;
@@ -235,7 +237,20 @@ insert_atom:
 	;
 
 select_statement:
-		SELECT opt_all_distinct selection table_exp {			
+		SELECT opt_all_distinct selection table_exp {
+			try {
+				if ($3) {
+					Table* t1 = driver.table;
+					WickyEngine* we = WickyEngine::getInstance();								
+					driver.table = we->Project(t1, *(driver.cs));
+					delete driver.cs;					
+					delete t1;
+				} else {
+				}
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}
+							
 		}
 	;
 	
@@ -246,8 +261,8 @@ opt_all_distinct:
 	;
 	
 selection:
-		scalar_exp_commalist
-	|	'*'
+		scalar_exp_commalist { $$ = 1; }
+	|	'*' { $$ = 0;}
 	;
 	
 table_exp:
@@ -256,13 +271,28 @@ table_exp:
 	;
 	
 scalar_exp_commalist:
-		scalar_exp
-	|	scalar_exp_commalist ',' scalar_exp
+		scalar_exp {
+			driver.cs = new std::list<std::pair<std::string, std::string> >;		
+			driver.cs->push_back(std::pair<std::string, std::string>($1[0], $1[1]));
+			delete[] $1;
+		}
+	|	scalar_exp_commalist ',' scalar_exp {
+			driver.cs->push_back(std::pair<std::string, std::string>($3[0], $3[1]));
+			delete[] $3;
+		}
 	;
 	
 opt_where_clause:
 		/* empty */
-	|	where_clause {			
+	|	where_clause {
+			Table* t1 = driver.table;
+			WickyEngine* we = WickyEngine::getInstance();			
+			try {
+				driver.table = we->Select(t1, *(driver.getCondition()));
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}
+			delete t1;
 		}
 	;
 	
@@ -272,8 +302,27 @@ from_clause:
 	;
 	
 table_ref_commalist:
-		table_ref
-	|	table_ref_commalist ',' table_ref
+		table_ref {
+			WickyEngine* we = WickyEngine::getInstance();			
+			try {
+				driver.table = we->GetTable(*$1);
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}
+		}
+	|	table_ref_commalist ',' table_ref {
+			WickyEngine* we = WickyEngine::getInstance();			
+			try {
+				Table *t1, *t2;
+				t1 = driver.table;
+				t2 = we->GetTable(*$3);
+				driver.table = we->Join(t1, t2);
+				delete t1;
+				delete t2;
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}		
+		}
 	;
 	
 table_ref:
@@ -347,21 +396,21 @@ table:
 literal:
 		STRING {			
 			std::string* ret = new std::string[2];
-			ret[0] = "STRING";
+			ret[0] = Schema::CHAR;
 			ret[1] = *$1;			
 			$$=ret;
 			delete $1;
 		}
 	|	INTNUM {
 			std::string* ret = new std::string[2];
-			ret[0] = "INTNUM";
+			ret[0] = Schema::INT;
 			ret[1] = *$1;
 			$$=ret;
 			delete $1;
 		}
 	|	APPROXNUM {
 			std::string* ret = new std::string[2];
-			ret[0] = "FLOAT";
+			ret[0] = Schema::FLOAT;
 			ret[1] = *$1;
 			$$=ret;
 			delete $1;	
