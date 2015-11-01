@@ -39,3 +39,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 int WickyEngine::Update(Table* t, Condition c){
 	
 }
+
+int WickyEngine::CreateTable(Schema sch){
+	
+}

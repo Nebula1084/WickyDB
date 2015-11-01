@@ -22,6 +22,7 @@ public:
 	int Insert(Table* t, Tuple tuple);
 	int Delete(Table* t, Condition c);
 	int Update(Table* t, Condition c);
+	int CreateTable(Schema sch);
 };
 
 #endif
