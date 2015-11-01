@@ -32,7 +32,7 @@ CatalogManager* CatalogManager::getInstance(){
 
 void CatalogManager::store(Schema sch){
 	if (isExist(sch.getName()))
-		throw std::runtime_error("table " + sch.getName() + " already exists");
+		throw std::runtime_error("Table " + sch.getName() + " already exists");
 	if (sch.attributes.size() == 0)
 		throw std::runtime_error("A table should have at least one attribute");
 	schemaQueue[sch.getName()] = sch;

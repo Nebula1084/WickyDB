@@ -46,6 +46,9 @@ Schema::Schema(std::string tableName, std::map<std::string, std::list<std::strin
         }else{
             Attribute attr(attrName, properties);
             attributes[attrName] = attr;
+            if(!(attr.index.compare(NOINDEX) == 0)){
+                indecies[attr.index] = attrName;
+            }
         }
      }
 }
@@ -94,29 +97,40 @@ bool Schema::isAttrExists(std::string attrName){
     return attributes.count(attrName);
 }
 
-int Schema::getIndex(std::string attrName){
-    if (attributes[attrName].index.compare(NOINDEX) == 0)
-    {
-        return 0;
-    }else{
-        return 1;
-    }
+bool Schema::isIndexExists(std::string indexName){
+    return indecies.count(indexName);
 }
 
-void Schema::addIndex(std::string attrName){
+std::string Schema::getIndex(std::string attrName){
+    if(!isAttrExists(attrName)){
+        throw std::runtime_error("Attribute " + attrName + " doesn't exist");
+    }
+    return attributes[attrName].index;
+}
+
+void Schema::addIndex(std::string indexName, std::string attrName){
+    if(!isAttrExists(attrName)){
+        throw std::runtime_error("Attribute " + attrName + " doesn't exist");
+    }
+    if(isIndexExists(indexName)){
+        throw std::runtime_error("Index " + indexName + " already exists");
+    }
     if(attributes[attrName].index.compare(NOINDEX) == 0){
-        attributes[attrName].index = BTREE;
+        attributes[attrName].index = indexName;
+        indecies[indexName] = attrName;
     }else{
-        throw std::runtime_error("Index on column " + attrName + "already exist");
+        throw std::runtime_error("Index on column " + attrName + " already exist");
     }
 
 }
 
-void Schema::deleteIndex(std::string attrName){
-    if(attributes[attrName].index.compare(NOINDEX) == 0){
-        throw std::runtime_error("Index on column " + attrName + "not exist");
-    }else{
+void Schema::deleteIndex(std::string indexName){
+    if(isIndexExists(indexName)){
+        std::string attrName = indecies[indexName];
         attributes[attrName].index = NOINDEX;
+        indecies.erase(indexName);
+    }else{
+        throw std::runtime_error("Index " + indexName + "doesn't exist");
     }
 }
 

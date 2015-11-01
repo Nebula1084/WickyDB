@@ -3,10 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 #include "Table.h"
 #include "Condition.h"
 #include "BufferManager.h"
+#include "RecordManager.h"
+#include "CatalogManager.h"
 #include "WickyFile.h"
 
 class WickyEngine{
@@ -26,9 +29,9 @@ public:
 	int Insert(Table* t, std::vector<std::pair<std::string, std::string> > values);
 	int Delete(Table* t, Condition c);
 	int Update(Table* t, Condition c);
-	int CreateTable(Schema sch);
+	void CreateTable(Schema sch);
 	int DropTable(std::string name);
-	Table* GetTable(std::string name);
+	Table GetTable(std::string name);
 };
 
 #endif

@@ -87,15 +87,34 @@ int WickyEngine::Update(Table* t, Condition c){
 	
 }
 
-int WickyEngine::CreateTable(Schema sch){
-	std::cout << sch.toString() << std::endl;
+void WickyEngine::CreateTable(Schema sch){
+	BufferManager *b = BufferManager::getInstance();
+	CatalogManager* cm = CatalogManager::getInstance();
+	RecordManager rm;
+	cm->store(sch);
+	Table t(sch.getName());
+	std::vector<Attribute> attrList;
+	sch.copyAttributes(attrList);
+	if(t.CreateTable(attrList)){
+		rm.writeTable(t, b);
+	}else{
+		throw std::runtime_error("Table should have at least one column");
+	}
 }
 
 int WickyEngine::DropTable(std::string name){
 	
 }
 
-Table* WickyEngine::GetTable(std::string name){	
-	std::cout << "Table:" << name << std::endl;
-	return new Table("test");
+Table WickyEngine::GetTable(std::string name){	
+	BufferManager *bm = BufferManager::getInstance();
+	CatalogManager* cm = CatalogManager::getInstance();
+	RecordManager rm;
+	if(cm->isExist(name)){
+		Schema s = cm->get(name);
+		Table t = rm.readTable(s, bm);
+		return t;
+	}else{
+		throw std::runtime_error("Table " + name + " doesn't exist");
+	}
 }
