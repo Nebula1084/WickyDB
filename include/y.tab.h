@@ -43,6 +43,9 @@
 #line 6 "src/Interpretor/SqlParser.y"
 
 # include <string>
+# include <sstream>
+# include <cstdlib>
+# include <stdexcept>
 class Parser;
 class Schema;
 class Condition;
@@ -50,7 +53,7 @@ class Condition;
 
 
 /* Line 35 of lalr1.cc  */
-#line 54 "y.tab.h"
+#line 57 "y.tab.h"
 
 
 #include <string>
@@ -64,7 +67,7 @@ class Condition;
 namespace yy {
 
 /* Line 35 of lalr1.cc  */
-#line 68 "y.tab.h"
+#line 71 "y.tab.h"
   class position;
   class location;
 
@@ -74,7 +77,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 78 "y.tab.h"
+#line 81 "y.tab.h"
 
 #include "location.hh"
 
@@ -122,7 +125,7 @@ do {							\
 namespace yy {
 
 /* Line 35 of lalr1.cc  */
-#line 126 "y.tab.h"
+#line 129 "y.tab.h"
 
   /// A Bison parser.
   class SqlParser
@@ -134,7 +137,7 @@ namespace yy {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 28 "src/Interpretor/SqlParser.y"
+#line 31 "src/Interpretor/SqlParser.y"
 
 	int intval;
 	double floatval;
@@ -146,7 +149,7 @@ namespace yy {
 
 
 /* Line 35 of lalr1.cc  */
-#line 150 "y.tab.h"
+#line 153 "y.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -285,7 +288,7 @@ namespace yy {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const signed char yycheck_[];
+    static const unsigned char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -365,7 +368,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 369 "y.tab.h"
+#line 372 "y.tab.h"
 
 
 

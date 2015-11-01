@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include <list>
 
 #include "Table.h"
 #include "Condition.h"
@@ -17,12 +17,13 @@ private:
 public:	
 	static WickyEngine* getInstance();
 	Table* Select(Table* t, Condition c);
-	Table* Project(Table* t, std::vector<std::string> cs);
+	Table* Project(Table* t, std::list<std::string> cs);
 	Table* Join(Table* t1, Table* t2);
-	int Insert(Table* t, Tuple tuple);
+	int Insert(Table* t, std::list<std::string> values);
 	int Delete(Table* t, Condition c);
 	int Update(Table* t, Condition c);
 	int CreateTable(Schema sch);
+	int DropTable(std::string name);
 	Table* GetTable(std::string name);
 };
 

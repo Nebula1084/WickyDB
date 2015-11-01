@@ -1,5 +1,5 @@
 #include "Condition.h"
-#include "iostream"
+
 
 Condition::Condition(){
 	
@@ -9,8 +9,14 @@ Condition::~Condition(){
 
 }
 
+bool Condition::empty(){
+	return stack.empty();
+}
+
 std::list< std::pair<std::string, std::string> > Condition::popCondition(){
 	
+	if (stack.empty())
+		throw std::runtime_error("The condition set is empty.");
 	std::list< std::pair<std::string, std::string> > ret;	
 	ret.push_back(stack.front());
 	stack.pop_front();

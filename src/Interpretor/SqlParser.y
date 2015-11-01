@@ -5,6 +5,9 @@
 
 %code requires {
 # include <string>
+# include <sstream>
+# include <cstdlib>
+# include <stdexcept>
 class Parser;
 class Schema;
 class Condition;
@@ -45,8 +48,10 @@ class Condition;
 %type <strval> data_type
 %type <strval> scalar_exp
 %type <strval> atom
+%type <strval> insert_atom
 %type <strval> literal
 %type <strval> column_ref
+%type <strval> table
 
 	/* operators */
 
@@ -69,6 +74,7 @@ class Condition;
 # include "Parser.h"
 # include "Schema.h"
 # include "Condition.h"
+# include "WickyEngine.h"
 }
 
 
@@ -90,14 +96,30 @@ sql:
 	;
 	
 base_table_def:
-		CREATE TABLE table '(' base_table_element_commalist ')' {
-		
+		CREATE TABLE def_table '(' base_table_element_commalist ')' {
+			WickyEngine* we = WickyEngine::getInstance();
+			try {
+				we->CreateTable(*(driver.schema));
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}			
+			delete driver.schema;
+		}
+	;
+	
+def_table:
+		table {
+			driver.schema = new Schema(*$1);			
 		}
 	;
 	
 base_table_element_commalist:
-		base_table_element
-	|	base_table_element_commalist ',' base_table_element
+		base_table_element {
+			
+		}
+	|	base_table_element_commalist ',' base_table_element {
+				
+		}
 	;
 
 base_table_element:
@@ -110,7 +132,15 @@ base_index_def:
 	;
 		
 drop_table:
-		DROP TABLE table
+		DROP TABLE table{
+			WickyEngine* we = WickyEngine::getInstance();			
+			try {
+				we->DropTable(*$3);
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}		
+			delete $3;
+		}
 	;
 
 drop_index:
@@ -118,35 +148,36 @@ drop_index:
 	;
 
 column_def:
-		column data_type column_def_opt_list
-	;
-	
-column_def_opt_list:
-		/* empty */
-	|	column_def_opt_list column_def_opt {
-	
-	}
+		column data_type column_def_opt {
+			driver.schema->addAttribute(*$1, $2[0]);
+			int len = std::atoi($2[1].c_str());
+			driver.schema->setLength(*$1, len);			
+			if ($3 != NULL){
+				if (*$3 == Schema::UNIQUE)
+					driver.schema->setUnique(*$1);
+				else
+					driver.error("WickyDB do not support constraint " + *$3);
+			}
+			delete $1;
+			delete[] $2;
+			delete $3;
+		}
 	;
 	
 column_def_opt:
-	UNIQUE {
-		$$ = new std::string(Schema::UNIQUE);
-	}
+		/* empty */{
+			$$ = NULL;
+		}
+	|	UNIQUE {
+			$$ = new std::string(Schema::UNIQUE);
+		}
 	;	
 	
-table_constraint_def:
-		UNIQUE '(' column_commalist ')'
-	|	PRIMARY KEY '(' column_commalist ')'
-	;
-		
-column_commalist:
-		column
-	|	column_commalist ',' column
-	;
-
-opt_column_commalist:
-		/* empty */ {}
-	|	'(' column_commalist ')'
+table_constraint_def:		
+	|	PRIMARY KEY '(' column ')' {
+			driver.schema->setPrimaryKey(*$4);
+			delete $4;
+		}
 	;
 	
 sql:
@@ -164,26 +195,48 @@ delete_statement_searched:
 	;
 	
 insert_statement:
-		INSERT INTO table opt_column_commalist values_or_query_spec {  }
+		INSERT INTO table values_or_query_spec {
+			WickyEngine* we = WickyEngine::getInstance();			
+			try {
+				Table* t = we->GetTable(*$3);
+				we->Insert(t, *(driver.values));
+				delete $3;
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}			
+			delete driver.values; 
+		}
 	;
 	
 values_or_query_spec:
-		VALUES '(' insert_atom_commalist ')' {}
+		VALUES '(' insert_atom_commalist ')' {					
+		}
 	;
 	
 insert_atom_commalist:
-		insert_atom
-	|	insert_atom_commalist ',' insert_atom
+		insert_atom {			
+			driver.values = new std::list<std::string>;
+			driver.values->push_back($1[1]);
+			delete[] $1;			
+		}
+	|	insert_atom_commalist ',' insert_atom {
+			driver.values->push_back($3[1]);
+			delete[] $3;
+		}
 	;
 	
 insert_atom:
-		atom
-	|	NULLX
+		atom {
+			$$ = $1;
+		}
+	|	NULLX {
+			$$ = new std::string("NULL");
+		}
 	;
 
 select_statement:
-		SELECT opt_all_distinct selection		
-		table_exp
+		SELECT opt_all_distinct selection table_exp {			
+		}
 	;
 	
 opt_all_distinct:
@@ -198,8 +251,8 @@ selection:
 	;
 	
 table_exp:
-		from_clause
-		opt_where_clause
+		from_clause opt_where_clause{			
+		}
 	;
 	
 scalar_exp_commalist:
@@ -209,11 +262,13 @@ scalar_exp_commalist:
 	
 opt_where_clause:
 		/* empty */
-	|	where_clause
+	|	where_clause {			
+		}
 	;
 	
 from_clause:
-		FROM table_ref_commalist
+		FROM table_ref_commalist {			
+		}
 	;
 	
 table_ref_commalist:
@@ -222,18 +277,19 @@ table_ref_commalist:
 	;
 	
 table_ref:
-		table
+		table {			
+			delete $1;
+		}
 	;
 
 where_clause:
-		WHERE search_condition {
-			driver.getCondition()->popCondition();
-			std::list< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
+		WHERE search_condition {				
+/*			std::list< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
 			
 			std::list< std::pair<std::string, std::string> >::iterator itr;
 			for (itr = cond.begin(); itr != cond.end(); itr++){
 				std::cout << itr->first << ":" << itr->second << std::endl;
-			}
+			}*/
 		}
 	;
 	
@@ -248,17 +304,17 @@ predicate:
 	;
 
 comparison_predicate:
-		scalar_exp COMPARISON scalar_exp {									
+		scalar_exp COMPARISON scalar_exp {			
 			driver.getCondition()->pushCondition($1[0], $1[1], *$2, $3[0], $3[1]);			
 			delete[] $1;			
 			delete $2;			
-			delete[] $3;						
+			delete[] $3;									
 		}
 	;
 	
 scalar_exp:
 		atom { $$ = $1; }
-	|	column_ref {			
+	|	column_ref {
 			$$ = $1; 
 		}
 	;
@@ -285,27 +341,30 @@ atom:
 	;
 	
 table:
-		NAME {  }
+		NAME { $$ = $1; }
 	;
 	
 literal:
 		STRING {			
 			std::string* ret = new std::string[2];
 			ret[0] = "STRING";
-			ret[1] = *$1;
-			$$=ret;						
+			ret[1] = *$1;			
+			$$=ret;
+			delete $1;
 		}
 	|	INTNUM {
 			std::string* ret = new std::string[2];
 			ret[0] = "INTNUM";
 			ret[1] = *$1;
-			$$=ret;				
+			$$=ret;
+			delete $1;
 		}
 	|	APPROXNUM {
 			std::string* ret = new std::string[2];
 			ret[0] = "FLOAT";
 			ret[1] = *$1;
-			$$=ret;			
+			$$=ret;
+			delete $1;	
 		}
 	;	
 	
@@ -321,13 +380,24 @@ index:
 	
 data_type:
 		INT {
-			std::cout << "int" << std::endl; 
+			$$ = new std::string[2];
+			$$[0] = Schema::INT;
+			std::stringstream ss;
+			ss << Schema::INT_LENGTH;
+			ss >> $$[1];
 		}
 	|	CHAR'(' INTNUM ')' {
-			std::cout << "char(" << $3 << ")" << std::endl;
+			$$ = new std::string[2];
+			$$[0] = Schema::CHAR;
+			$$[1] = *$3;
+			delete $3;
 		}
 	|	FLOAT {
-			std::cout << "float" << std::endl; 
+			$$ = new std::string[2];
+			$$[0] = Schema::FLOAT;
+			std::stringstream ss;
+			ss << Schema::FLOAT_LENGTH;
+			ss >> $$[1];
 		}
 	;
 	

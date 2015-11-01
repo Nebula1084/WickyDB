@@ -1,15 +1,14 @@
+#ifndef _PARSER_H
+#define _PARSER_H
+
 #include <iostream>
 #include <string>
+#include <list>
 
 #include "Expression.h"
 #include "Condition.h"
 #include "Schema.h"
 #include "y.tab.h"
-
-#ifndef _PARSER_H
-#define _PARSER_H
-
-
 
 // Tell Flex the lexer's prototype ...
 # define YY_DECL										\
@@ -28,12 +27,13 @@ private:
 	bool echoEn;
 	bool newSmt;
 	bool err;
-	Condition* condition;
-	Schema* schema;
+	Condition* condition;	
 public:
 	Parser();
 	virtual ~Parser();
 	
+	Schema* schema;
+	std::list<std::string>* values;
 	int result;
 
 	// Handling the scanner.
