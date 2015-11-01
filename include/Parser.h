@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
 
 #include "Expression.h"
 #include "Condition.h"
@@ -35,8 +35,8 @@ public:
 	
 	Schema* schema;
 	Table* table;
-	std::list<std::pair<std::string, std::string> >* values;
-	std::list<std::pair<std::string, std::string> >* cs;
+	std::vector<std::pair<std::string, std::string> >* values;
+	std::vector<std::pair<std::string, std::string> >* cs;
 	int result;
 
 	// Handling the scanner.

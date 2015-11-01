@@ -21,7 +21,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	return new Table("test");
 }
 
-Table* WickyEngine::Project(Table* t, std::list<std::pair<std::string, std::string> > cs){
+Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){
 	std::cout << "WickyEngine::Project()" << std::endl;
 	return new Table("test");
 }
@@ -31,8 +31,8 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 	return new Table("test");
 }
 
-int WickyEngine::Insert(Table* t, std::list<std::pair<std::string, std::string> > values){
-	std::list<std::pair<std::string, std::string> >::iterator itr;
+int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){
+	std::vector<std::pair<std::string, std::string> >::iterator itr;
 	for (itr = values.begin(); itr != values.end(); itr++){		
 		std::cout << itr->first << " " << itr->second << " ";
 	}

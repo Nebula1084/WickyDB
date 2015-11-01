@@ -217,7 +217,7 @@ values_or_query_spec:
 	
 insert_atom_commalist:
 		insert_atom {			
-			driver.values = new std::list<std::pair<std::string, std::string> >;		
+			driver.values = new std::vector<std::pair<std::string, std::string> >;		
 			driver.values->push_back(std::pair<std::string, std::string>($1[0], $1[1]));
 			delete[] $1;
 		}
@@ -272,7 +272,7 @@ table_exp:
 	
 scalar_exp_commalist:
 		scalar_exp {
-			driver.cs = new std::list<std::pair<std::string, std::string> >;		
+			driver.cs = new std::vector<std::pair<std::string, std::string> >;		
 			driver.cs->push_back(std::pair<std::string, std::string>($1[0], $1[1]));
 			delete[] $1;
 		}
@@ -333,9 +333,9 @@ table_ref:
 
 where_clause:
 		WHERE search_condition {				
-/*			std::list< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
+/*			std::vector< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
 			
-			std::list< std::pair<std::string, std::string> >::iterator itr;
+			std::vector< std::pair<std::string, std::string> >::iterator itr;
 			for (itr = cond.begin(); itr != cond.end(); itr++){
 				std::cout << itr->first << ":" << itr->second << std::endl;
 			}*/

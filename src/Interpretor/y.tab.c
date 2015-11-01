@@ -593,7 +593,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 /* Line 678 of lalr1.cc  */
 #line 219 "src/Interpretor/SqlParser.y"
     {			
-			driver.values = new std::list<std::pair<std::string, std::string> >;		
+			driver.values = new std::vector<std::pair<std::string, std::string> >;		
 			driver.values->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(1) - (1)].strval)[0], (yysemantic_stack_[(1) - (1)].strval)[1]));
 			delete[] (yysemantic_stack_[(1) - (1)].strval);
 		}
@@ -675,7 +675,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 /* Line 678 of lalr1.cc  */
 #line 274 "src/Interpretor/SqlParser.y"
     {
-			driver.cs = new std::list<std::pair<std::string, std::string> >;		
+			driver.cs = new std::vector<std::pair<std::string, std::string> >;		
 			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(1) - (1)].strval)[0], (yysemantic_stack_[(1) - (1)].strval)[1]));
 			delete[] (yysemantic_stack_[(1) - (1)].strval);
 		}
@@ -762,9 +762,9 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 /* Line 678 of lalr1.cc  */
 #line 335 "src/Interpretor/SqlParser.y"
     {				
-/*			std::list< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
+/*			std::vector< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
 			
-			std::list< std::pair<std::string, std::string> >::iterator itr;
+			std::vector< std::pair<std::string, std::string> >::iterator itr;
 			for (itr = cond.begin(); itr != cond.end(); itr++){
 				std::cout << itr->first << ":" << itr->second << std::endl;
 			}*/
