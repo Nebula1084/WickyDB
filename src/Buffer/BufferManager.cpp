@@ -271,6 +271,5 @@ void BufferManager::doubleToBytes(double n, unsigned char* bytes){
 
 void BufferManager::stringToBytes(std::string str, unsigned char* bytes){
 	int len = str.length();
-	memcpy(bytes, str.c_str(), len);
-	bytes[len] = 0;
+	memcpy(bytes, str.c_str(), len);	
 }

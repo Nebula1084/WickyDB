@@ -3,6 +3,7 @@
 #include <string>
 #include "WickyEngine.h"
 #include "CatalogManager.h"
+#include "IndexManager.h"
 #include "Parser.h"
 
 int main(int argc, char* argv[]){	

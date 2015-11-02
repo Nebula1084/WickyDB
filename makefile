@@ -2,7 +2,7 @@ WICKYDB = wickydb
 WICKY = bin/main.o bin/WickyEngine.o bin/WickyFile.o bin/Condition.o
 BUFFER = bin/BufferManager.o bin/block.o
 CATALOG = bin/CatalogManager.o bin/Schema.o
-INDEX = bin/Index.o bin/Key.o bin/IndexManager.o
+INDEX = bin/Index.o bin/Key.o bin/IndexManager.o bin/Node.o
 INTERPRETOR = bin/Parser.o bin/Expression.o bin/Optimizer.o bin/Plan.o bin/Evaluator.o bin/lex.yy.o bin/y.tab.o
 #ALOGRITHM = bin/BTree.o
 RECORD = bin/RecordManager.o bin/Table.o
@@ -59,14 +59,23 @@ bin/Schema.o: src/Catalog/Schema.cpp include/Schema.h \
 	
 ###################Index###############
 bin/Index.o: src/Index/Index.cpp include/Index.h \
-	include/Key.h
+	include/Key.h \
+	include/Schema.h \
+	include/BufferManager.h \
+	include/Node.h \
+	include/Block.h
 	g++ -c -o bin/Index.o src/Index/Index.cpp -Iinclude
 	
 bin/Key.o: src/Index/Key.cpp include/Key.h
 	g++ -c -o bin/Key.o src/Index/Key.cpp -Iinclude
 	
+bin/Node.o: src/Index/Node.cpp include/Node.h \
+	include/Index.h \
+	include/Block.h
+	g++ -c -o bin/Node.o src/Index/Node.cpp -Iinclude
+	
 bin/IndexManager.o: src/Index/IndexManager.cpp include/IndexManager.h \
-	include/Table.h \
+	include/Schema.h \
 	include/Index.h
 	g++ -c -o bin/IndexManager.o src/Index/IndexManager.cpp -Iinclude
 	
