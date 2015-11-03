@@ -31,7 +31,7 @@
 class Tuple{
 public:
 	std::vector<std::string> col; //each column
-	Tuple(){};
+	Tuple(){}
 	Tuple(std::vector<std::string> v){
 		col = v;
 	}

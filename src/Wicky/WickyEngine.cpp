@@ -72,11 +72,18 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 }
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){
-	std::vector<std::pair<std::string, std::string> >::iterator itr;
-	for (itr = values.begin(); itr != values.end(); itr++){		
-		std::cout << itr->first << " " << itr->second << " ";
+	// std::vector<std::pair<std::string, std::string> >::iterator itr;
+	// for (itr = values.begin(); itr != values.end(); itr++){		
+	// 	std::cout << itr->first << " " << itr->second << " ";
+	// }
+	// std::cout << std::endl;
+	using std::cout;
+	using std::endl;
+	using std::vector;
+	vector<Attribute> attrList = t->getAttrList();
+	for(int i = 0; i < attrList.size(); i++){
+		cout<<i<<": "<<attrList[i].getName()<<endl;
 	}
-	std::cout << std::endl;
 }
 
 int WickyEngine::Delete(Table* t, Condition c){
@@ -95,6 +102,9 @@ void WickyEngine::CreateTable(Schema sch){
 	Table t(sch.getName());
 	std::vector<Attribute> attrList;
 	sch.copyAttributes(attrList);
+	for(int i = 0; i < attrList.size(); i++){
+		cout<<i<<": "<<attrList[i].getName()<<endl;
+	}
 	if(t.CreateTable(attrList)){
 		rm.writeTable(t, b);
 	}else{

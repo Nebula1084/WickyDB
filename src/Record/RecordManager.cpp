@@ -62,6 +62,11 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 	s.copyAttributes(temp);				//get the Attributes from schema
 	result.CreateTable(temp);
 
+	// for(int i = 0; i < temp.size(); i++){
+	// 	std::cout<<i<<": "<<temp[i].getName()<<std::endl;
+	// }
+
+	
 	std::vector<std::string> rawVec;
 
 	unsigned char buf[1000000];
@@ -70,6 +75,7 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 
 	Split(raw, " ", rawVec);
 	int attrNumber = atoi(rawVec[0].c_str());
+	// std::cout<<"The attrNumber is: "<<attrNumber<<std::endl;
 	if (attrNumber != result.getAttrNum())
 		std::cout<<"WARNING! the data is unsafe!"<<std::endl;
 
