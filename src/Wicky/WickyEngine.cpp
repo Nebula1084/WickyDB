@@ -106,14 +106,14 @@ int WickyEngine::DropTable(std::string name){
 	
 }
 
-Table WickyEngine::GetTable(std::string name){	
+Table* WickyEngine::GetTable(std::string name){	
 	BufferManager *bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
 	if(cm->isExist(name)){
 		Schema s = cm->get(name);
 		Table t = rm.readTable(s, bm);
-		return t;
+		return new Table(t);
 	}else{
 		throw std::runtime_error("Table " + name + " doesn't exist");
 	}

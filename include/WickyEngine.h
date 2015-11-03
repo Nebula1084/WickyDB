@@ -31,7 +31,7 @@ public:
 	int Update(Table* t, Condition c);
 	void CreateTable(Schema sch);
 	int DropTable(std::string name);
-	Table GetTable(std::string name);
+	Table* GetTable(std::string name);
 };
 
 #endif
