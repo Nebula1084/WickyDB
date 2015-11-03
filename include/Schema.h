@@ -42,6 +42,7 @@ public:
 class Schema {
 private:
 	std::string tableName;
+	std::vector<std::string> attrNames;
 	std::map<std::string, Attribute> attributes;
 	std::map<std::string, std::string> indecies;
 	std::string primaryKey;
@@ -51,8 +52,8 @@ private:
 
 public:
 	Schema(){};
+	// Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs);
 	Schema(std::string tableName);
-	Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs);
 	~Schema(){};
 
 	std::string getName(); //return table name
@@ -89,7 +90,7 @@ public:
 	void setLength(std::string attrName, int length);
 	int getLength(std::string attrName);
 	Attribute getAttribute(std::string attrName);
-	std::list<std::string> getAttributes(); //return a list of all attributes' name
+	std::vector<std::string> getAttributes(); //return a list of all attributes' name
 	void copyAttributes(std::vector<Attribute>& container);
 
 	static std::string intToString(int i);
