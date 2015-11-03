@@ -35,7 +35,6 @@ public:
 	Tuple(std::vector<std::string> v){
 		col = v;
 	}
-	Tuple(){}
 };
 
 
