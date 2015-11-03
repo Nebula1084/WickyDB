@@ -65,7 +65,7 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 	// for(int i = 0; i < temp.size(); i++){
 	// 	std::cout<<i<<": "<<temp[i].getName()<<std::endl;
 	// }
-
+	
 	
 	std::vector<std::string> rawVec;
 
