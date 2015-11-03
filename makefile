@@ -13,7 +13,7 @@ CC		= g++
 SRC		= src
 
 wickydb.exe: $(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
-	g++ -o $(WICKYDB)\
+	g++ -o $(WICKYDB) \
 		$(WICKY) $(BUFFER) $(CATALOG) $(INDEX) $(INTERPRETOR) $(ALOGRITHM) $(RECORD)
 		
 ###################WICKY###############

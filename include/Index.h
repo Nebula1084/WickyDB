@@ -3,7 +3,7 @@
 
 #include <list>
 #include <string>
-
+#include <map>
 
 #include "Key.h"
 #include "Schema.h"
@@ -19,8 +19,7 @@ protected:
 	int maxKeyNum, last;
 	Node* root;
 	std::list<int> holes;
-	void insertInLeaf(Node node, Key key, int pointer);
-	void insertInParent(Node node, Key key, int pointer);
+	std::map<int, Node*> nodes;		
 public:
 	Index(std::string name, std::string type, int keyLen);
 	~Index();
@@ -32,6 +31,11 @@ public:
 	std::string getName();
 	std::string getFileName();
 	Node* newNode();
+	void deleteNode(Node* n);
+	Node* getNode(int ptr);
+	Node* getRoot();
+	void setRoot(Node* r);
+	std::pair<Node*, int> find(Key k);
 };
 
 #endif

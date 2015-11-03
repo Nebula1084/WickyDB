@@ -18,15 +18,15 @@ Key::Key(const Key& k){
 	}
 }
 
-Key intToKey(int n){
+Key Key::intToKey(int n){
 	return Key(Schema::INT_LENGTH, (unsigned char*)&n);
 }
 
-Key doubleToKey(double d){
+Key Key::doubleToKey(double d){
 	return Key(Schema::FLOAT_LENGTH, (unsigned char*)&d);
 }
 
-Key strToKey(std::string str){
+Key Key::strToKey(std::string str){
 	return Key(str.length(), (unsigned char*)str.c_str());
 }
 
@@ -39,9 +39,12 @@ int Key::getLength(){
 }
 
 bool Key::operator==(const Key& rhs) const{
+	std::cout << "operator==" << len << std::endl;
 	for (int i=0; i<len; i++)
-		if (key[i]!=rhs.key[i])
+		if (key[i]!=rhs.key[i]){
+			std::cout << (int)key[i] << " " << (int)rhs.key[i] << std::endl;
 			return false;
+		}	
 	return true;
 }
 
@@ -64,7 +67,7 @@ bool Key::operator>(const Key& rhs) const{
 	return rhs<*this;
 }
 
-bool Key::operator<=(const Key& rhs) const{
+bool Key::operator<=(const Key& rhs) const{	
 	return !(*this>rhs);
 }
 
