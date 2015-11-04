@@ -104,8 +104,8 @@ base_table_def:
 				we->CreateTable(*(driver.schema));
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
-			}			
-			delete driver.schema;
+			}						
+			delete driver.schema;			
 		}
 	;
 	
