@@ -1,5 +1,6 @@
 #include "WickyEngine.h"
 #include <set>
+#include <stdexcept>
 
 WickyEngine* WickyEngine::instance = NULL;
 
@@ -18,7 +19,16 @@ WickyEngine* WickyEngine::getInstance(){
 }
 
 Table* WickyEngine::Select(Table* t, Condition c){
-	std::cout << "WickyEngine::Select()" << std::endl;
+	using std::string;
+	using std::set;
+	using std::list;
+	using std::pair;
+
+	list<pair<string,string> > cond;
+	while(!c.empty()){				//continue if there still exists some condition
+		cond = c.popCondition();
+
+	}
 	return new Table("test");
 }
 
@@ -71,24 +81,33 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 }
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
-	std::vector<std::pair<std::string, std::string> >::iterator itr;
-	// for (itr = values.begin(); itr != values.end(); itr++){		
-	// 	std::cout << itr->first << " " << itr->second << " ";
-	// }
-	// std::cout << std::endl;
+	//judge whether the input fits the table
+	if(t->getAttrNum()!=values.size())
+		throw std::runtime_error("The input data can't fit the table!");
+	
+	using std::cout;
+	using std::endl;
+	using std::string;
+	using std::vector;
+	vector<std::pair<string, string> >::iterator itr;
+	vector<string> inputCol;
 	for (itr = values.begin(); itr != values.end(); itr++){		
 		if(itr->first=="CHAR")
 			itr->second = itr->second.substr(1,itr->second.size()-2);
+		inputCol.push_back(itr->second);
 	}
 
-	using std::cout;
-	using std::endl;
-	using std::vector;
-	vector<Attribute> attrList = t->getAttrList();
-	for(int i = 0; i < attrList.size(); i++){
-		cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
-		" "<<attrList[i].getLength()<<endl;
-	}
+	// vector<Attribute> attrList = t->getAttrList();
+	// for(int i = 0; i < attrList.size(); i++){
+	// 	cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
+	// 	" "<<attrList[i].getLength()<<endl;
+	// }
+	Tuple inputTuple(inputCol);
+	t->rows.push_back(inputTuple);
+	// for(int i=0; i<t->rows[t->rows.size()-1].col.size(); i++){
+	// 	cout<<t->rows[t->rows.size()-1].col[i]<<endl;
+	// }
+	return 0;
 }
 
 int WickyEngine::Delete(Table* t, Condition c){
@@ -100,6 +119,15 @@ int WickyEngine::Update(Table* t, Condition c){
 }
 
 void WickyEngine::CreateTable(Schema sch){	
+	// using std::cout;
+	// using std::endl;
+	// std::vector<Attribute> attrList;
+	// sch.copyAttributes(attrList);
+	// for(int i = 0; i < attrList.size(); i++){
+	// 	cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
+	// 	" "<<attrList[i].getLength()<<endl;
+	// }
+
 	BufferManager *b = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
