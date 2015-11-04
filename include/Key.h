@@ -27,6 +27,7 @@ public:
 	bool operator<=(const Key& rhs) const;
 	bool operator>=(const Key& rhs) const;
 	
+	void print();
 };
 
 #endif

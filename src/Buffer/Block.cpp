@@ -6,16 +6,15 @@ Block::Block(WickyFile* wf, int index){
 	this->wf = wf;
 	this->index = index;
 	this->start = index * BLOCK_SIZE;
-	this->mem = new unsigned char[BLOCK_SIZE];		
-	
+	this->mem = new unsigned char[BLOCK_SIZE];			
 	BufferManager* bm = BufferManager::getInstance();
-	bm->block_load += 1;				
+	//bm->block_load += 1;				
 	bm->readDisk(wf, start, BLOCK_SIZE, mem);
 }
 
 Block::~Block(){
 	BufferManager* bm = BufferManager::getInstance();		
-	bm->block_dump += 1;
+	//bm->block_dump += 1;
 	bm->writeDisk(wf, start, BLOCK_SIZE, mem);
 	delete[] this->mem;
 }

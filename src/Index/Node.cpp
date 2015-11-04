@@ -10,7 +10,10 @@ Node::Node(Index* index, int ptr){
 }
 
 Node::~Node(){
-	
+	BufferManager* bm = BufferManager::getInstance();
+		
+	bm->write(index->getFileName(), ptr, parent);	
+	bm->write(index->getFileName(), keyNum);
 }
 
 void Node::setInter(bool inter){
@@ -65,9 +68,10 @@ void Node::setKey(int i, Key k){
 }
 
 int Node::findV(Key V){	
-	int ret = -1;
+	int ret = -1;	
 	for (int i = 0; i < keyNum; i++){
-		if (V <= getKey(i)){			
+		Key K = getKey(i);		
+		if (V <= K){			
 			return i;
 		}
 	}

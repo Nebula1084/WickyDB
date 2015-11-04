@@ -11,9 +11,10 @@ Index::Index(std::string name, std::string type, int keyLen){
 		bm->read(fileName, 0, &(this->last));		
 		int m, x;
 		bm->read(fileName, &m);
-		if (m != -1)
+		if (m != -1) {
 			this->root = new Node(this, m);
-		else 
+			std::cout << this->root->getKeyNum() << std::endl;
+		} else 
 			this->root = NULL;		
 		bm->read(fileName, &m);
 		for (int i=0; i<m; i++){
@@ -34,15 +35,18 @@ Index::~Index(){
 	bm->write(fileName, 0, this->last);
 	bm->write(fileName, this->root->getAddr());
 	bm->write(fileName, (int)holes.size());
-	std::list<int>::iterator itr;
+	std::list<int>::iterator itr;	
 	for (itr=holes.begin(); itr!=holes.end(); itr++){
+		std::cout << *itr << std::endl;
 		bm->write(fileName, *itr);
 	}
-	delete root;
+	std::map<int, Node*>::iterator nodeItr;
+	for (nodeItr=nodes.begin(); nodeItr!=nodes.end(); nodeItr++){
+		delete nodeItr->second;
+	}		
 }
 
-void Index::insertKey(Key K, int P){
-	std::cout << "Index::insertKey()" << std::endl;
+void Index::insertKey(Key K, int P){	
 	if (K.getLength() != keyLen)
 		throw std::runtime_error("key length does not match");
 	Node* L;
@@ -51,7 +55,8 @@ void Index::insertKey(Key K, int P){
 		L = root;
 	} else {
 		std::pair<Node*, int> p = find(K);
-		std::cout << "operator==" << std::endl;
+		if (p.second != -1)
+			throw std::runtime_error("key already exists");
 		L = p.first;
 	}
 	if (L->getKeyNum() < maxKeyNum - 1){		
@@ -92,8 +97,7 @@ std::string Index::getFileName(){
 
 Node* Index::newNode(){
 	int n;
-	Node* ret;
-	std::cout << "Index::newNode()" << std::endl;
+	Node* ret;	
 	if (holes.empty()){
 		last += Block::BLOCK_SIZE;
 		n = last;
@@ -104,7 +108,7 @@ Node* Index::newNode(){
 	BufferManager* bm = BufferManager::getInstance();
 	bm->write(this->getFileName(), n, -1);	
 	bm->write(this->getFileName(), 0);
-	ret = new Node(this, n);		
+	ret = new Node(this, n);
 	nodes.insert(std::map<int, Node*>::value_type(n, ret));
 	return ret;
 }
@@ -116,6 +120,9 @@ void Index::deleteNode(Node* n){
 
 Node* Index::getNode(int ptr){
 	std::map<int, Node*>::iterator itr = nodes.find(ptr);
+	if (itr==nodes.end()){
+		return new Node(this, ptr);
+	}	
 	return itr->second;
 }
 
@@ -127,13 +134,11 @@ void Index::setRoot(Node* r){
 	root = r;
 }
 
-std::pair<Node*, int> Index::find(Key k){
-	std::cout << "Index::find()" << std::endl;
+std::pair<Node*, int> Index::find(Key k){	
 	Node* C = this->root;	
 	if (C == NULL) return std::pair<Node*, int>(NULL, -1);
 	while (C->isInternal()){		
-		int i = C->findV(k);
-		std::cout << "after find()" << i << std::endl;
+		int i = C->findV(k);		
 		if (i == -1) {
 			C = getNode(C->getPointer(C->getKeyNum()));			 
 		} else if (k == C->getKey(i)){
@@ -141,9 +146,8 @@ std::pair<Node*, int> Index::find(Key k){
 		} else {
 			C = getNode(C->getPointer(i));
 		}
-	}
-	int i = C->findV(k);	
-	std::cout << "after findx()" << i << std::endl;
+	}	
+	int i = C->findV(k);		
 	if (C->getKey(i) == k) 
 	 	return std::pair<Node*, int>(C, i);
 	else
