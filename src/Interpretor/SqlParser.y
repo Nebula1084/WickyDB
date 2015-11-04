@@ -243,6 +243,7 @@ select_statement:
 					Table* t1 = driver.table;
 					WickyEngine* we = WickyEngine::getInstance();								
 					driver.table = we->Project(t1, *(driver.cs));
+					driver.table->printTable();
 					delete driver.cs;					
 					delete t1;
 				} else {

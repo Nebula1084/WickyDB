@@ -637,6 +637,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 					Table* t1 = driver.table;
 					WickyEngine* we = WickyEngine::getInstance();								
 					driver.table = we->Project(t1, *(driver.cs));
+					driver.table->printTable();
 					delete driver.cs;					
 					delete t1;
 				} else {
@@ -651,21 +652,21 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 39:
 
 /* Line 678 of lalr1.cc  */
-#line 264 "src/Interpretor/SqlParser.y"
+#line 265 "src/Interpretor/SqlParser.y"
     { (yyval.intval) = 1; }
     break;
 
   case 40:
 
 /* Line 678 of lalr1.cc  */
-#line 265 "src/Interpretor/SqlParser.y"
+#line 266 "src/Interpretor/SqlParser.y"
     { (yyval.intval) = 0;}
     break;
 
   case 41:
 
 /* Line 678 of lalr1.cc  */
-#line 269 "src/Interpretor/SqlParser.y"
+#line 270 "src/Interpretor/SqlParser.y"
     {			
 		}
     break;
@@ -673,7 +674,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 42:
 
 /* Line 678 of lalr1.cc  */
-#line 274 "src/Interpretor/SqlParser.y"
+#line 275 "src/Interpretor/SqlParser.y"
     {
 			driver.cs = new std::vector<std::pair<std::string, std::string> >;		
 			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(1) - (1)].strval)[0], (yysemantic_stack_[(1) - (1)].strval)[1]));
@@ -684,7 +685,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 43:
 
 /* Line 678 of lalr1.cc  */
-#line 279 "src/Interpretor/SqlParser.y"
+#line 280 "src/Interpretor/SqlParser.y"
     {
 			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]));
 			delete[] (yysemantic_stack_[(3) - (3)].strval);
@@ -694,7 +695,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 45:
 
 /* Line 678 of lalr1.cc  */
-#line 287 "src/Interpretor/SqlParser.y"
+#line 288 "src/Interpretor/SqlParser.y"
     {
 			Table* t1 = driver.table;
 			WickyEngine* we = WickyEngine::getInstance();			
@@ -710,7 +711,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 46:
 
 /* Line 678 of lalr1.cc  */
-#line 300 "src/Interpretor/SqlParser.y"
+#line 301 "src/Interpretor/SqlParser.y"
     {			
 		}
     break;
@@ -718,7 +719,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 47:
 
 /* Line 678 of lalr1.cc  */
-#line 305 "src/Interpretor/SqlParser.y"
+#line 306 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();			
 			try {
@@ -732,7 +733,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 48:
 
 /* Line 678 of lalr1.cc  */
-#line 313 "src/Interpretor/SqlParser.y"
+#line 314 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();			
 			try {
@@ -751,7 +752,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 49:
 
 /* Line 678 of lalr1.cc  */
-#line 329 "src/Interpretor/SqlParser.y"
+#line 330 "src/Interpretor/SqlParser.y"
     {			
 			delete (yysemantic_stack_[(1) - (1)].strval);
 		}
@@ -760,7 +761,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 50:
 
 /* Line 678 of lalr1.cc  */
-#line 335 "src/Interpretor/SqlParser.y"
+#line 336 "src/Interpretor/SqlParser.y"
     {				
 /*			std::vector< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
 			
@@ -774,7 +775,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 52:
 
 /* Line 678 of lalr1.cc  */
-#line 346 "src/Interpretor/SqlParser.y"
+#line 347 "src/Interpretor/SqlParser.y"
     {		
 	}
     break;
@@ -782,7 +783,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 55:
 
 /* Line 678 of lalr1.cc  */
-#line 356 "src/Interpretor/SqlParser.y"
+#line 357 "src/Interpretor/SqlParser.y"
     {			
 			driver.getCondition()->pushCondition((yysemantic_stack_[(3) - (1)].strval)[0], (yysemantic_stack_[(3) - (1)].strval)[1], *(yysemantic_stack_[(3) - (2)].strval), (yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]);			
 			delete[] (yysemantic_stack_[(3) - (1)].strval);			
@@ -794,14 +795,14 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 56:
 
 /* Line 678 of lalr1.cc  */
-#line 365 "src/Interpretor/SqlParser.y"
+#line 366 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
   case 57:
 
 /* Line 678 of lalr1.cc  */
-#line 366 "src/Interpretor/SqlParser.y"
+#line 367 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); 
 		}
@@ -810,7 +811,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 58:
 
 /* Line 678 of lalr1.cc  */
-#line 372 "src/Interpretor/SqlParser.y"
+#line 373 "src/Interpretor/SqlParser.y"
     {			
 			std::string* ret = new std::string[2];
 			ret[0] = "COLUMN";
@@ -822,7 +823,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 59:
 
 /* Line 678 of lalr1.cc  */
-#line 378 "src/Interpretor/SqlParser.y"
+#line 379 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = "COLUMN";
@@ -834,7 +835,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 60:
 
 /* Line 678 of lalr1.cc  */
-#line 387 "src/Interpretor/SqlParser.y"
+#line 388 "src/Interpretor/SqlParser.y"
     { 
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval);			
 		}
@@ -843,14 +844,14 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 61:
 
 /* Line 678 of lalr1.cc  */
-#line 393 "src/Interpretor/SqlParser.y"
+#line 394 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
   case 62:
 
 /* Line 678 of lalr1.cc  */
-#line 397 "src/Interpretor/SqlParser.y"
+#line 398 "src/Interpretor/SqlParser.y"
     {			
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::CHAR;
@@ -863,7 +864,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 63:
 
 /* Line 678 of lalr1.cc  */
-#line 404 "src/Interpretor/SqlParser.y"
+#line 405 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::INT;
@@ -876,7 +877,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 64:
 
 /* Line 678 of lalr1.cc  */
-#line 411 "src/Interpretor/SqlParser.y"
+#line 412 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::FLOAT;
@@ -889,7 +890,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 65:
 
 /* Line 678 of lalr1.cc  */
-#line 421 "src/Interpretor/SqlParser.y"
+#line 422 "src/Interpretor/SqlParser.y"
     { 
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval);			 
 		}
@@ -898,14 +899,14 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 66:
 
 /* Line 678 of lalr1.cc  */
-#line 427 "src/Interpretor/SqlParser.y"
+#line 428 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
   case 67:
 
 /* Line 678 of lalr1.cc  */
-#line 431 "src/Interpretor/SqlParser.y"
+#line 432 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::INT;
@@ -918,7 +919,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 68:
 
 /* Line 678 of lalr1.cc  */
-#line 438 "src/Interpretor/SqlParser.y"
+#line 439 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::CHAR;
@@ -930,7 +931,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 69:
 
 /* Line 678 of lalr1.cc  */
-#line 444 "src/Interpretor/SqlParser.y"
+#line 445 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::FLOAT;
@@ -943,7 +944,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 
 /* Line 678 of lalr1.cc  */
-#line 947 "y.tab.c"
+#line 948 "y.tab.c"
 	default:
           break;
       }
@@ -1371,10 +1372,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
          0,    86,    86,    87,    88,    89,    94,    95,    96,    97,
      101,   113,   119,   122,   128,   129,   133,   137,   149,   153,
      170,   173,   178,   179,   186,   190,   191,   192,   196,   200,
-     214,   219,   224,   231,   234,   240,   257,   259,   260,   264,
-     265,   269,   274,   279,   285,   287,   300,   305,   313,   329,
-     335,   345,   346,   348,   352,   356,   365,   366,   372,   378,
-     387,   393,   397,   404,   411,   421,   427,   431,   438,   444
+     214,   219,   224,   231,   234,   240,   258,   260,   261,   265,
+     266,   270,   275,   280,   286,   288,   301,   306,   314,   330,
+     336,   346,   347,   349,   353,   357,   366,   367,   373,   379,
+     388,   394,   398,   405,   412,   422,   428,   432,   439,   445
   };
 
   // Print the state stack on the debug stream.
@@ -1469,11 +1470,11 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 } // yy
 
 /* Line 1054 of lalr1.cc  */
-#line 1473 "y.tab.c"
+#line 1474 "y.tab.c"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 453 "src/Interpretor/SqlParser.y"
+#line 454 "src/Interpretor/SqlParser.y"
 
 
 void
