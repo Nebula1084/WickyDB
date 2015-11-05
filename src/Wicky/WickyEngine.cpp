@@ -1,6 +1,7 @@
 #include "WickyEngine.h"
 #include <set>
 #include <stdexcept>
+#include <map>
 
 WickyEngine* WickyEngine::instance = NULL;
 
@@ -19,17 +20,46 @@ WickyEngine* WickyEngine::getInstance(){
 }
 
 Table* WickyEngine::Select(Table* t, Condition c){
-	using std::string;
-	using std::set;
-	using std::list;
-	using std::pair;
-
+	using namespace std;
+	cout<<"int select"<<endl;
+	//initial the mapping between operators
+	map<string,int> opMap;
+	opMap["="]=0;
+	opMap[">"]=1;
+	opMap["<"]=2;
+	opMap["<>"]=3;
+	opMap["<="]=4;
+	opMap[">="]=5;
+	
 	list<pair<string,string> > cond;
+	//initial the table to be returned
+	Table* resultTable = new Table(t->getTableName());
+	resultTable->CreateTable(t->getAttrList());
+	vector<Tuple> resultRow = t->rows;
+	vector<Tuple> tempRow;
+	vector<string> tempStore;
+	list<pair<string,string> >::iterator itList;
 	while(!c.empty()){				//continue if there still exists some condition
 		cond = c.popCondition();
+		for(itList = cond.begin(); itList != cond.end(); itList++){
+			tempStore.push_back(itList->second);
+		}
 
+		tempRow.clear();
+		int op = opMap[tempStore[1]];	//get the operator
+		switch(op)
+		{
+			case 0: break;				// =
+			case 1: break;				// >
+			case 2: break;				// <
+			case 3: break;				// <>
+			case 4: break;				// <=
+			case 5: break;				// >=
+		}
 	}
-	return new Table("test");
+	resultTable->rows = t->rows;
+	// resultTable->printTable();
+	return resultTable;
 }
 
 Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){	
