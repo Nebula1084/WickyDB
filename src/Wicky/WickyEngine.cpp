@@ -21,7 +21,7 @@ WickyEngine* WickyEngine::getInstance(){
 
 Table* WickyEngine::Select(Table* t, Condition c){
 	using namespace std;
-	cout<<"int select"<<endl;
+	// cout<<"int select"<<endl;
 	//initial the mapping between operators
 	map<string,int> opMap;
 	opMap["="]=0;
@@ -35,30 +35,79 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	//initial the table to be returned
 	Table* resultTable = new Table(t->getTableName());
 	resultTable->CreateTable(t->getAttrList());
-	vector<Tuple> resultRow = t->rows;
+	vector<Tuple> resultRow = t->rows;		//the rows to be returned
+	vector<Attribute> tAttr = t->getAttrList();
 	vector<Tuple> tempRow;
-	vector<string> tempStore;
+	vector<string> tempStore;				//store the condition
 	list<pair<string,string> >::iterator itList;
 	while(!c.empty()){				//continue if there still exists some condition
 		cond = c.popCondition();
+		//get rid of single quote and push into vector
+		for(itList = cond.begin(); itList != cond.end(); itList++){		
+			if(itList->first=="CHAR")
+				itList->second = itList->second.substr(1,itList->second.size()-2);
+		}
+		tempStore.clear();
 		for(itList = cond.begin(); itList != cond.end(); itList++){
 			tempStore.push_back(itList->second);
 		}
 
 		tempRow.clear();
 		int op = opMap[tempStore[1]];	//get the operator
+		int position=-1;
+		//find the colomun that is to be judged
+		for(int i = 0; i < tAttr.size(); i++){
+			if(tAttr[i].getName()==tempStore[0]){	//find the column
+				position = i;
+				break;
+			}
+		}
+		if(position<0){				//didn't find the column
+			throw std::runtime_error("Can't find the 'where' condition");
+		}
+
 		switch(op)
 		{
-			case 0: break;				// =
-			case 1: break;				// >
-			case 2: break;				// <
-			case 3: break;				// <>
-			case 4: break;				// <=
-			case 5: break;				// >=
+			case 0:						// =
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]==tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}			
+			break;				
+			case 1: 					// >
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]>tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}	
+			break;				
+			case 2: 					// <
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]<tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}
+			break;				
+			case 3: 					// <>
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]!=tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}
+			break;				
+			case 4: 					// <=
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]<=tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}
+			break;				
+			case 5: 					// >=
+			for(int i = 0; i < resultRow.size(); i++){
+				if(resultRow[i].col[position]>=tempStore[2])
+					tempRow.push_back(resultRow[i]);
+			}
+			break;				
 		}
+		resultRow = tempRow;
 	}
-	resultTable->rows = t->rows;
-	// resultTable->printTable();
+	resultTable->rows = resultRow;
 	return resultTable;
 }
 
