@@ -22,9 +22,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	return new Table("test");
 }
 
-Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){
-	std::cout << "WickyEngine::Project()" << std::endl;
-	return new Table("test");
+Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){	
 	using std::string;
 	using std::set;
 	using std::vector;
@@ -72,9 +70,7 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 	return new Table("test");
 }
 
-int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){
-	std::cout << "WickyEngine::Insert()" << std::endl;
-	return 0;
+int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
 	std::vector<std::pair<std::string, std::string> >::iterator itr;
 	// for (itr = values.begin(); itr != values.end(); itr++){		
 	// 	std::cout << itr->first << " " << itr->second << " ";
@@ -103,9 +99,7 @@ int WickyEngine::Update(Table* t, Condition c){
 	
 }
 
-void WickyEngine::CreateTable(Schema sch){
-	std::cout << "WickyEngine::CreateTable" << std::endl;
-	return;
+void WickyEngine::CreateTable(Schema sch){	
 	BufferManager *b = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
@@ -124,8 +118,7 @@ int WickyEngine::DropTable(std::string name){
 	
 }
 
-Table* WickyEngine::GetTable(std::string name){	
-	return new Table("test");
+Table* WickyEngine::GetTable(std::string name){		
 	BufferManager *bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
