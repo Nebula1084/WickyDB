@@ -91,19 +91,40 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	using std::vector;
 	vector<std::pair<string, string> >::iterator itr;
 	vector<string> inputCol;
-	for (itr = values.begin(); itr != values.end(); itr++){		
+	vector<Attribute> attrList = t->getAttrList();
+	for(itr = values.begin(); itr != values.end(); itr++){		
 		if(itr->first=="CHAR")
 			itr->second = itr->second.substr(1,itr->second.size()-2);
-		inputCol.push_back(itr->second);
 	}
-
+	int countAttr = 0;
+	for(itr = values.begin(); itr != values.end(); itr++){
+		if(itr->first!=attrList[countAttr].getType()){
+			throw std::runtime_error("Required a "+ attrList[countAttr].getType() +" type！ Insertion failed");		
+		}
+		if(itr->first!="CHAR")
+			inputCol.push_back(itr->second);
+		else{
+			int attrLength = attrList[countAttr].getLength();
+			// cout<<attrLength<<" "<<countAttr<<endl;
+			if(attrLength < itr->second.size()){
+				throw std::runtime_error("The string "+itr->second + " is too long! Insertion failed");
+			}
+			inputCol.push_back(itr->second);
+		}
+		countAttr++;
+	}
 	// vector<Attribute> attrList = t->getAttrList();
 	// for(int i = 0; i < attrList.size(); i++){
 	// 	cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
 	// 	" "<<attrList[i].getLength()<<endl;
 	// }
+	BufferManager *bm = BufferManager::getInstance();
+	RecordManager rm;
+
 	Tuple inputTuple(inputCol);
 	t->rows.push_back(inputTuple);
+	rm.writeTable(*t, bm);
+	// t->printTable();
 	// for(int i=0; i<t->rows[t->rows.size()-1].col.size(); i++){
 	// 	cout<<t->rows[t->rows.size()-1].col[i]<<endl;
 	// }
