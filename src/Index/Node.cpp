@@ -4,7 +4,8 @@ Node::Node(Index* index, int ptr){
 	this->index = index;
 	this->ptr = ptr;
 	this->inter = false;
-	BufferManager* bm = BufferManager::getInstance();	
+	BufferManager* bm = BufferManager::getInstance();
+	
 	bm->read(index->getFileName(), ptr, &parent);	
 	bm->read(index->getFileName(), &keyNum);	
 }

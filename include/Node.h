@@ -11,10 +11,11 @@ class Index;
 class Node {
 private:
 	int keyNum;
-	int parent;	
+	int parent;
 	int ptr;
 	Index* index;
 	bool inter;
+	unsigned char * mem;
 public:
 	Node(Index *index, int ptr);
 	~Node();
