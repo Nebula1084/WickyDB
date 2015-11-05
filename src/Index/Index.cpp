@@ -106,7 +106,7 @@ Node* Index::newNode(){
 		holes.pop_front();
 	}
 	BufferManager* bm = BufferManager::getInstance();
-	bm->write(this->getFileName(), n, -1);	
+	bm->write(this->getFileName(), n, -1);
 	bm->write(this->getFileName(), 0);
 	ret = new Node(this, n);
 	nodes.insert(std::map<int, Node*>::value_type(n, ret));

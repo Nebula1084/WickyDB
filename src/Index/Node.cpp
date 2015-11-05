@@ -79,6 +79,7 @@ int Node::findV(Key V){
 }
 
 void Node::add(int p, Key k){	
+	std::cout << p << std::endl;
 	int len = index->getKeyLen();
 	int offset = ptr + 4 + 4;
 	unsigned char* buf = new unsigned char[len+4];
@@ -94,13 +95,14 @@ void Node::add(int p, Key k){
 		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
 	}
 	memcpy(buf+4, k.getValue(), len);
-	buf[0] = p;
+	memcpy(buf, &p, 4);	
 	bm->write(index->getFileName(), offset, len+4, buf);
 	keyNum++;		
 	delete buf;	
 }
 
-void Node::add(Key k, int p){	
+void Node::add(Key k, int p){
+	std::cout << p << std::endl;
 	int len = index->getKeyLen();
 	int offset = ptr + 4 + 4;
 	unsigned char* buf = new unsigned char[len+4];
@@ -116,7 +118,7 @@ void Node::add(Key k, int p){
 		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
 	}
 	memcpy(buf, k.getValue(), len);
-	buf[len] = p;
+	memcpy(buf+len, &p, 4);
 	bm->write(index->getFileName(), offset, len+4, buf);
 	keyNum++;		
 	delete buf;	

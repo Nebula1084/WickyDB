@@ -20,20 +20,15 @@ int main(int argc, char* argv[]){
 		parser.setErr(true);
 	}			
 	*/
-	Index* index = new Index("test1", Schema::INT, Schema::INT_LENGTH);
-	
-	for (int i = 1; i < 20; i++){
-		Key k = Key::intToKey(i);
-		std::cout <<i << std::endl;
-		index->insertKey(k, i*2);
-	}
-	
-	for (int i = 800; i < 1000; i++){
+	Index* index = new Index("test1", Schema::INT, Schema::INT_LENGTH);		
+
+	for (int i = 0; i < 2000; i++){
+		std::cout << "i" << std::endl;
 		Key k = Key::intToKey(i);
 		index->insertKey(k, i*2);
 	}
 		
-	for (int j = 1; j < 1000; j ++){
+	for (int j = 0; j < 2000; j ++){
 		Key k = Key::intToKey(j);
 		std::cout << j << " " << index->search(k) << std::endl;	
 	}	

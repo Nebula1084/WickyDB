@@ -7,14 +7,12 @@ Block::Block(WickyFile* wf, int index){
 	this->index = index;
 	this->start = index * BLOCK_SIZE;
 	this->mem = new unsigned char[BLOCK_SIZE];			
-	BufferManager* bm = BufferManager::getInstance();
-	//bm->block_load += 1;				
+	BufferManager* bm = BufferManager::getInstance();	
 	bm->readDisk(wf, start, BLOCK_SIZE, mem);
 }
 
 Block::~Block(){
-	BufferManager* bm = BufferManager::getInstance();		
-	//bm->block_dump += 1;
+	BufferManager* bm = BufferManager::getInstance();			
 	bm->writeDisk(wf, start, BLOCK_SIZE, mem);
 	delete[] this->mem;
 }
@@ -42,8 +40,10 @@ int Block::write(int position, int len, unsigned char* buf){
 }
 
 int Block::read(int position, int len, unsigned char* buf){	
-	if (position < start)
-		throw std::runtime_error("Block::read():couldn't reach within this block");		
+	if (position < start) {
+		std::cout << "position:" << position << " " << "start:" << start << std::endl;
+		throw std::runtime_error("Block::read():couldn't reach within this block");
+	}		
 	if (position - start + len > BLOCK_SIZE)
 		len = BLOCK_SIZE - (position - start);	
 	if (wf->getSize() < position + len){	

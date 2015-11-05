@@ -9,9 +9,7 @@ BufferManager::BufferManager():
 		
 }
 
-BufferManager::~BufferManager(){
-	std::cout << "block load time:" << block_load << std::endl;
-	std::cout << "block dump time:" << block_dump << std::endl; 
+BufferManager::~BufferManager(){	
 	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;	
 	for (fileItr = blockIndex.begin(); fileItr != blockIndex.end(); fileItr++){
 		std::map<int, Block*>* eachFile = fileItr->second;
@@ -25,6 +23,8 @@ BufferManager::~BufferManager(){
 	for (itr = filePile.begin(); itr != filePile.end(); itr++){
 		delete itr->second;
 	}
+	std::cout << "block load time:" << block_load << std::endl;
+	std::cout << "block dump time:" << block_dump << std::endl; 
 }
 
 BufferManager* BufferManager::getInstance(){
@@ -72,6 +72,7 @@ void BufferManager::sweep(){
 void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
 	block_dump += 1;
 	fseek(wf->getFile(), offset, SEEK_SET);	
+	std::cout << "offset:" << offset << " len:" << len << std::endl;
 	fwrite(buf, len, 1, wf->getFile());	
 }
 
