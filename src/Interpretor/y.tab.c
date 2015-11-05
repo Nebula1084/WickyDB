@@ -468,8 +468,8 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 				we->CreateTable(*(driver.schema));
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
-			}			
-			delete driver.schema;
+			}						
+			delete driver.schema;			
 		}
     break;
 
