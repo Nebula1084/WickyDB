@@ -193,13 +193,29 @@ manipulative_statement:
 	;
 
 delete_statement_searched:
-		DELETE FROM table opt_where_clause
+		DELETE FROM table opt_where_clause{
+			WickyEngine* we = WickyEngine::getInstance();
+			Table* t = NULL;
+			try {				
+				t = we->GetTable(*$3);
+				we->Delete(t, *(driver.getCondition()));
+				delete t;
+				t = NULL;
+				delete $3;
+			} catch (std::runtime_error& e){
+				if (t != NULL){
+					delete t;
+					t = NULL;
+				}		
+				driver.error(e.what());
+			}			
+		}
 	;
 	
 insert_statement:
 		INSERT INTO table values_or_query_spec {
 			WickyEngine* we = WickyEngine::getInstance();
-			Table* t = NULL;			
+			Table* t = NULL;
 			try {				
 				t = we->GetTable(*$3);
 				we->Insert(t, *(driver.values));
@@ -212,7 +228,7 @@ insert_statement:
 					t = NULL;
 				}		
 				driver.error(e.what());
-			}			
+			}
 			delete driver.values; 
 		}
 	;
@@ -244,7 +260,18 @@ insert_atom:
 	;
 
 select_statement:
-		SELECT opt_all_distinct selection table_exp {						
+		SELECT opt_all_distinct selection table_exp {
+			{
+				Table* t1 = driver.table;
+				WickyEngine* we = WickyEngine::getInstance();			
+				try {
+					driver.table = we->Select(t1, *(driver.getCondition()));
+				} catch (std::runtime_error& e){
+					driver.table = NULL;
+					driver.error(e.what());
+				}
+				delete t1;
+			}				
 			if (driver.table == NULL) {				
 				if (driver.cs != NULL) {
 					delete driver.cs;
@@ -301,15 +328,7 @@ scalar_exp_commalist:
 opt_where_clause:
 		/* empty */
 	|	where_clause {
-			Table* t1 = driver.table;
-			WickyEngine* we = WickyEngine::getInstance();			
-			try {
-				driver.table = we->Select(t1, *(driver.getCondition()));
-			} catch (std::runtime_error& e){
-				driver.table = NULL;
-				driver.error(e.what());
-			}
-			delete t1;
+
 		}
 	;
 	

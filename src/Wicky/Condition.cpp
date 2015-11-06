@@ -38,3 +38,10 @@ void Condition::pushCondition(std::string ltype, std::string l, std::string op, 
 void Condition::test(){
 	std::cout << "Condition::test()" << std::endl;
 }
+
+void Condition::print(){
+	std::list< std::pair<std::string, std::string> >::iterator itr;
+	for (itr=stack.begin(); itr!=stack.end(); itr++){
+		std::cout << itr->first << " " << itr->second << std::endl;
+	}
+}

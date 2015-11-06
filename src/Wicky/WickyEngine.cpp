@@ -211,7 +211,8 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 }
 
 int WickyEngine::Delete(Table* t, Condition c){
-	
+	std::cout << "Delete" << std::endl;
+	c.print();
 }
 
 int WickyEngine::Update(Table* t, Condition c){
@@ -243,7 +244,8 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
-	
+	std::cout << "WickyEngine::DropTable()" << std::endl;
+	std::cout << name << std::endl;
 }
 
 Table* WickyEngine::GetTable(std::string name){		
