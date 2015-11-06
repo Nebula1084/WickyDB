@@ -247,6 +247,7 @@ select_statement:
 					delete driver.cs;					
 					delete t1;
 				} else {
+					driver.table->printTable();
 				}
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
