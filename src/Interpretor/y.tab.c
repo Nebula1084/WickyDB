@@ -636,7 +636,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 				if ((yysemantic_stack_[(4) - (3)].intval)) {
 					Table* t1 = driver.table;
 					WickyEngine* we = WickyEngine::getInstance();								
-					driver.table = we->Project(t1, *(driver.cs));
+					driver.table = we->Project(t1, *(driver.cs));					
 					delete driver.cs;					
 					delete t1;
 				} else {

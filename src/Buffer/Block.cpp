@@ -13,8 +13,8 @@ Block::Block(WickyFile* wf, int index){
 
 Block::~Block(){
 	BufferManager* bm = BufferManager::getInstance();			
-	bm->writeDisk(wf, start, BLOCK_SIZE, mem);
-	delete[] this->mem;
+	bm->writeDisk(wf, start, BLOCK_SIZE, mem);	
+	delete[] this->mem;	
 }
 
 int Block::getStart(){

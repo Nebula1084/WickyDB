@@ -12,10 +12,10 @@ class Node {
 private:
 	int keyNum;
 	int parent;
-	int ptr;
+	const int ptr;
 	Index* index;
 	bool inter;
-	unsigned char * mem;
+	unsigned char * content;
 public:
 	Node(Index *index, int ptr);
 	~Node();

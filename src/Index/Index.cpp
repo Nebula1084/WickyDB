@@ -4,7 +4,8 @@ Index::Index(std::string name, std::string type, int keyLen){
 	this->name = name;
 	this->type = type;
 	this->keyLen = keyLen;
-	this->maxKeyNum = (Block::BLOCK_SIZE - 9) / (keyLen + 1);		
+	this->maxKeyNum = (Block::BLOCK_SIZE - 9) / (keyLen + 4);		
+	std::cout << this->maxKeyNum << std::endl;
 	this->fileName = "index-" + name + ".wk";
 	BufferManager* bm = BufferManager::getInstance();
 	if (bm->isFileExists(fileName)){
@@ -105,9 +106,13 @@ Node* Index::newNode(){
 		n = holes.front();
 		holes.pop_front();
 	}
+	std::cout << "n:" << n << std::endl;
 	BufferManager* bm = BufferManager::getInstance();
+	unsigned char* buf = new unsigned char[Block::BLOCK_SIZE];
+	bm->write(this->getFileName(), n, Block::BLOCK_SIZE, buf);
 	bm->write(this->getFileName(), n, -1);
 	bm->write(this->getFileName(), 0);
+	delete[] buf;
 	ret = new Node(this, n);
 	nodes.insert(std::map<int, Node*>::value_type(n, ret));
 	return ret;
@@ -115,6 +120,7 @@ Node* Index::newNode(){
 
 void Index::deleteNode(Node* n){
 	holes.push_back(n->getAddr());
+	nodes.erase(nodes.find(n->getAddr()));
 	delete n;
 }
 

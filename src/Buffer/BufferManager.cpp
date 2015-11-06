@@ -9,13 +9,16 @@ BufferManager::BufferManager():
 		
 }
 
-BufferManager::~BufferManager(){	
-	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;	
+BufferManager::~BufferManager(){
+	// CatalogManager* cm = CatalogManager::getInstance();
+	// delete cm;
+	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;
+		
 	for (fileItr = blockIndex.begin(); fileItr != blockIndex.end(); fileItr++){
 		std::map<int, Block*>* eachFile = fileItr->second;
-		std::map<int, Block*>::iterator blockItr;
-		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){
-			delete blockItr->second;
+		std::map<int, Block*>::iterator blockItr;		
+		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){			
+			delete blockItr->second;			
 		}
 		delete eachFile;
 	}
@@ -71,8 +74,7 @@ void BufferManager::sweep(){
 
 void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
 	block_dump += 1;
-	fseek(wf->getFile(), offset, SEEK_SET);	
-	std::cout << "offset:" << offset << " len:" << len << std::endl;
+	fseek(wf->getFile(), offset, SEEK_SET);		
 	fwrite(buf, len, 1, wf->getFile());	
 }
 

@@ -1,20 +1,22 @@
 #include "Node.h"
 
-Node::Node(Index* index, int ptr){	
-	this->index = index;
-	this->ptr = ptr;
+Node::Node(Index* index, int ptr): ptr(ptr){	
+	this->index = index;	
 	this->inter = false;
-	BufferManager* bm = BufferManager::getInstance();
-	
-	bm->read(index->getFileName(), ptr, &parent);	
-	bm->read(index->getFileName(), &keyNum);	
+	content = new unsigned char[Block::BLOCK_SIZE];
+	BufferManager* bm = BufferManager::getInstance();	
+	std::cout << "Node address::" << ptr << std::endl; 
+	bm->read(index->getFileName(), ptr, Block::BLOCK_SIZE, content);	
+	memcpy(&parent, content, 4);	
+	memcpy(&keyNum, content+4, 4);	
 }
 
 Node::~Node(){
 	BufferManager* bm = BufferManager::getInstance();
-		
-	bm->write(index->getFileName(), ptr, parent);	
-	bm->write(index->getFileName(), keyNum);
+	memcpy(content, &parent, 4);	
+	memcpy(content+4, &keyNum, 4);		
+	bm->write(index->getFileName(), ptr, Block::BLOCK_SIZE, content);		
+	delete[] content;	
 }
 
 void Node::setInter(bool inter){
@@ -28,20 +30,24 @@ int Node::getKeyNum(){
 int Node::getPointer(int i){
 	if (i > keyNum)
 		throw std::runtime_error("Node::getPointer(i) where i is out of range.");
-	int ret, offset;
-	BufferManager* bm = BufferManager::getInstance();
-	offset = ptr + 4 + 4 + (index->getKeyLen() + 4) * i;
-	bm->read(index->getFileName(), offset, &ret);
+	int ret, offset;	
+	offset = 4 + 4 + (index->getKeyLen() + 4) * i;	
+	if (offset + 4 > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");
+	memcpy(&ret, content + offset, 4); //read ret
+//	bm->read(index->getFileName(), offset, &ret);
 	return ret;	
 }
 
 void Node::setPointer(int i, int pointer){
 	if (i > index->getMaxKeyNum())
 		throw std::runtime_error("Node::setPointer(i, ptr) where i is out of range.");
-	int offset;
-	BufferManager* bm = BufferManager::getInstance();
-	offset = ptr + 4 + 4 + (index->getKeyLen() + 4) * i;
-	bm->write(index->getFileName(), offset, pointer);	
+	int offset;	
+	offset = 4 + 4 + (index->getKeyLen() + 4) * i;
+	if (offset + 4 > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");
+	memcpy(content + offset, &pointer, 4);
+//	bm->write(index->getFileName(), offset, pointer);	
 }
 
 Key Node::getKey(int i){		
@@ -49,12 +55,14 @@ Key Node::getKey(int i){
 		throw std::runtime_error("Node::getKey(i) where i is out of range.");
 	int len = index->getKeyLen();
 	int offset;
-	unsigned char* buf = new unsigned char[len];
-	BufferManager* bm = BufferManager::getInstance();
-	offset = ptr + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;	
-	bm->read(index->getFileName(), offset, len, buf);	
+	unsigned char* buf = new unsigned char[len];	
+	offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
+	if (offset + 4 > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");
+	memcpy(buf, content + offset, len);	
+//	bm->read(index->getFileName(), offset, len, buf);	
 	Key key(len, buf);
-	delete buf;	
+	delete[] buf;	
 	return key;
 }
 
@@ -62,13 +70,15 @@ void Node::setKey(int i, Key k){
 	if (i > index->getMaxKeyNum())
 		throw std::runtime_error("Node::setKey(i, key) where i is out of range.");
 	int len = index->getKeyLen();
-	int offset;	
-	BufferManager* bm = BufferManager::getInstance();
-	offset = ptr + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-	bm->write(index->getFileName(), offset, len, k.getValue());
+	int offset;		
+	offset =  4 + 4 + 4 + (index->getKeyLen() + 4) * i;
+	if (offset + len > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");
+	memcpy(content + offset, k.getValue(), len);
+//	bm->write(index->getFileName(), offset, len, k.getValue());
 }
 
-int Node::findV(Key V){	
+int Node::findV(Key V){		
 	int ret = -1;	
 	for (int i = 0; i < keyNum; i++){
 		Key K = getKey(i);		
@@ -79,64 +89,79 @@ int Node::findV(Key V){
 	return ret;
 }
 
-void Node::add(int p, Key k){	
-	std::cout << p << std::endl;
+void Node::add(int p, Key k){		
 	int len = index->getKeyLen();
-	int offset = ptr + 4 + 4;
-	unsigned char* buf = new unsigned char[len+4];
-	BufferManager* bm = BufferManager::getInstance();		
+	int offset = 4 + 4;
+	unsigned char* buf = new unsigned char[len+4];	
 	for (int i=keyNum-1; i>=0; i--){
-		offset = ptr + 4 + 4 + (index->getKeyLen() + 4) * i;		
-		bm->read(index->getFileName(), offset, len + 4, buf);		
+		offset = 4 + 4 + (index->getKeyLen() + 4) * i;
+		if (offset + len + 4 > Block::BLOCK_SIZE)
+			throw std::runtime_error("pointer is out of range");
+		memcpy(buf, content + offset, len + 4);		
+//		bm->read(index->getFileName(), offset, len + 4, buf);		
 		Key key(len, buf + 4);
 		if (key < k) {
 			offset = offset + index->getKeyLen() + 4;
 			break;
 		}
-		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
+		if (offset + index->getKeyLen() + 4 + len + 4 > Block::BLOCK_SIZE)
+			throw std::runtime_error("pointer is out of range");
+		memcpy(content + offset + index->getKeyLen() + 4, buf, len + 4);
+//		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
 	}
 	memcpy(buf+4, k.getValue(), len);
-	memcpy(buf, &p, 4);	
-	bm->write(index->getFileName(), offset, len+4, buf);
+	memcpy(buf, &p, 4);
+	if (offset + len + 4 > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");
+	memcpy(content + offset, buf, len + 4);	
+//	bm->write(index->getFileName(), offset, len+4, buf);
 	keyNum++;		
-	delete buf;	
+	delete[] buf;	
 }
 
 void Node::add(Key k, int p){
-	std::cout << p << std::endl;
 	int len = index->getKeyLen();
-	int offset = ptr + 4 + 4;
-	unsigned char* buf = new unsigned char[len+4];
-	BufferManager* bm = BufferManager::getInstance();	
+	int offset = 4 + 4;
+	unsigned char* buf = new unsigned char[len+4];	
 	for (int i=keyNum-1; i>=0; i--){
-		offset = ptr + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-		bm->read(index->getFileName(), offset, len + 4, buf);
+		offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
+		if (offset + offset + len + 4 > Block::BLOCK_SIZE)
+			throw std::runtime_error("pointer is out of range");
+		memcpy(buf , content + offset, len + 4);
+//		bm->read(index->getFileName(), offset, len + 4, buf);
 		Key key(len, buf);
 		if (key < k) {
 			offset = offset + index->getKeyLen() +4;
 			break;
 		}
-		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
+		memcpy(content + offset + index->getKeyLen() + 4, buf, len + 4);
+//		bm->write(index->getFileName(), offset + index->getKeyLen() + 4, len + 4, buf);		
 	}
 	memcpy(buf, k.getValue(), len);
 	memcpy(buf+len, &p, 4);
-	bm->write(index->getFileName(), offset, len+4, buf);
+	if (offset + offset + len + 4 > Block::BLOCK_SIZE)
+		throw std::runtime_error("pointer is out of range");	
+	memcpy(content + offset, buf, len + 4);
+//	bm->write(index->getFileName(), offset, len+4, buf);
 	keyNum++;		
-	delete buf;	
+	delete[] buf;	
 }
 
 void Node::deletePK(int x){
 	int len = index->getKeyLen();
 	int offset;
 	len += 4;
-	unsigned char* buf = new unsigned char[len];
-	BufferManager* bm = BufferManager::getInstance();
+	unsigned char* buf = new unsigned char[len];	
 	for (int i = x+1; i< keyNum; i++){
-		offset = ptr + 4 + 4 + len * i;
-		bm->read(index->getFileName(), offset, len, buf);
-		bm->write(index->getFileName(), offset-len, len, buf);
+		offset = 4 + 4 + len * i;
+		if (offset + offset + len > Block::BLOCK_SIZE)
+			throw std::runtime_error("pointer is out of range");
+		memcpy(buf, content + offset, len);
+//		bm->read(index->getFileName(), offset, len, buf);
+		memcpy(content + offset - len, buf , len);
+//		bm->write(index->getFileName(), offset-len, len, buf);
 	}
-	delete buf;
+	delete[] buf;
 	keyNum--;
 }
 
