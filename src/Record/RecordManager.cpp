@@ -62,11 +62,9 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 	s.copyAttributes(temp);				//get the Attributes from schema
 	result.CreateTable(temp);
 
-	// for(int i = 0; i < temp.size(); i++){
-	// 	std::cout<<i<<": "<<temp[i].getName()<<std::endl;
-	// }
-	
-	
+	// using namespace std;
+	// cout<<"******* read table *******"<<endl;
+
 	std::vector<std::string> rawVec;
 
 	unsigned char buf[1000000];
@@ -101,7 +99,7 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 			output = output + " " + table.rows[i].col[j];
 		}
 	}
-	b->write(filename, output);
+	b->write(filename,0, output);
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)
@@ -126,4 +124,11 @@ void RecordManager::Split(std::string src, std::string separator, std::vector<st
     //the last token
     substring = str.substr(start);
     dest.push_back(substring);
+}
+
+void RecordManager::deleteTable(std::string tableName, BufferManager *b){
+	using namespace std;
+	if(!b->isFileExists(tableName))
+		cout<<"The table "<<tableName<<" isn't exist!"<<endl;
+	b->removeFile(tableName);
 }

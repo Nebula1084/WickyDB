@@ -46,7 +46,6 @@ WickyEngine* WickyEngine::getInstance(){
 
 Table* WickyEngine::Select(Table* t, Condition c){
 	using namespace std;
-	cout<<"int select"<<endl;
 	//initial the mapping between operators
 	map<string,int> opMap;
 	opMap["="]=0;
@@ -56,6 +55,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	opMap["<="]=4;
 	opMap[">="]=5;
 	
+
 	list<pair<string,string> > cond;
 	//initial the table to be returned
 	Table* resultTable = new Table(t->getTableName());
@@ -137,9 +137,8 @@ Table* WickyEngine::Select(Table* t, Condition c){
 }
 
 Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::string> > cs){	
-	using std::string;
-	using std::set;
-	using std::vector;
+	using namespace std;
+
 	vector<Attribute> attrOri = t->getAttrList();
 	vector<Attribute> attrRes;
 	set<int> targetNum;
@@ -269,15 +268,16 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
-	std::cout << "WickyEngine::DropTable()" << std::endl;
-	std::cout << name << std::endl;
+	// std::cout << "WickyEngine::DropTable()" << std::endl;
+	// std::cout << name << std::endl;
+	
+	return 0;
 }
 
 Table* WickyEngine::GetTable(std::string name){		
 	BufferManager *bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
-	std::cout<< name << std::endl;
 	if(cm->isExist(name)){
 		Schema s = cm->get(name);
 		Table t = rm.readTable(s, bm);
