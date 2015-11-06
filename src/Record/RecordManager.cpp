@@ -101,7 +101,6 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 	// std::cout<<"write: "<<output<<std::endl;
 	b->removeFile(filename);
 	b->write(filename,0, output);
-	std::cout<<"******"<<std::endl;
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)
