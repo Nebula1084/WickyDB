@@ -23,7 +23,15 @@ protected:
 public:
 	Index(std::string name, std::string type, int keyLen);
 	~Index();
-	void insertKey(Key key, int pointer);
+	/*
+	@K key
+	@P pointer
+	@return error information
+		KEY_EXIST: -1
+	@throw 
+		key length does not match
+	*/
+	int insertKey(Key key, int pointer);
 	int search(Key k);
 	void deleteKey(Key k);
 	int getKeyLen();
@@ -36,6 +44,7 @@ public:
 	Node* getRoot();
 	void setRoot(Node* r);
 	std::pair<Node*, int> find(Key k);
+	const static int KEY_EXIST;
 };
 
 #endif

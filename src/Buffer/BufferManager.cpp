@@ -72,9 +72,9 @@ void BufferManager::sweep(){
 	}
 }
 
-void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
+void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){	
 	block_dump += 1;
-	fseek(wf->getFile(), offset, SEEK_SET);		
+	fseek(wf->getFile(), offset, SEEK_SET);
 	fwrite(buf, len, 1, wf->getFile());	
 }
 

@@ -39,10 +39,11 @@ int Key::getLength(){
 }
 
 bool Key::operator==(const Key& rhs) const{	
-	for (int i=0; i<len; i++)
-		if (key[i]!=rhs.key[i]){			
+	for (int i=0; i<len; i++) {
+		if (key[i]!=rhs.key[i]){
 			return false;
-		}	
+		}		
+	}
 	return true;
 }
 
@@ -75,6 +76,6 @@ bool Key::operator>=(const Key& rhs) const{
 
 void Key::print(){
 	for (int i = 0; i < len; i++)
-		std::cout << (int)key[i];
+		std::cout << (int)key[i] << " ";
 	std::cout << std::endl;
 }
