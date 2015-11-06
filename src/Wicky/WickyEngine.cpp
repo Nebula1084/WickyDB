@@ -19,6 +19,31 @@ WickyEngine* WickyEngine::getInstance(){
 	return instance;
 }
 
+void WickyEngine::ShowTables(){
+	CatalogManager *cm = CatalogManager::getInstance();
+	std::list<std::string> tables = cm->getTables();
+	if (tables.size() == 0)
+	{
+		std::cout << "Empty database" << std::endl;
+	}else{
+		std::cout << " Table List:" << std::endl;
+		std::list<std::string>::iterator iter;
+		for(iter = tables.begin(); iter != tables.end(); iter++){
+			std::cout << " "+*iter << std::endl;
+		}
+	}
+}
+
+void WickyEngine::DescribeTable(std::string tname){
+	CatalogManager *cm = CatalogManager::getInstance();
+	if (cm->isExist(tname))
+	{
+		std::cout << cm->get(tname).toString() << std::endl;
+	}else{
+		throw std::runtime_error("Table " + tname + " doesn't exist");
+	}
+}
+
 Table* WickyEngine::Select(Table* t, Condition c){
 	using namespace std;
 	//initial the mapping between operators
@@ -240,9 +265,21 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
+<<<<<<< HEAD
 	// std::cout << "WickyEngine::DropTable()" << std::endl;
 	// std::cout << name << std::endl;
 
+=======
+	CatalogManager* cm = CatalogManager::getInstance();
+    if(cm->isExist(name)){
+    	BufferManager *bm = BufferManager::getInstance();
+		RecordManager rm;
+    	cm->drop(name);
+    	rm.deleteTable(name, bm);
+    }else{
+    	throw std::runtime_error("Table " + name + " doesn't exists");
+    }
+>>>>>>> origin/master
 	return 0;
 }
 
