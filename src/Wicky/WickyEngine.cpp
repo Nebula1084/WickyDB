@@ -13,6 +13,31 @@ WickyEngine::~WickyEngine(){
 	
 }
 
+void WickyEngine::ShowTables(){
+	CatalogManager *cm = CatalogManager::getInstance();
+	std::list<std::string> tables = cm->getTables();
+	if (tables.size() == 0)
+	{
+		std::cout << "Empty database" << std::endl;
+	}else{
+		std::cout << " Table List:" << std::endl;
+		std::list<std::string>::iterator iter;
+		for(iter = tables.begin(); iter != tables.end(); iter++){
+			std::cout << " "+*iter << std::endl;
+		}
+	}
+}
+
+void WickyEngine::DescribeTable(std::string tname){
+	CatalogManager *cm = CatalogManager::getInstance();
+	if (cm->isExist(tname))
+	{
+		std::cout << cm->get(tname).toString() << std::endl;
+	}else{
+		throw std::runtime_error("Table " + tname + " doesn't exist");
+	}
+}
+
 WickyEngine* WickyEngine::getInstance(){
 	if (instance == NULL)
 		instance = new WickyEngine();
