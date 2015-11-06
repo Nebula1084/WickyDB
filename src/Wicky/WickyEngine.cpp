@@ -96,38 +96,86 @@ Table* WickyEngine::Select(Table* t, Condition c){
 		{
 			case 0:						// =
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]==tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp==secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]==tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}			
 			break;				
 			case 1: 					// >
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]>tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp>secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]>tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}	
 			break;				
 			case 2: 					// <
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]<tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp<secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]<tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}
 			break;				
 			case 3: 					// <>
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]!=tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp!=secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]!=tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}
 			break;				
 			case 4: 					// <=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]<=tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp<=secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]<=tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}
 			break;				
 			case 5: 					// >=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(resultRow[i].col[position]>=tempStore[2])
-					tempRow.push_back(resultRow[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(resultRow[i].col[position].c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp>=secondCmp)
+						tempRow.push_back(resultRow[i]);
+				}
+				else{
+					if(resultRow[i].col[position]>=tempStore[2])
+						tempRow.push_back(resultRow[i]);
+				}
 			}
 			break;				
 		}
@@ -283,43 +331,91 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 0:						// =
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target==tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp==secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target==tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}			
 			break;				
 			case 1: 					// >
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target>tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp>secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target>tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}	
 			break;				
 			case 2: 					// <
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target<tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp<secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target<tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}
 			break;				
 			case 3: 					// <>
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target!=tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp!=secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target!=tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}
 			break;				
 			case 4: 					// <=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target!=tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp<=secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target<=tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}
 			break;				
 			case 5: 					// >=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(target!=tempStore[2])
-					tempIndex.push_back(toDeleteIndex[i]);
+				if(tempStore[0]!="CHAR"){
+					float firstCmp = atof(target.c_str());
+					float secondCmp = atof(tempStore[2].c_str());
+					if(firstCmp>=secondCmp)
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
+				else{
+					if(target>=tempStore[2])
+						tempIndex.push_back(toDeleteIndex[i]);
+				}
 			}
 			break;				
 		}
