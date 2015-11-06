@@ -87,9 +87,19 @@ void BufferManager::removeFile(std::string name){
 		throw std::runtime_error("file " + name + " doesn't exist");
 	}
 	std::map<std::string, WickyFile*>::iterator itr = filePile.find(name);
+	
 	WickyFile* wf;	
-	if (itr != filePile.end()){
+	if (itr != filePile.end()){		
 		wf = itr->second;
+		filePile.erase(itr);
+		std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;
+		fileItr = blockIndex.find(wf);
+		blockIndex.erase(fileItr);
+		std::map<int, Block*>* eachFile = fileItr->second;
+		std::map<int, Block*>::iterator blockItr;
+		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){
+			delete blockItr->second;
+		}		
 		delete wf;
 	}
 	remove(name.c_str());

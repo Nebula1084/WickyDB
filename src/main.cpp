@@ -16,8 +16,7 @@ int main(int argc, char* argv[]){
 	parser.printHead();		
 	while (parser.parse("")!=Parser::EXIT){		
 		parser.setErr(true);
-	}			
-		
+	}		
 	delete cm;
 	delete bm;
 	
