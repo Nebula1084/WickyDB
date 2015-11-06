@@ -41,7 +41,7 @@ int Node::getPointer(int i){
 	if (i > keyNum)
 		throw std::runtime_error("Node::getPointer(i) where i is out of range.");
 	int ret, offset;
-	offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;	
+	offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
 	if (offset + 4 > Block::BLOCK_SIZE)
 		throw std::runtime_error("pointer is out of range");
 	memcpy(&ret, content + offset, 4); //read ret
@@ -157,21 +157,31 @@ void Node::add(Key k, int p){
 	delete[] buf;	
 }
 
-void Node::deletePK(int x){
+void Node::deletePK(Key K, int P){
 	int len = index->getKeyLen();
-	int offset;
-	len += 4;
-	unsigned char* buf = new unsigned char[len];	
-	for (int i = x+1; i< keyNum; i++){
-		offset = 4 + 4 + 4 + len * i;
-		if (offset + offset + len > Block::BLOCK_SIZE)
-			throw std::runtime_error("pointer is out of range");
-		memcpy(buf, content + offset, len);
-//		bm->read(index->getFileName(), offset, len, buf);
-		memcpy(content + offset - len, buf , len);
-//		bm->write(index->getFileName(), offset-len, len, buf);
+	int offset, kx, px;
+	len += 4;	
+	for (kx = 0; kx < keyNum; kx++)
+		if (getKey(kx) == K) break;
+	if (kx == keyNum) 
+		throw std::runtime_error("Node::deletePK():no such key");
+	if (getPointer(kx) == P){
+		px = kx;
+	} else if (getPointer(kx+1) == P){
+		px = kx + 1;
+	} else {
+		throw std::runtime_error("Node::deletePK():no such pointer");
 	}
-	delete[] buf;
+	int add1 = 4 + 4 + 4 + (index->getKeyLen() + 4) * kx;
+	int add2 = 4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * px;
+	int startAddr;
+	if (add1 > add2)
+		startAddr = add2;
+	else
+		startAddr = add1;
+	for (; startAddr < keyNum * (index->getKeyLen() + 4); startAddr + index->getKeyLen() + 4){
+		memcpy(content + startAddr, content + startAddr + index->getKeyLen() + 4, index->getKeyLen() + 4);
+	}
 	keyNum--;
 }
 
@@ -220,5 +230,83 @@ void Node::insertInParent(Key K1, Node* L1){
 		Node* P1 = P->split();
 		Key K2 = P->getKey(P->getKeyNum()-1);
 		P->insertInParent(K2, P);
+	}
+}
+
+void Node::deleteEntry(Key K, int P){
+	deletePK(K, P);
+	if (index->getRoot() == this && keyNum == 1){
+		index->setRoot(index->getNode(this->getPointer(0)));
+		index->deleteNode(this);
+		return;
+	} else if (keyNum < index->getMaxKeyNum() / 2){
+		Node* Pa = index->getNode(this->parent);
+		Key K1 = K;		
+		Node* N1;
+		int pN = Pa->findV(this->getKey(0));
+		int pN1;
+		if (Pa->getKey(pN) > K){
+			pN--;
+		}
+		if (pN == 0) {
+			N1 = index->getNode(Pa->getPointer(pN+1));
+			pN1 = pN + 1;
+			K1 = Pa->getKey(pN);
+		} else {
+			N1 = index->getNode(Pa->getPointer(pN-1));
+			pN1 = pN - 1;
+			K1 = Pa->getKey(pN-1);
+		}
+		if (this->getKeyNum() + N1->getKeyNum() < index->getMaxKeyNum()){
+			if (pN1 < pN){
+				N1->coalesce(this, K1);
+				Pa->deleteEntry(K1, this->getAddr());
+				index->deleteNode(this);
+			} else  {
+				this->coalesce(N1, K1);
+				Pa->deleteEntry(K1, N1->getAddr());
+				index->deleteNode(N1);
+			}
+		} else {
+			if (pN1 < pN){
+				N1->redistribute(this, K1);
+			} else {
+				this->redistribute(N1, K1);
+			}
+		}
+	}
+}
+
+void Node::coalesce(Node* N, Key K1){
+	if (N->isInternal()){
+		this->add(K1, N->getPointer(0));
+		for (int i=0; i<N->getKeyNum(); i++){
+			this->add(N->getKey(i), N->getPointer(i+1));
+		}
+	} else {
+		for (int i=0; i<N->getKeyNum(); i++){
+			this->add(N->getPointer(i), N->getKey(i));
+		}
+		this->setPointer(index->getMaxKeyNum()-1, N->getPointer(index->getMaxKeyNum()-1));
+	}	
+}
+
+void Node::redistribute(Node* N, Key K1){
+	int m = this->getKeyNum()-1;
+	Node* Pa = index->getNode(N->parent);
+	if (N->isInternal()){		
+		int N1Pm = this->getPointer(m);
+		Key N1Kmd = this->getKey(m-1);
+		this->deletePK(N1Kmd, N1Pm);
+		N->add(N1Pm, K1);		
+		int i = Pa->findV(K1);
+		Pa->setKey(i, N1Kmd);
+	} else {
+		int N1Pm = this->getPointer(m);
+		Key N1Km = this->getKey(m);		
+		this->deletePK(N1Km, N1Pm);
+		N->add(N1Pm, N1Km);
+		int i = Pa->findV(K1);
+		Pa->setKey(i, N1Km);
 	}
 }

@@ -16,7 +16,7 @@ IndexManager* IndexManager::getInstance(){
 	return instance;
 }
 
-Index* IndexManager::createIndex(std::string name, Schema *s, std::string columnName, int type){
+Index* IndexManager::createIndex(std::string name, std::string type, int keyLen){
 	// if (!s->isAttrExists(columnName))
 	// 	throw std::runtime_error("this column doesn't exist!");
 	// if (!s->isUnique(columnName))
@@ -26,11 +26,14 @@ Index* IndexManager::createIndex(std::string name, Schema *s, std::string column
 	if (bm->isFileExists("index-" + name + ".wk"))
 		throw std::runtime_error("index already exists");
 		
-	return new Index(name, Schema::BTREE, s->getLength(name));
+	return new Index(name, type, keyLen);
 }
 
-Index* IndexManager::getIndex(std::string name){
-	
+Index* IndexManager::getIndex(std::string name, std::string type, int keyLen){
+	BufferManager* bm = BufferManager::getInstance();
+	if (!bm->isFileExists("index-" + name + ".wk"))
+		throw std::runtime_error("index doesn't exist");
+	return new Index(name, type, keyLen);
 }
 
 void IndexManager::dropIndex(Index index){

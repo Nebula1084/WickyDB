@@ -1,6 +1,8 @@
 #include "Index.h"
 
 const int Index::KEY_EXIST = -1;
+const int Index::KEY_DO_NOT_EXIST = -2;
+const int Index::INSERT_SUCCESS = 1;
 
 Index::Index(std::string name, std::string type, int keyLen){
 	this->name = name;
@@ -80,6 +82,7 @@ int Index::insertKey(Key K, int P){
 		Node* L1 = L->split();
 		L->insertInParent(L1->getKey(0), L1);
 	}
+	return INSERT_SUCCESS;
 }
 
 int Index::search(Key k){
@@ -87,12 +90,17 @@ int Index::search(Key k){
 	Node* n = res.first;
 	int i = res.second;
 	if (n == NULL || i == -1)
-		return -1;
+		return KEY_DO_NOT_EXIST;
 	return n->getPointer(i);
 }
 
-void Index::deleteKey(Key k){
-	
+int Index::deleteKey(Key k){
+	std::pair<Node*, int> tmp = find(k);
+	Node* n = tmp.first;
+	int i = tmp.second;
+	if (n == NULL || i == -1)
+		return KEY_DO_NOT_EXIST;
+	n->deleteEntry(k, i);
 }
 
 int Index::getKeyLen(){
@@ -145,7 +153,7 @@ Node* Index::getNode(int ptr){
 		Node* node = new Node(this, ptr);
 		nodes.insert(std::map<int, Node*>::value_type(ptr, node));
 		return node;
-	}	
+	}
 	return itr->second;
 }
 

@@ -33,7 +33,7 @@ public:
 	*/
 	int insertKey(Key key, int pointer);
 	int search(Key k);
-	void deleteKey(Key k);
+	int deleteKey(Key k);
 	int getKeyLen();
 	int getMaxKeyNum();
 	std::string getName();
@@ -45,6 +45,8 @@ public:
 	void setRoot(Node* r);
 	std::pair<Node*, int> find(Key k);
 	const static int KEY_EXIST;
+	const static int KEY_DO_NOT_EXIST;
+	const static int INSERT_SUCCESS;
 };
 
 #endif

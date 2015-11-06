@@ -30,10 +30,13 @@ public:
 	int findV(Key k);
 	void add(int p, Key k);
 	void add(Key k, int p);
-	void deletePK(int x);
+	void deletePK(Key K, int P);
 	Node* split();
 	void insertInLeaf(Key key, int pointer);
 	void insertInParent(Key K1, Node* L1);
+	void deleteEntry(Key K, int P);
+	void coalesce(Node* N, Key K1);
+	void redistribute(Node* N, Key K1);
 };
 
 #endif
