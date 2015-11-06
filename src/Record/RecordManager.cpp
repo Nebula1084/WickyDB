@@ -69,7 +69,7 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 	memset(buf,0,sizeof(buf));
 	b->readAll(filename, 0, buf);
 	std::string raw((char *)buf);
-
+	std::cout<<"read: "<<raw<<std::endl;
 	Split(raw, " ", rawVec);
 	int attrNumber = atoi(rawVec[0].c_str());
 	// std::cout<<"The attrNumber is: "<<attrNumber<<std::endl;
@@ -98,9 +98,7 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 			output = output + " " + table.rows[i].col[j];
 		}
 	}
-	// std::cout<<"****** write table ******"<<std::endl;
-	// std::cout<<table.rows.size()<<std::endl;
-
+	std::cout<<"write: "<<output<<std::endl;
 	b->write(filename,0, output);
 }
 

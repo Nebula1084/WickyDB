@@ -2,6 +2,7 @@
 #include <set>
 #include <stdexcept>
 #include <map>
+#include <iomanip>
 
 WickyEngine* WickyEngine::instance = NULL;
 
@@ -232,8 +233,131 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 }
 
 int WickyEngine::Delete(Table* t, Condition c){
-	std::cout << "Delete" << std::endl;
-	c.print();
+	using namespace std;
+	//initial the mapping between operators
+	map<string,int> opMap;
+	opMap["="]=0;
+	opMap[">"]=1;
+	opMap["<"]=2;
+	opMap["<>"]=3;
+	opMap["<="]=4;
+	opMap[">="]=5;
+	
+	vector<int> toDeleteIndex(t->rows.size());		//the index to be deleted
+	for(int i = 0 ; i < toDeleteIndex.size(); i++)
+		toDeleteIndex[i]=i;
+	vector<Tuple> rawRow = t->rows;
+	list<pair<string,string> > cond;
+	vector<Attribute> tAttr = t->getAttrList();
+	vector<int> tempIndex;
+	vector<string> tempStore;				//store the condition
+	list<pair<string,string> >::iterator itList;
+	while(!c.empty()){				//continue if there still exists some condition
+		cond = c.popCondition();
+		//get rid of single quote and push into vector
+		for(itList = cond.begin(); itList != cond.end(); itList++){		
+			if(itList->first=="CHAR")
+				itList->second = itList->second.substr(1,itList->second.size()-2);
+		}
+		tempStore.clear();
+		for(itList = cond.begin(); itList != cond.end(); itList++){
+			tempStore.push_back(itList->second);
+		}
+
+		int op = opMap[tempStore[1]];	//get the operator
+		int position=-1;
+		//find the colomun that is to be judged
+		for(int i = 0; i < tAttr.size(); i++){
+			if(tAttr[i].getName()==tempStore[0]){	//find the column
+				position = i;
+				break;
+			}
+		}
+		if(position<0){				//didn't find the column
+			throw std::runtime_error("Can't find the 'where' condition. Delete failed！");
+		}
+
+		tempIndex.clear();
+		switch(op)
+		{
+			case 0:						// =
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target==tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}			
+			break;				
+			case 1: 					// >
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target>tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}	
+			break;				
+			case 2: 					// <
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target<tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}
+			break;				
+			case 3: 					// <>
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target!=tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}
+			break;				
+			case 4: 					// <=
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target!=tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}
+			break;				
+			case 5: 					// >=
+			for(int i = 0; i < toDeleteIndex.size(); i++){
+				string target = rawRow[toDeleteIndex[i]].col[position];
+				if(target!=tempStore[2])
+					tempIndex.push_back(toDeleteIndex[i]);
+			}
+			break;				
+		}
+		toDeleteIndex = tempIndex;
+	}
+	cout<<"Delete start! processing......."<<endl;
+	if(toDeleteIndex.size()==0){
+		cout<<"Can't find any record to delete"<<endl;
+		return 0;
+	}
+	vector<Tuple>::iterator it;
+	vector<Tuple> resultRow;
+	resultRow.clear();
+	int countIndex=0;
+	for(int i = 0; i < t->rows.size(); i++){
+		int index = toDeleteIndex[countIndex];
+		if(index==i){
+			it = t->rows.begin() + index;
+			cout<<"delete record: ";
+			for(int j = 0; j < (*it).col.size(); j++){
+				cout<<setw(10)<<(*it).col[j];
+			}
+			cout<<endl;
+			countIndex++;
+			if(countIndex >= toDeleteIndex.size())
+				countIndex = toDeleteIndex.size()-1;
+		}
+		else{
+			resultRow.push_back(t->rows[i]);
+		}
+	}
+	int recordNum = t->rows.size()-resultRow.size();
+	cout<<"Totally delete "<<recordNum<<" records"<<endl;
+	t->rows = resultRow;
+	BufferManager *bm = BufferManager::getInstance();
+	RecordManager rm;
+	rm.writeTable(*t, bm);
+	return 0;
 }
 
 int WickyEngine::Update(Table* t, Condition c){
