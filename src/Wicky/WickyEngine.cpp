@@ -160,13 +160,10 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
 	//judge whether the input fits the table
+	using namespace std;
 	if(t->getAttrNum()!=values.size())
 		throw std::runtime_error("The input data can't fit the table!");
 	
-	using std::cout;
-	using std::endl;
-	using std::string;
-	using std::vector;
 	vector<std::pair<string, string> >::iterator itr;
 	vector<string> inputCol;
 	vector<Attribute> attrList = t->getAttrList();
@@ -245,7 +242,7 @@ void WickyEngine::CreateTable(Schema sch){
 int WickyEngine::DropTable(std::string name){
 	// std::cout << "WickyEngine::DropTable()" << std::endl;
 	// std::cout << name << std::endl;
-	
+
 	return 0;
 }
 

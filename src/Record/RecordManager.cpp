@@ -57,17 +57,16 @@ std::vector<Tuple> RecordManager::selectTuple(Table* table, std::vector<int> off
 
 Table RecordManager::readTable(Schema s, BufferManager *b){
 	std::string filename = s.getName();	//get table name 
+
 	Table result(filename);
 	std::vector<Attribute> temp;
 	s.copyAttributes(temp);				//get the Attributes from schema
 	result.CreateTable(temp);
 
-	// using namespace std;
-	// cout<<"******* read table *******"<<endl;
-
 	std::vector<std::string> rawVec;
 
 	unsigned char buf[1000000];
+	memset(buf,0,sizeof(buf));
 	b->readAll(filename, 0, buf);
 	std::string raw((char *)buf);
 
@@ -99,6 +98,9 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 			output = output + " " + table.rows[i].col[j];
 		}
 	}
+	// std::cout<<"****** write table ******"<<std::endl;
+	// std::cout<<table.rows.size()<<std::endl;
+
 	b->write(filename,0, output);
 }
 

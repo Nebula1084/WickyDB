@@ -26,7 +26,13 @@
 // 	std::string getIndex(){return index;}
 // 	bool isUnique(){return unique;}
 // };
+/*
 
+
+
+
+
+*/
 
 class Tuple{
 public:
