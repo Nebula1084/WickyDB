@@ -13,6 +13,12 @@ WickyEngine::~WickyEngine(){
 	
 }
 
+WickyEngine* WickyEngine::getInstance(){
+	if (instance == NULL)
+		instance = new WickyEngine();
+	return instance;
+}
+
 void WickyEngine::ShowTables(){
 	CatalogManager *cm = CatalogManager::getInstance();
 	std::list<std::string> tables = cm->getTables();
@@ -36,12 +42,6 @@ void WickyEngine::DescribeTable(std::string tname){
 	}else{
 		throw std::runtime_error("Table " + tname + " doesn't exist");
 	}
-}
-
-WickyEngine* WickyEngine::getInstance(){
-	if (instance == NULL)
-		instance = new WickyEngine();
-	return instance;
 }
 
 Table* WickyEngine::Select(Table* t, Condition c){
@@ -268,9 +268,15 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
-	// std::cout << "WickyEngine::DropTable()" << std::endl;
-	// std::cout << name << std::endl;
-	
+	CatalogManager* cm = CatalogManager::getInstance();
+    if(cm->isExist(name)){
+    	BufferManager *bm = BufferManager::getInstance();
+		RecordManager rm;
+    	cm->drop(name);
+    	rm.deleteTable(name, bm);
+    }else{
+    	throw std::runtime_error("Table " + name + " doesn't exists");
+    }
 	return 0;
 }
 
