@@ -265,11 +265,10 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
-<<<<<<< HEAD
+
 	// std::cout << "WickyEngine::DropTable()" << std::endl;
 	// std::cout << name << std::endl;
 
-=======
 	CatalogManager* cm = CatalogManager::getInstance();
     if(cm->isExist(name)){
     	BufferManager *bm = BufferManager::getInstance();
@@ -279,7 +278,7 @@ int WickyEngine::DropTable(std::string name){
     }else{
     	throw std::runtime_error("Table " + name + " doesn't exists");
     }
->>>>>>> origin/master
+
 	return 0;
 }
 
