@@ -243,8 +243,10 @@ void WickyEngine::CreateTable(Schema sch){
 }
 
 int WickyEngine::DropTable(std::string name){
-	std::cout << "WickyEngine::DropTable()" << std::endl;
-	std::cout << name << std::endl;
+	// std::cout << "WickyEngine::DropTable()" << std::endl;
+	// std::cout << name << std::endl;
+	
+	return 0;
 }
 
 Table* WickyEngine::GetTable(std::string name){		

@@ -125,3 +125,10 @@ void RecordManager::Split(std::string src, std::string separator, std::vector<st
     substring = str.substr(start);
     dest.push_back(substring);
 }
+
+void RecordManager::deleteTable(std::string tableName, BufferManager *b){
+	using namespace std;
+	if(!b->isFileExists(tableName))
+		cout<<"The table "<<tableName<<" isn't exist!"<<endl;
+	b->removeFile(tableName);
+}
