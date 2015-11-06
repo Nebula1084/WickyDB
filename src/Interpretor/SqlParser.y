@@ -198,12 +198,19 @@ delete_statement_searched:
 	
 insert_statement:
 		INSERT INTO table values_or_query_spec {
-			WickyEngine* we = WickyEngine::getInstance();			
-			try {
-				Table* t = we->GetTable(*$3);
+			WickyEngine* we = WickyEngine::getInstance();
+			Table* t = NULL;			
+			try {				
+				t = we->GetTable(*$3);
 				we->Insert(t, *(driver.values));
+				delete t;
+				t = NULL;
 				delete $3;
 			} catch (std::runtime_error& e){
+				if (t != NULL){
+					delete t;
+					t = NULL;
+				}		
 				driver.error(e.what());
 			}			
 			delete driver.values; 
@@ -237,21 +244,28 @@ insert_atom:
 	;
 
 select_statement:
-		SELECT opt_all_distinct selection table_exp {
-			try {
-				if ($3) {
-					Table* t1 = driver.table;
-					WickyEngine* we = WickyEngine::getInstance();								
-					driver.table = we->Project(t1, *(driver.cs));
-					driver.table->printTable();
-					delete driver.cs;					
-					delete t1;
-				} else {
-					driver.table->printTable();
+		SELECT opt_all_distinct selection table_exp {						
+			if (driver.table == NULL) {				
+				if (driver.cs != NULL) {
+					delete driver.cs;
+					driver.cs = NULL;
+				}				
+			} else 			
+				try {
+					if ($3) {
+						Table* t1 = driver.table;
+						WickyEngine* we = WickyEngine::getInstance();								
+						driver.table = we->Project(t1, *(driver.cs));
+						driver.table->printTable();
+						delete driver.cs;					
+						delete t1;
+					} else {					
+						driver.table->printTable();
+					}
+				} catch (std::runtime_error& e){
+					driver.table = NULL;
+					driver.error(e.what());
 				}
-			} catch (std::runtime_error& e){
-				driver.error(e.what());
-			}
 							
 		}
 	;
@@ -292,6 +306,7 @@ opt_where_clause:
 			try {
 				driver.table = we->Select(t1, *(driver.getCondition()));
 			} catch (std::runtime_error& e){
+				driver.table = NULL;
 				driver.error(e.what());
 			}
 			delete t1;
@@ -309,6 +324,7 @@ table_ref_commalist:
 			try {
 				driver.table = we->GetTable(*$1);
 			} catch (std::runtime_error& e){
+				driver.table = NULL;
 				driver.error(e.what());
 			}
 		}
@@ -322,6 +338,7 @@ table_ref_commalist:
 				delete t1;
 				delete t2;
 			} catch (std::runtime_error& e){
+				driver.table = NULL;
 				driver.error(e.what());
 			}		
 		}

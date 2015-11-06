@@ -21,7 +21,7 @@ WickyEngine* WickyEngine::getInstance(){
 
 Table* WickyEngine::Select(Table* t, Condition c){
 	using namespace std;
-	// cout<<"int select"<<endl;
+	cout<<"int select"<<endl;
 	//initial the mapping between operators
 	map<string,int> opMap;
 	opMap["="]=0;
@@ -120,7 +120,7 @@ Table* WickyEngine::Project(Table* t, std::vector<std::pair<std::string, std::st
 	set<int> targetNum;
 	bool flag;
 	int size = attrOri.size();
-
+	std::cout<<"int Project"<<std::endl;
 	for(int i = 0; i < size; i++){
 		string temp = attrOri[i].getName();
 		flag = false;
@@ -250,6 +250,7 @@ Table* WickyEngine::GetTable(std::string name){
 	BufferManager *bm = BufferManager::getInstance();
 	CatalogManager* cm = CatalogManager::getInstance();
 	RecordManager rm;
+	std::cout<< name << std::endl;
 	if(cm->isExist(name)){
 		Schema s = cm->get(name);
 		Table t = rm.readTable(s, bm);
