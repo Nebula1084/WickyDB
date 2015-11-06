@@ -31,6 +31,10 @@
 class Tuple{
 public:
 	std::vector<std::string> col; //each column
+	Tuple(){}
+	Tuple(std::vector<std::string> v){
+		col = v;
+	}
 };
 
 
@@ -43,12 +47,14 @@ private:
 public:
 	std::vector<Tuple> rows;			//the data of the table	
 	Table(std::string tableName);
-	bool CreateTable(std::vector<Attribute> attrList);
+	bool CreateTable(std::vector<Attribute> attrList);	//initial the table with attributes list
 
-	int getAttrNum(){return attrNum;}
-	std::string getTableName(){return tableName;}
+	int getAttrNum(){return attrNum;}					//return the number of attributes
+	std::string getTableName(){return tableName;}		//return the table name
 
-	void printTable();
+	void printTable();					//print all the rows of table
+
+	std::vector<Attribute> getAttrList(){return attrList;}	
 };
 
 #endif

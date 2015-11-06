@@ -2381,7 +2381,7 @@ Parser::scan_begin ()
 		yyin = stdin;		
 	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
-		error ("cannot open " + file + ": " + strerror(errno));
+		error ("cannot open " + file);
 		exit (EXIT_FAILURE);
 	}
 }

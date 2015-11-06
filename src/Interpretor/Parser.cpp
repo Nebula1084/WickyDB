@@ -11,7 +11,8 @@ Parser::Parser ()
 	condition = NULL;
 	schema = NULL;	
 	setNewSmt(true);
-	
+	values = NULL;
+	cs = NULL;
 }
 
 Parser::~Parser ()
@@ -59,6 +60,8 @@ void Parser::setNewSmt(bool smt){
 			delete condition;
 		condition = new Condition;
 		err = false;
+		values = NULL;
+		cs = NULL;
 	}	
 }
 

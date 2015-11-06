@@ -15,8 +15,8 @@ private:
 public:
 	virtual ~IndexManager();
 	static IndexManager* getInstance();	
-	Index createIndex(std::string name, Schema *s, std::string columnName, int type);
-	Index getIndex(std::string name);
+	Index* createIndex(std::string name, Schema *s, std::string columnName, int type);
+	Index* getIndex(std::string name);
 	void dropIndex(Index index);
 };
 

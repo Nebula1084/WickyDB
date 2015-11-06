@@ -14,6 +14,9 @@
 class Attribute
 {
 private:
+	/**
+	* the value of variable can be: type{INT, CHAR, FLOAT}, index{NOINDEX or the index name}
+	*/
 	std::string attrName;
 	std::string type;
 	int length;
@@ -39,7 +42,9 @@ public:
 class Schema {
 private:
 	std::string tableName;
+	std::vector<std::string> attrNames;
 	std::map<std::string, Attribute> attributes;
+	std::map<std::string, std::string> indecies;
 	std::string primaryKey;
 
 	static Schema createSchema(std::string schString); //recover a schema from a string
@@ -47,14 +52,8 @@ private:
 
 public:
 	Schema(){};
+	// Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs);
 	Schema(std::string tableName);
-	/**
-	* @param  attrs is a map to store attributes,the key of attrs is the name of the attribute,
-	*        the value of attrs is a list maintain its properities, which is {type, length, index, isunique} subsequently
-	*        the value of each parameter can be: type{INT, CHAR, FLOAT}, length {string consists of integer}, 
-	*        index{NOINDEX, BTREE}, isunique{UNIQUE, DUPLIC} 
-	*/
-	Schema(std::string tableName, std::map<std::string, std::list<std::string> > attrs);
 	~Schema(){};
 
 	std::string getName(); //return table name
@@ -66,17 +65,22 @@ public:
 	*/
 	void addAttribute(std::string attrName, std::string type);
 	bool isAttrExists(std::string attrName);
-	int getIndex(std::string attrName); //return 0 for no index, 1 for b+ Tree index on certain attrbute
+	bool isIndexExists(std::string indexName);
+	/**
+	* return NOINDEX, if there is no index on attribute
+	* return the index name if the index is exist
+	*/
+	std::string getIndex(std::string attrName); 
 	/**
 	* add b+ Tree index to the attribute
 	* if the index is exist, it will throw a runtime error
 	*/
-	void addIndex(std::string attrName); 
+	void addIndex(std::string indexName, std::string attrName); 
 	/**
-	* delete b+ Tree index from the attribute
-	* if there is no index on this attribute, it will throw a runtime error
+	* delete index
+	* if the index is not exist, it will throw a runtime error
 	*/
-	void deleteIndex(std::string attrName);
+	void deleteIndex(std::string indexName);
 	void setPrimaryKey(std::string attrName);
 	std::string getPrimaryKey(); //returns "NULL" if is not defined
 	void setUnique(std::string attrName);
@@ -86,7 +90,7 @@ public:
 	void setLength(std::string attrName, int length);
 	int getLength(std::string attrName);
 	Attribute getAttribute(std::string attrName);
-	std::list<std::string> getAttributes(); //return a list of all attributes' name
+	std::vector<std::string> getAttributes(); //return a list of all attributes' name
 	void copyAttributes(std::vector<Attribute>& container);
 
 	static std::string intToString(int i);
