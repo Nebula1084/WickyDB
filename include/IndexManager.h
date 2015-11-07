@@ -17,7 +17,8 @@ public:
 	static IndexManager* getInstance();	
 	Index* createIndex(std::string name, std::string type, int keyLen);
 	Index* getIndex(std::string name, std::string type, int keyLen);
-	void dropIndex(Index index);
+	void deleteIndex(Index* index);
+	void dropIndex(Index* index);
 };
 
 #endif

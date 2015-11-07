@@ -16,11 +16,12 @@ class Index{
 protected:
 	std::string name, type, fileName;
 	int keyLen;
-	int maxKeyNum, last;
+	int maxKeyNum, last;	
 	Node* root;
 	std::list<int> holes;
 	std::map<int, Node*> nodes;		
 public:
+	int debug;
 	Index(std::string name, std::string type, int keyLen);
 	~Index();
 	/*

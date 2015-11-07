@@ -5,10 +5,11 @@ const int Index::KEY_DO_NOT_EXIST = -2;
 const int Index::INSERT_SUCCESS = 1;
 
 Index::Index(std::string name, std::string type, int keyLen){
+	this->debug = false;
 	this->name = name;
 	this->type = type;
 	this->keyLen = keyLen;
-	this->maxKeyNum = (Block::BLOCK_SIZE - 9) / (keyLen + 4);			
+	this->maxKeyNum = (Block::BLOCK_SIZE - 12) / (keyLen + 4) - 3;
 	this->fileName = "index-" + name + ".wk";
 	BufferManager* bm = BufferManager::getInstance();
 	if (bm->isFileExists(fileName)){
@@ -48,7 +49,7 @@ Index::~Index(){
 	std::map<int, Node*>::iterator nodeItr;
 	for (nodeItr=nodes.begin(); nodeItr!=nodes.end(); nodeItr++){
 		delete nodeItr->second;
-	}		
+	}
 }
 
 /*
@@ -97,15 +98,8 @@ int Index::deleteKey(Key k){
 	Node* n = tmp.first;
 	int i = tmp.second;
 	if (n == NULL || i == -1){
-		// std::cout << "Key k====";
-		// k.print();
-		// root->print();
-		// getch();
-		// std::cout << "n address=====" << n->getAddr() << std::endl;
-		// n->print();
-		// getch();
 		return KEY_DO_NOT_EXIST;
-	}
+	}			
 	n->deleteEntry(k, n->getPointer(i));	
 	return INSERT_SUCCESS;
 }
@@ -148,8 +142,7 @@ Node* Index::newNode(){
 	return ret;
 }
 
-void Index::deleteNode(Node* n){
-	 std::cout << "delete node" << std::endl;
+void Index::deleteNode(Node* n){	 
 	if (nodes.find(n->getAddr()) == nodes.end())
 		throw std::runtime_error("node dosen't exist");
 	holes.push_back(n->getAddr());
@@ -159,8 +152,7 @@ void Index::deleteNode(Node* n){
 
 Node* Index::getNode(int ptr){
 	std::map<int, Node*>::iterator itr = nodes.find(ptr);
-	if (itr==nodes.end()){
-		std::cout << "ptr=====" << ptr << std::endl;
+	if (itr==nodes.end()){		
 		Node* node = new Node(this, ptr);
 		nodes.insert(std::map<int, Node*>::value_type(ptr, node));
 		return node;

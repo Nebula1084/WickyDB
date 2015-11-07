@@ -17,11 +17,6 @@ IndexManager* IndexManager::getInstance(){
 }
 
 Index* IndexManager::createIndex(std::string name, std::string type, int keyLen){
-	// if (!s->isAttrExists(columnName))
-	// 	throw std::runtime_error("this column doesn't exist!");
-	// if (!s->isUnique(columnName))
-	// 	throw std::runtime_error("this attribute is not unique.");
-	// s->addIndex(columnName);
 	BufferManager* bm = BufferManager::getInstance();
 	if (bm->isFileExists("index-" + name + ".wk"))
 		throw std::runtime_error("index already exists");
@@ -36,6 +31,13 @@ Index* IndexManager::getIndex(std::string name, std::string type, int keyLen){
 	return new Index(name, type, keyLen);
 }
 
-void IndexManager::dropIndex(Index index){
-	
+void IndexManager::deleteIndex(Index* index){
+	delete index;
+}
+
+void IndexManager::dropIndex(Index* index){
+	BufferManager* bm = BufferManager::getInstance();
+	std::string fn = index->getFileName();
+	delete index;
+	bm->removeFile(fn);
 }
