@@ -14,7 +14,7 @@ public:
 	WickyFile* getFile();	
 private:
 	friend class BufferManager;
-	int start, index;
+	int start, index;	
 	WickyFile* wf;
 	unsigned char* mem;
 	int write(int position, int len, unsigned char* buf);

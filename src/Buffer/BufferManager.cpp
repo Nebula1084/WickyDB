@@ -10,12 +10,15 @@ BufferManager::BufferManager():
 }
 
 BufferManager::~BufferManager(){
-	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;	
+	// CatalogManager* cm = CatalogManager::getInstance();
+	// delete cm;
+	std::map<WickyFile*, std::map<int, Block*>* >::iterator fileItr;
+		
 	for (fileItr = blockIndex.begin(); fileItr != blockIndex.end(); fileItr++){
 		std::map<int, Block*>* eachFile = fileItr->second;
-		std::map<int, Block*>::iterator blockItr;
-		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){
-			delete blockItr->second;
+		std::map<int, Block*>::iterator blockItr;		
+		for (blockItr = eachFile->begin(); blockItr != eachFile->end(); blockItr++){			
+			delete blockItr->second;			
 		}
 		delete eachFile;
 	}
@@ -23,6 +26,8 @@ BufferManager::~BufferManager(){
 	for (itr = filePile.begin(); itr != filePile.end(); itr++){
 		delete itr->second;
 	}
+	std::cout << "block load time:" << block_load << std::endl;
+	std::cout << "block dump time:" << block_dump << std::endl; 
 }
 
 BufferManager* BufferManager::getInstance(){
@@ -67,12 +72,14 @@ void BufferManager::sweep(){
 	}
 }
 
-void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){		
-	fseek(wf->getFile(), offset, SEEK_SET);	
+void BufferManager::writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf){	
+	block_dump += 1;
+	fseek(wf->getFile(), offset, SEEK_SET);
 	fwrite(buf, len, 1, wf->getFile());	
 }
 
 void BufferManager::readDisk(WickyFile* wf, int offset, int len, unsigned char* buf){
+	block_load += 1;
 	fseek(wf->getFile(), offset, SEEK_SET);	
 	fread(buf, len, 1, wf->getFile());	
 }
@@ -281,6 +288,5 @@ void BufferManager::doubleToBytes(double n, unsigned char* bytes){
 
 void BufferManager::stringToBytes(std::string str, unsigned char* bytes){
 	int len = str.length();
-	memcpy(bytes, str.c_str(), len);
-	bytes[len] = 0;
+	memcpy(bytes, str.c_str(), len);	
 }
