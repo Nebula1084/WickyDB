@@ -234,6 +234,15 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 }
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
+	
+	//get the primary key
+	CatalogManager* cm = CatalogManager::getInstance();
+	std::string primaryKey;
+	if(cm->isExist(t->getTableName())){
+		Schema s = cm->get(t->getTableName());
+		primaryKey = s.getPrimaryKey();
+	}
+
 	//judge whether the input fits the table
 	using namespace std;
 	if(t->getAttrNum()!=values.size())
@@ -248,36 +257,38 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	}
 	int countAttr = 0;
 	for(itr = values.begin(); itr != values.end(); itr++){
-		if(itr->first!=attrList[countAttr].getType()){
+		if(itr->first!=attrList[countAttr].getType()){		//wrong type
 			throw std::runtime_error("Required a "+ attrList[countAttr].getType() +" type！ Insertion failed");		
 		}
+		//if it's a primary key or unique key
+		if(attrList[countAttr].isUnique() || attrList[countAttr].getName()==primaryKey){
+			for(int k = 0; k < t->rows.size(); k++){
+				if(t->rows[k].col[countAttr]==itr->second)
+					throw std::runtime_error("The attribute" + attrList[countAttr].getName()
+						+ " is unique or primary! And the value is already exist! Insertion failed");
+			}
+		}
+
 		if(itr->first!="CHAR")
 			inputCol.push_back(itr->second);
 		else{
 			int attrLength = attrList[countAttr].getLength();
 			// cout<<attrLength<<" "<<countAttr<<endl;
-			if(attrLength < itr->second.size()){
+			if(attrLength < itr->second.size()){			//the string is too long
 				throw std::runtime_error("The string "+itr->second + " is too long! Insertion failed");
 			}
 			inputCol.push_back(itr->second);
 		}
 		countAttr++;
 	}
-	// vector<Attribute> attrList = t->getAttrList();
-	// for(int i = 0; i < attrList.size(); i++){
-	// 	cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
-	// 	" "<<attrList[i].getLength()<<endl;
-	// }
+	
 	BufferManager *bm = BufferManager::getInstance();
 	RecordManager rm;
 
 	Tuple inputTuple(inputCol);
 	t->rows.push_back(inputTuple);
 	rm.writeTable(*t, bm);
-	// t->printTable();
-	// for(int i=0; i<t->rows[t->rows.size()-1].col.size(); i++){
-	// 	cout<<t->rows[t->rows.size()-1].col[i]<<endl;
-	// }
+	
 	return 0;
 }
 
