@@ -2,6 +2,7 @@
 #define _KEY_H
 
 #include <string>
+#include <string.h>
 #include <stdexcept>
 #include "Schema.h"
 
