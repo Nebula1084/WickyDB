@@ -15,7 +15,9 @@ private:
 public:
 	virtual ~IndexManager();
 	static IndexManager* getInstance();	
+	//createIndex("test", Schema::INT, Schema::INT_LENGTH);
 	Index* createIndex(std::string name, std::string type, int keyLen);
+	//getIndex("test", Schema::INT, Schema::INT_LENGTH);
 	Index* getIndex(std::string name, std::string type, int keyLen);
 	void deleteIndex(Index* index);
 	void dropIndex(Index* index);
