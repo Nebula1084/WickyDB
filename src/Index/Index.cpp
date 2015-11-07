@@ -29,7 +29,7 @@ Index::Index(std::string name, std::string type, int keyLen){
 		this->root = NULL;
 		bm->write(fileName, 0, this->last);
 		bm->write(fileName, -1);
-		bm->write(fileName, (int)holes.size());		
+		bm->write(fileName, (int)holes.size());
 	}
 }
 
@@ -39,7 +39,7 @@ Index::~Index(){
 	if (root != NULL)
 		bm->write(fileName, this->root->getAddr());
 	else
-		bm->write(fileName, -1);		
+		bm->write(fileName, -1);
 	bm->write(fileName, (int)holes.size());
 	std::list<int>::iterator itr;
 	for (itr=holes.begin(); itr!=holes.end(); itr++){				
@@ -86,20 +86,28 @@ int Index::search(Key k){
 	std::pair<Node*, int> res =	find(k);
 	Node* n = res.first;
 	int i = res.second;
-	if (n == NULL || i == -1)
+	if (n == NULL || i == -1) {		
 		return KEY_DO_NOT_EXIST;
+	}
 	return n->getPointer(i);
 }
 
 int Index::deleteKey(Key k){
 	std::pair<Node*, int> tmp = find(k);
-	Node* n = tmp.first;	
+	Node* n = tmp.first;
 	int i = tmp.second;
-	if (n == NULL || i == -1)
-		return KEY_DO_NOT_EXIST;	
-	std::cout << "before delete" << std::endl;
-	n->deleteEntry(k, n->getPointer(i));
-	std::cout << "after delete" << std::endl;
+	if (n == NULL || i == -1){
+		// std::cout << "Key k====";
+		// k.print();
+		// root->print();
+		// getch();
+		// std::cout << "n address=====" << n->getAddr() << std::endl;
+		// n->print();
+		// getch();
+		return KEY_DO_NOT_EXIST;
+	}
+	n->deleteEntry(k, n->getPointer(i));	
+	return INSERT_SUCCESS;
 }
 
 int Index::getKeyLen(){
@@ -152,6 +160,7 @@ void Index::deleteNode(Node* n){
 Node* Index::getNode(int ptr){
 	std::map<int, Node*>::iterator itr = nodes.find(ptr);
 	if (itr==nodes.end()){
+		std::cout << "ptr=====" << ptr << std::endl;
 		Node* node = new Node(this, ptr);
 		nodes.insert(std::map<int, Node*>::value_type(ptr, node));
 		return node;
@@ -167,8 +176,8 @@ void Index::setRoot(Node* r){
 	root = r;
 }
 
-std::pair<Node*, int> Index::find(Key k){	
-	Node* C = this->root;	
+std::pair<Node*, int> Index::find(Key k){
+	Node* C = this->root;
 	if (C == NULL) return std::pair<Node*, int>(NULL, -1);
 	while (C->isInternal()){
 		int i = C->findV(k);
@@ -180,10 +189,10 @@ std::pair<Node*, int> Index::find(Key k){
 			C = getNode(C->getPointer(i));
 		}
 	}	
-	int i = C->findV(k);	
+	int i = C->findV(k);
 	if (C->getKey(i) == k) {		
 	 	return std::pair<Node*, int>(C, i);
-	} else {		
+	} else {
 		return std::pair<Node*, int>(C, -1);
 	}
 }

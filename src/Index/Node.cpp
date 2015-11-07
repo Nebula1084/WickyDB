@@ -259,17 +259,14 @@ void Node::deleteEntry(Key K, int P){
 			N1 = index->getNode(Pa->getPointer(pN+1));
 			pN1 = pN + 1;
 			K1 = Pa->getKey(pN);
-		} else {			
+		} else {
 			N1 = index->getNode(Pa->getPointer(pN-1));
 			pN1 = pN-1;
 			K1 = Pa->getKey(pN);
 		}
 		if (this->getKeyNum() + N1->getKeyNum() < index->getMaxKeyNum()){
 			std::cout << "-----------------------" << pN << std::endl;
-			std::cout << "Node address::" << this->getAddr() << std::endl;
-			for (int i=0; i<Pa->getKeyNum(); i++){
-				std::cout << i << ":" << Pa->getPointer(i) << std::endl;
-			}
+			std::cout << "Node address::" << this->getAddr() << std::endl;		
 			if (pN1 < pN){
 				std::cout << "delete1 " << this->getAddr() << std::endl;
 				N1->coalesce(this, K1);
@@ -281,10 +278,7 @@ void Node::deleteEntry(Key K, int P){
 				Pa->deleteEntry(K1, N1->getAddr());
 				index->deleteNode(N1);
 			}	
-			std::cout << "Pa-----------------------" << pN << std::endl;
-			for (int i=0; i<Pa->getKeyNum(); i++){
-				std::cout << i << ":" << Pa->getPointer(i) << std::endl;
-			}
+			Pa->print();
 		} else {
 			if (pN1 < pN){
 				N1->redistribute(this, K1);
@@ -296,7 +290,10 @@ void Node::deleteEntry(Key K, int P){
 }
 
 void Node::coalesce(Node* N, Key K1){	
-	if (N->isInternal()){		
+	if (N->isInternal()){
+		std::cout << "before coalesce-------------" << std::endl;
+		K1.print();
+		getch();
 		this->add(K1, N->getPointer(0));
 		for (int i=0; i<N->getKeyNum(); i++){
 			this->add(N->getKey(i), N->getPointer(i+1));
@@ -306,22 +303,25 @@ void Node::coalesce(Node* N, Key K1){
 			this->add(N->getPointer(i), N->getKey(i));
 		}
 		this->setPointer(index->getMaxKeyNum()-1, N->getPointer(index->getMaxKeyNum()-1));
-	}	
+	}
+	
+	std::cout << "after coalesce-------------" << getAddr() << std::endl;
+	//print();
 }
 
 void Node::redistribute(Node* N, Key K1){
-	int m = this->getKeyNum()-1;
+	int m = this->getKeyNum();
 	Node* Pa = index->getNode(N->parent);
-	if (N->isInternal()){		
-		int N1Pm = this->getPointer(m);		
+	if (N->isInternal()){
+		int N1Pm = this->getPointer(m);	
 		Key N1Kmd = this->getKey(m-1);
 		this->deletePK(N1Kmd, N1Pm);
 		N->add(N1Pm, K1);		
 		int i = Pa->findV(K1);
 		Pa->setKey(i, N1Kmd);
 	} else {
-		int N1Pm = this->getPointer(m);		
-		Key N1Km = this->getKey(m);
+		int N1Pm = this->getPointer(m-1);		
+		Key N1Km = this->getKey(m-1);
 		this->deletePK(N1Km, N1Pm);		
 		N->add(N1Pm, N1Km);
 		int i = Pa->findV(K1);
@@ -334,17 +334,34 @@ void Node::aredistribute(Node* N, Key K1){
 	Node* Pa = index->getNode(N->parent);
 	if (N->isInternal()){
 		int N1Pm = this->getPointer(0);		
-		Key N1Kmd = this->getKey(1);
+		Key N1Kmd = this->getKey(0);
 		this->deletePK(N1Kmd, N1Pm);
 		N->add(N1Pm, K1);
 		int i = Pa->findV(K1);
 		Pa->setKey(i, N1Kmd);
 	} else {
-		int N1Pm = this->getPointer(0);		
+		int N1Pm = this->getPointer(0);
 		Key N1Km = this->getKey(0);		
 		this->deletePK(N1Km, N1Pm);		
 		N->add(N1Pm, N1Km);
 		int i = Pa->findV(K1);
 		Pa->setKey(i, N1Km);
 	}
+}
+
+void Node::print(){
+	for (int i=0; i<this->getKeyNum(); i++){
+		std::cout << i << " pointer:" << this->getPointer(i) << std::endl;
+		std::cout << i << " key:";
+		this->getKey(i).print();
+	}
+}
+
+void Node::printRecursive(Node* n){
+	print();
+	if (this->inter){
+		for (int i=0; i<=this->getKeyNum(); i++){
+			printRecursive(index->getNode(this->getPointer(i)));
+		}	
+	};
 }

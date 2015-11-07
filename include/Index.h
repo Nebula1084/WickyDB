@@ -42,8 +42,8 @@ public:
 	void deleteNode(Node* n);
 	Node* getNode(int ptr);
 	Node* getRoot();
-	void setRoot(Node* r);
-	std::pair<Node*, int> find(Key k);
+	void setRoot(Node* r);	
+	std::pair<Node*, int> find(Key k);	
 	const static int KEY_EXIST;
 	const static int KEY_DO_NOT_EXIST;
 	const static int INSERT_SUCCESS;
