@@ -19,7 +19,7 @@ public:
 	
 	unsigned char* getValue();
 	int getLength();
-	
+	Key& operator=(const Key& rhs);
 	bool operator==(const Key& rhs) const;
 	bool operator!=(const Key& rhs) const;
 	bool operator<(const Key& rhs) const;

@@ -2,6 +2,7 @@
 #define _NODE_H
 
 #include <stdexcept>
+#include <conio.h>
 
 #include "Index.h"
 #include "Block.h"
@@ -23,7 +24,7 @@ public:
 	int getKeyNum();
 	int getPointer(int i);
 	void setPointer(int i, int pointer);
-	Key getKey(int i);
+	Key getKey(int i);	
 	void setKey(int i, Key k);
 	int getAddr();
 	bool isInternal();
@@ -37,6 +38,7 @@ public:
 	void deleteEntry(Key K, int P);
 	void coalesce(Node* N, Key K1);
 	void redistribute(Node* N, Key K1);
+	void aredistribute(Node* N, Key K1);
 };
 
 #endif

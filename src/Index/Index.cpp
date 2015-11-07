@@ -35,19 +35,16 @@ Index::Index(std::string name, std::string type, int keyLen){
 
 Index::~Index(){
 	BufferManager* bm = BufferManager::getInstance();
-	bm->write(fileName, 0, this->last);
-	std::cout << this->last << std::endl;
+	bm->write(fileName, 0, this->last);	
 	if (root != NULL)
 		bm->write(fileName, this->root->getAddr());
 	else
 		bm->write(fileName, -1);		
 	bm->write(fileName, (int)holes.size());
 	std::list<int>::iterator itr;
-	for (itr=holes.begin(); itr!=holes.end(); itr++){		
-		std::cout << "test" << std::endl;
+	for (itr=holes.begin(); itr!=holes.end(); itr++){				
 		bm->write(fileName, *itr);
-	}
-	std::cout << "holes" << std::endl;
+	}	
 	std::map<int, Node*>::iterator nodeItr;
 	for (nodeItr=nodes.begin(); nodeItr!=nodes.end(); nodeItr++){
 		delete nodeItr->second;
@@ -75,7 +72,7 @@ int Index::insertKey(Key K, int P){
 			return KEY_EXIST;
 		L = p.first;
 	}
-	if (L->getKeyNum() < maxKeyNum - 1){		
+	if (L->getKeyNum() < maxKeyNum - 1){
 		L->insertInLeaf(K, P);
 	} else {
 		L->add(P, K);
@@ -96,11 +93,13 @@ int Index::search(Key k){
 
 int Index::deleteKey(Key k){
 	std::pair<Node*, int> tmp = find(k);
-	Node* n = tmp.first;
+	Node* n = tmp.first;	
 	int i = tmp.second;
 	if (n == NULL || i == -1)
-		return KEY_DO_NOT_EXIST;
-	n->deleteEntry(k, i);
+		return KEY_DO_NOT_EXIST;	
+	std::cout << "before delete" << std::endl;
+	n->deleteEntry(k, n->getPointer(i));
+	std::cout << "after delete" << std::endl;
 }
 
 int Index::getKeyLen(){
@@ -142,6 +141,9 @@ Node* Index::newNode(){
 }
 
 void Index::deleteNode(Node* n){
+	 std::cout << "delete node" << std::endl;
+	if (nodes.find(n->getAddr()) == nodes.end())
+		throw std::runtime_error("node dosen't exist");
 	holes.push_back(n->getAddr());
 	nodes.erase(nodes.find(n->getAddr()));
 	delete n;

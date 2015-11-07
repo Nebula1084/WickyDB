@@ -38,6 +38,13 @@ int Key::getLength(){
 	return len;
 }
 
+Key& Key::operator=(const Key& rhs){
+	if (this!=&rhs){
+		memcpy(this->key, rhs.key, this->len);
+	}
+	return *this;
+}
+
 bool Key::operator==(const Key& rhs) const{	
 	for (int i=0; i<len; i++) {
 		if (key[i]!=rhs.key[i]){

@@ -15,7 +15,7 @@ Node::Node(Index* index, int ptr): ptr(ptr){
 		this->inter = false;
 }
 
-Node::~Node(){
+Node::~Node(){	
 	BufferManager* bm = BufferManager::getInstance();
 	memcpy(content, &parent, 4);	
 	memcpy(content+4, &keyNum, 4);
@@ -38,11 +38,13 @@ int Node::getKeyNum(){
 }
 
 int Node::getPointer(int i){
-	if (i > keyNum)
+	if (i > index->getMaxKeyNum()){
+		std::cout << i << " " << keyNum << std::endl;
 		throw std::runtime_error("Node::getPointer(i) where i is out of range.");
+	}
 	int ret, offset;
 	offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-	if (offset + 4 > Block::BLOCK_SIZE)
+	if (offset + 4 > Block::BLOCK_SIZE || offset + 4 <0)
 		throw std::runtime_error("pointer is out of range");
 	memcpy(&ret, content + offset, 4); //read ret
 //	bm->read(index->getFileName(), offset, &ret);
@@ -54,7 +56,7 @@ void Node::setPointer(int i, int pointer){
 		throw std::runtime_error("Node::setPointer(i, ptr) where i is out of range.");
 	int offset;	
 	offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-	if (offset + 4 > Block::BLOCK_SIZE)
+	if (offset + 4 > Block::BLOCK_SIZE || offset + 4 <0)
 		throw std::runtime_error("pointer is out of range");
 	memcpy(content + offset, &pointer, 4);
 //	bm->write(index->getFileName(), offset, pointer);	
@@ -67,7 +69,7 @@ Key Node::getKey(int i){
 	int offset;
 	unsigned char* buf = new unsigned char[len];	
 	offset = 4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-	if (offset + 4 > Block::BLOCK_SIZE)
+	if (offset + len > Block::BLOCK_SIZE || offset + 4 <0)
 		throw std::runtime_error("pointer is out of range");
 	memcpy(buf, content + offset, len);	
 //	bm->read(index->getFileName(), offset, len, buf);	
@@ -82,7 +84,7 @@ void Node::setKey(int i, Key k){
 	int len = index->getKeyLen();
 	int offset;		
 	offset =  4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-	if (offset + len > Block::BLOCK_SIZE)
+	if (offset + len > Block::BLOCK_SIZE || offset + len <0)
 		throw std::runtime_error("pointer is out of range");
 	memcpy(content + offset, k.getValue(), len);
 //	bm->write(index->getFileName(), offset, len, k.getValue());
@@ -105,7 +107,7 @@ void Node::add(int p, Key k){
 	unsigned char* buf = new unsigned char[len+4];	
 	for (int i=keyNum-1; i>=0; i--){
 		offset = 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
-		if (offset + len + 4 > Block::BLOCK_SIZE)
+		if (offset + len + 4 > Block::BLOCK_SIZE || offset + len + 4 <0)
 			throw std::runtime_error("pointer is out of range");
 		memcpy(buf, content + offset, len + 4);		
 //		bm->read(index->getFileName(), offset, len + 4, buf);		
@@ -132,7 +134,7 @@ void Node::add(int p, Key k){
 void Node::add(Key k, int p){
 	int len = index->getKeyLen();
 	int offset = 4 + 4 + 4;
-	unsigned char* buf = new unsigned char[len+4];	
+	unsigned char* buf = new unsigned char[len+4];
 	for (int i=keyNum-1; i>=0; i--){
 		offset = 4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * i;
 		if (offset + offset + len + 4 > Block::BLOCK_SIZE)
@@ -157,32 +159,35 @@ void Node::add(Key k, int p){
 	delete[] buf;	
 }
 
-void Node::deletePK(Key K, int P){
+void Node::deletePK(Key K, int P){	
 	int len = index->getKeyLen();
 	int offset, kx, px;
-	len += 4;	
+	len += 4;
 	for (kx = 0; kx < keyNum; kx++)
 		if (getKey(kx) == K) break;
 	if (kx == keyNum) 
 		throw std::runtime_error("Node::deletePK():no such key");
-	if (getPointer(kx) == P){
+	if (getPointer(kx) == P){		
 		px = kx;
-	} else if (getPointer(kx+1) == P){
+	} else if (getPointer(kx+1) == P){		
 		px = kx + 1;
 	} else {
 		throw std::runtime_error("Node::deletePK():no such pointer");
 	}
-	int add1 = 4 + 4 + 4 + (index->getKeyLen() + 4) * kx;
-	int add2 = 4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * px;
+	int add1 = 4 + 4 + 4 + 4 + (index->getKeyLen() + 4) * kx;
+	int add2 = 4 + 4 + 4 + (index->getKeyLen() + 4) * px;
 	int startAddr;
 	if (add1 > add2)
 		startAddr = add2;
 	else
 		startAddr = add1;
-	for (; startAddr < keyNum * (index->getKeyLen() + 4); startAddr + index->getKeyLen() + 4){
-		memcpy(content + startAddr, content + startAddr + index->getKeyLen() + 4, index->getKeyLen() + 4);
-	}
-	keyNum--;
+	for (; startAddr < keyNum * (index->getKeyLen() + 4); startAddr=startAddr + index->getKeyLen() + 4){
+		if (startAddr + (index->getKeyLen() + 4) * 2 > Block::BLOCK_SIZE) {
+			throw std::runtime_error("Node::deletePK() stack corruption");
+		}
+		memcpy(content + startAddr, content + startAddr + index->getKeyLen() + 4, index->getKeyLen() + 4);		
+	}		
+	keyNum--;	
 }
 
 Node* Node::split(){
@@ -194,7 +199,7 @@ Node* Node::split(){
 		L1->add(this->getPointer(i), this->getKey(i));
 	}
 	L1->setPointer(j, this->getPointer(i));
-	keyNum = (keyNum+1)/2;	
+	keyNum = (keyNum+1)/2;
 	return L1;
 }
 
@@ -233,13 +238,15 @@ void Node::insertInParent(Key K1, Node* L1){
 	}
 }
 
-void Node::deleteEntry(Key K, int P){
-	deletePK(K, P);
-	if (index->getRoot() == this && keyNum == 1){
-		index->setRoot(index->getNode(this->getPointer(0)));
-		index->deleteNode(this);
+void Node::deleteEntry(Key K, int P){	
+	deletePK(K, P);	
+	if (index->getRoot() == this){
+		if (keyNum == 1){
+			index->setRoot(index->getNode(this->getPointer(0)));
+			index->deleteNode(this);	
+		}		
 		return;
-	} else if (keyNum < index->getMaxKeyNum() / 2){
+	} else if (keyNum < index->getMaxKeyNum() / 2){		
 		Node* Pa = index->getNode(this->parent);
 		Key K1 = K;		
 		Node* N1;
@@ -248,42 +255,53 @@ void Node::deleteEntry(Key K, int P){
 		if (Pa->getKey(pN) > K){
 			pN--;
 		}
-		if (pN == 0) {
+		if (pN == 0) {			
 			N1 = index->getNode(Pa->getPointer(pN+1));
 			pN1 = pN + 1;
 			K1 = Pa->getKey(pN);
-		} else {
+		} else {			
 			N1 = index->getNode(Pa->getPointer(pN-1));
-			pN1 = pN - 1;
-			K1 = Pa->getKey(pN-1);
+			pN1 = pN-1;
+			K1 = Pa->getKey(pN);
 		}
 		if (this->getKeyNum() + N1->getKeyNum() < index->getMaxKeyNum()){
+			std::cout << "-----------------------" << pN << std::endl;
+			std::cout << "Node address::" << this->getAddr() << std::endl;
+			for (int i=0; i<Pa->getKeyNum(); i++){
+				std::cout << i << ":" << Pa->getPointer(i) << std::endl;
+			}
 			if (pN1 < pN){
+				std::cout << "delete1 " << this->getAddr() << std::endl;
 				N1->coalesce(this, K1);
 				Pa->deleteEntry(K1, this->getAddr());
 				index->deleteNode(this);
 			} else  {
+				std::cout << "delete2 " << N1->getAddr() << std::endl;
 				this->coalesce(N1, K1);
 				Pa->deleteEntry(K1, N1->getAddr());
 				index->deleteNode(N1);
+			}	
+			std::cout << "Pa-----------------------" << pN << std::endl;
+			for (int i=0; i<Pa->getKeyNum(); i++){
+				std::cout << i << ":" << Pa->getPointer(i) << std::endl;
 			}
 		} else {
 			if (pN1 < pN){
 				N1->redistribute(this, K1);
 			} else {
-				this->redistribute(N1, K1);
-			}
+				N1->aredistribute(this, K1);
+			}						
 		}
-	}
+	}		
 }
 
-void Node::coalesce(Node* N, Key K1){
-	if (N->isInternal()){
+void Node::coalesce(Node* N, Key K1){	
+	if (N->isInternal()){		
 		this->add(K1, N->getPointer(0));
 		for (int i=0; i<N->getKeyNum(); i++){
 			this->add(N->getKey(i), N->getPointer(i+1));
 		}
-	} else {
+	} else {		
 		for (int i=0; i<N->getKeyNum(); i++){
 			this->add(N->getPointer(i), N->getKey(i));
 		}
@@ -295,16 +313,36 @@ void Node::redistribute(Node* N, Key K1){
 	int m = this->getKeyNum()-1;
 	Node* Pa = index->getNode(N->parent);
 	if (N->isInternal()){		
-		int N1Pm = this->getPointer(m);
+		int N1Pm = this->getPointer(m);		
 		Key N1Kmd = this->getKey(m-1);
 		this->deletePK(N1Kmd, N1Pm);
 		N->add(N1Pm, K1);		
 		int i = Pa->findV(K1);
 		Pa->setKey(i, N1Kmd);
 	} else {
-		int N1Pm = this->getPointer(m);
-		Key N1Km = this->getKey(m);		
-		this->deletePK(N1Km, N1Pm);
+		int N1Pm = this->getPointer(m);		
+		Key N1Km = this->getKey(m);
+		this->deletePK(N1Km, N1Pm);		
+		N->add(N1Pm, N1Km);
+		int i = Pa->findV(K1);
+		Pa->setKey(i, N1Km);
+	}
+}
+
+void Node::aredistribute(Node* N, Key K1){
+	int m = this->getKeyNum()-1;
+	Node* Pa = index->getNode(N->parent);
+	if (N->isInternal()){
+		int N1Pm = this->getPointer(0);		
+		Key N1Kmd = this->getKey(1);
+		this->deletePK(N1Kmd, N1Pm);
+		N->add(N1Pm, K1);
+		int i = Pa->findV(K1);
+		Pa->setKey(i, N1Kmd);
+	} else {
+		int N1Pm = this->getPointer(0);		
+		Key N1Km = this->getKey(0);		
+		this->deletePK(N1Km, N1Pm);		
 		N->add(N1Pm, N1Km);
 		int i = Pa->findV(K1);
 		Pa->setKey(i, N1Km);

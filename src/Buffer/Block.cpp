@@ -47,7 +47,7 @@ int Block::read(int position, int len, unsigned char* buf){
 	if (position - start + len > BLOCK_SIZE)
 		len = BLOCK_SIZE - (position - start);	
 	if (wf->getSize() < position + len){	
-		std::cout << wf->getSize() << " " << len<< std::endl;
+		std::cout << wf->getSize() << " position:" << position << " len:" << len<< std::endl;
 		throw std::runtime_error("Block::read():couldn't reach within this file");	
 		// memcpy(buf, mem + position - start, wf->getSize() - position);						
 		// wf->setFptr(wf->getSize());			
