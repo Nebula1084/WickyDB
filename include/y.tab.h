@@ -192,7 +192,9 @@ namespace yy {
      INT = 285,
      CHAR = 286,
      FLOAT = 287,
-     EXEC = 288
+     EXEC = 288,
+     SHOW = 289,
+     DESC = 290
    };
 
     };
@@ -289,7 +291,7 @@ namespace yy {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const signed char yycheck_[];
+    static const unsigned char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -369,7 +371,7 @@ namespace yy {
 } // yy
 
 /* Line 35 of lalr1.cc  */
-#line 373 "y.tab.h"
+#line 375 "y.tab.h"
 
 
 

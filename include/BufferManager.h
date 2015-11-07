@@ -24,7 +24,7 @@ private:
 	std::list<Block*> buffer;
 	std::map<WickyFile*, std::map<int, Block*>* > blockIndex;
 	Block* getBlock(WickyFile* wf, int n);
-	BufferManager();	
+	BufferManager();
 	WickyFile* getFile(std::string name, int flag = WickyFile::FILE_REDIRECT);
 	void writeDisk(WickyFile* wf, int offset, int len, unsigned char* buf);
 	void readDisk(WickyFile* wf, int offset, int len, unsigned char* buf);

@@ -312,12 +312,13 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 		Schema s = cm->get(t->getTableName());
 		primaryKey = s.getPrimaryKey();
 	}
-
 	//judge whether the input fits the table
 	using namespace std;
 	if(t->getAttrNum()!=values.size())
 		throw std::runtime_error("The input data can't fit the table!");
 	
+	// cout<<"before insertion: "<<t->rows.size()<<endl;
+
 	vector<std::pair<string, string> >::iterator itr;
 	vector<string> inputCol;
 	vector<Attribute> attrList = t->getAttrList();
@@ -354,11 +355,19 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	
 	BufferManager *bm = BufferManager::getInstance();
 	RecordManager rm;
-
 	Tuple inputTuple(inputCol);
 	t->rows.push_back(inputTuple);
 	rm.writeTable(*t, bm);
+
+	// cout<<"last row:";
+	// for(int i = 0; i < t->getAttrNum(); i++){
+	// 	cout<<" "<<t->rows[t->rows.size()-1].col[i];
+	// }
+	// cout<<endl;
 	
+	// cout<<"after insertion: "<<t->rows.size()<<endl;
+	// cout<<"insert: "<<endl;
+	// cout<<values[0].second<<" "<<values[1].second<<endl;
 	return 0;
 }
 

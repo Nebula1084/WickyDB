@@ -41,7 +41,7 @@ public:
 	int result;
 
 	// Handling the scanner.
-	void scan_begin ();
+	int scan_begin ();
 	void scan_end ();
 	bool trace_scanning;
 	

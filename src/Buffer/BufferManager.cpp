@@ -39,7 +39,7 @@ BufferManager* BufferManager::getInstance(){
 Block* BufferManager::getBlock(WickyFile* wf, int n){
 	std::map<int, Block*>* fileBlockIndex;
 	std::map<WickyFile*, std::map<int, Block*>* >::iterator itr;
-	itr = blockIndex.find(wf);	
+	itr = blockIndex.find(wf);
 	if (itr == blockIndex.end()){
 		fileBlockIndex = new std::map<int, Block*>;
 		blockIndex.insert(std::map<WickyFile*, std::map<int, Block*>* >::value_type(wf, fileBlockIndex));
@@ -57,7 +57,7 @@ Block* BufferManager::getBlock(WickyFile* wf, int n){
 	} else {
 		block = blockItr->second;
 	}
-		
+	
 	return block;
 }
 
@@ -139,10 +139,10 @@ int BufferManager::write(std::string name, int offset, int len, unsigned char* b
 	while (len > 0){
 		Block* block = getBlock(wf, position / Block::BLOCK_SIZE);
 		sweep();
-		int tmp = block->write(position, len, buf);
-		position += tmp;		
+		int tmp = block->write(position, len, buf+ret);
+		position += tmp;
 		len -= tmp;
-		ret += tmp;		
+		ret += tmp;
 	}
 	return ret;
 }
@@ -157,13 +157,14 @@ int BufferManager::read(std::string name, int offset, int len, unsigned char* bu
 	int position = offset;
 	while (len > 0){
 		Block* block = getBlock(wf, position / Block::BLOCK_SIZE);
-		sweep();						
-		int tmp = block->read(position, len, buf);				
+		sweep();
+		int tmp = block->read(position, len, buf+ret);
+		
 		if (tmp == 0) break;
-		position += tmp;		
+		position += tmp;
 		len -= tmp;
 		ret += tmp;
-	}	
+	}
 	return ret;
 }
 

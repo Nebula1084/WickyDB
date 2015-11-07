@@ -10,8 +10,7 @@ Parser::Parser ()
 {
 	line=0;
 	condition = NULL;
-	schema = NULL;	
-	setNewSmt(true);
+	schema = NULL;		
 	values = NULL;
 	cs = NULL;
 }
@@ -21,11 +20,9 @@ Parser::~Parser ()
 }
 
 int Parser::parse(const std::string &f){	
-	if (line != 1 || err) {
-		setNewSmt(true);		
-	}
 	file = f;
-	scan_begin ();	
+	if (scan_begin () == Parser::SYNTAX_ERR) 
+		return Parser::SYNTAX_ERR;
 	yy::SqlParser parser (*this);
 	parser.set_debug_level (trace_parsing);
 	int res = parser.parse ();	
@@ -78,8 +75,7 @@ void Parser::printHead(){
 		} else {
 			std::cout << "------->";
 		}
-	} else {
-		std::cout << line << std::endl;
+	} else {		
 	}
 }
 

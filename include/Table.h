@@ -2,6 +2,7 @@
 #define _TABLE_H
 #include <string>
 #include <vector>
+#include <set>
 #include "Schema.h"
 
 
@@ -49,13 +50,16 @@ private:
 	std::string tableName;			//the name of table
 	int attrNum;				//the number of attributes(column)
 	std::vector<Attribute> attrList;	//the list of attributes
+	// int length;
 
 public:
 	std::vector<Tuple> rows;			//the data of the table	
+	// std::set<int> deletedIndex;
 	Table(std::string tableName);
 	bool CreateTable(std::vector<Attribute> attrList);	//initial the table with attributes list
 
 	int getAttrNum(){return attrNum;}					//return the number of attributes
+	// int getTableLen(){return length;}
 	std::string getTableName(){return tableName;}		//return the table name
 
 	void printTable();					//print all the rows of table

@@ -66,6 +66,8 @@ char	{ return token::CHAR; }
 float	{ return token::FLOAT; }
 exit	{ return token::EXIT; }
 execfile { return token::EXEC; }
+show	{ return token::SHOW; }
+desc	{ return token::DESC; }
 	/* punctuation */
 
 "="		|
@@ -84,7 +86,7 @@ execfile { return token::EXEC; }
 
 	/* names */
 
-[A-Za-z][A-Za-z0-9_]*	{
+[A-Za-z][A-Za-z0-9_.]*	{
 	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
 };
@@ -132,16 +134,17 @@ execfile { return token::EXEC; }
 
 %%
 
-void
+int
 Parser::scan_begin ()
 {
-	yy_flex_debug = trace_scanning;
+	yy_flex_debug = trace_scanning;	
 	if (file.empty () || file == "-") {
 		yyin = stdin;		
+	yyrestart(yyin);
 	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file);
-		exit (EXIT_FAILURE);
+		return Parser::SYNTAX_ERR;
 	}
 }
 
