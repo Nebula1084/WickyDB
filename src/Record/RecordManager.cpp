@@ -58,10 +58,10 @@ std::vector<Tuple> RecordManager::selectTuple(Table* table, std::vector<int> off
 Table RecordManager::readTable(Schema s, BufferManager *b){
 	std::string filename = s.getName();	//get table name 
 
-	Table result(filename);
+	Table *result = new Table(filename);
 	std::vector<Attribute> temp;
 	s.copyAttributes(temp);				//get the Attributes from schema
-	result.CreateTable(temp);
+	result->CreateTable(temp);
 
 	std::vector<std::string> rawVec;
 
@@ -73,19 +73,27 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 	Split(raw, " ", rawVec);
 	int attrNumber = atoi(rawVec[0].c_str());
 	// std::cout<<"The attrNumber is: "<<attrNumber<<std::endl;
-	if (attrNumber != result.getAttrNum())
+	if (attrNumber != result->getAttrNum())
 		std::cout<<"WARNING! the data is unsafe!"<<std::endl;
 
 	int count = 1;
+	
 	while(count < rawVec.size()){
 		Tuple x;
 		x.col.clear();
+		// std::cout<<"go for loop"<<std::endl;
 		for(int i = 0; i < attrNumber; i++){
 			x.col.push_back(rawVec[count++]);
+			if(count>=rawVec.size())
+				break;
 		}
-		result.rows.push_back(x);
+		// std::cout<<"before push"<<std::endl;
+		result->rows.push_back(x);
+		// std::cout<<"after push"<<std::endl;
 	}
-	return result;
+	Table trueResult(*result);
+	delete result;
+	return trueResult;
 }
 
 bool RecordManager::writeTable(Table table, BufferManager *b){

@@ -284,11 +284,11 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	
 	BufferManager *bm = BufferManager::getInstance();
 	RecordManager rm;
-
 	Tuple inputTuple(inputCol);
 	t->rows.push_back(inputTuple);
 	rm.writeTable(*t, bm);
-	
+	// cout<<"insert: "<<endl;
+	// cout<<values[0].second<<" "<<values[1].second<<endl;
 	return 0;
 }
 

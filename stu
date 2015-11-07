@@ -1,3 +1,11 @@
+create table student3 (
+		sno int,
+		sname char(16) unique,
+		sage int,
+		sgender char (1),
+		score float,
+		primary key ( sno )
+);
 insert into student3 values (20,'ww20',20,'M',78.0);
 insert into student3 values (21,'ww21',21,'F',79.0);
 insert into student3 values (22,'ww22',20,'M',80.0);
