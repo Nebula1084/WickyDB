@@ -19,6 +19,9 @@ private:
 	~WickyEngine();
 public:	
 	static WickyEngine* getInstance();
+	void ShowTables();
+	void DescribeTable(std::string tname);
+	
 	Table* Select(Table* t, Condition c);
 	Table* Project(Table* t, std::vector<std::pair<std::string, std::string> > cs);
 	Table* Join(Table* t1, Table* t2);

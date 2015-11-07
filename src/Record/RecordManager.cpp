@@ -57,22 +57,19 @@ std::vector<Tuple> RecordManager::selectTuple(Table* table, std::vector<int> off
 
 Table RecordManager::readTable(Schema s, BufferManager *b){
 	std::string filename = s.getName();	//get table name 
+
 	Table result(filename);
 	std::vector<Attribute> temp;
 	s.copyAttributes(temp);				//get the Attributes from schema
 	result.CreateTable(temp);
 
-	// for(int i = 0; i < temp.size(); i++){
-	// 	std::cout<<i<<": "<<temp[i].getName()<<std::endl;
-	// }
-	
-	
 	std::vector<std::string> rawVec;
 
 	unsigned char buf[1000000];
+	memset(buf,0,sizeof(buf));
 	b->readAll(filename, 0, buf);
 	std::string raw((char *)buf);
-
+	std::cout<<"read: "<<raw<<std::endl;
 	Split(raw, " ", rawVec);
 	int attrNumber = atoi(rawVec[0].c_str());
 	// std::cout<<"The attrNumber is: "<<attrNumber<<std::endl;
@@ -101,7 +98,8 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 			output = output + " " + table.rows[i].col[j];
 		}
 	}
-	b->write(filename, output);
+	std::cout<<"write: "<<output<<std::endl;
+	b->write(filename,0, output);
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)
@@ -126,4 +124,11 @@ void RecordManager::Split(std::string src, std::string separator, std::vector<st
     //the last token
     substring = str.substr(start);
     dest.push_back(substring);
+}
+
+void RecordManager::deleteTable(std::string tableName, BufferManager *b){
+	using namespace std;
+	if(!b->isFileExists(tableName))
+		cout<<"The table "<<tableName<<" isn't exist!"<<endl;
+	b->removeFile(tableName);
 }

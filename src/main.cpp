@@ -13,7 +13,6 @@ int main(int argc, char* argv[]){
     
 	std::cout << "Welcome to the WicyDB monitor. Commands end with ;" << std::endl;	
 	std::cout << "This is our team work. The team compose of Hai Jiewen Zhang Haiwei Yu Qiubin and Xiao Shaobin." << std::endl;
-	
 	  	
 	// parser.printHead();		
 	// while (parser.parse("")!=Parser::EXIT){		

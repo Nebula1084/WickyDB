@@ -21,7 +21,7 @@ public:
 
 	Table readTable(Schema s, BufferManager *b);
 	bool writeTable(Table table, BufferManager *b);
-
+	void deleteTable(std::string tableName, BufferManager *b);	//drop table
 	void Split(std::string src, std::string separator, std::vector<std::string>& v);
 };
 

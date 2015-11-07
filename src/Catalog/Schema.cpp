@@ -70,14 +70,14 @@ std::string Schema::toString(){
     for (int i = 0; i < attrNames.size(); i++){
         std::string attrName = attrNames[i];
         Attribute attr = attributes[attrName];
-        str += Q+attrName+Q+" "+attr.type+LB+intToString(attr.length)+RB+" "+attr.index;
+        str += " "+Q+attrName+Q+" "+attr.type+LB+intToString(attr.length)+RB+" "+attr.index;
         if(attr.unique)
             str += " " + UNIQUE;
         else
             str += " " + DUPLIC;
         str += ",\n"; 
     }
-    str += "PRIMARY KEY " + SP + Q+primaryKey+Q + ",\n" + RB;
+    str += " PRIMARY KEY " + SP + Q+primaryKey+Q + ",\n" + RB;
     return str;
 }
 
