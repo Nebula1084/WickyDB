@@ -78,6 +78,8 @@ void Parser::printHead(){
 		} else {
 			std::cout << "------->";
 		}
+	} else {
+		std::cout << line << std::endl;
 	}
 }
 
