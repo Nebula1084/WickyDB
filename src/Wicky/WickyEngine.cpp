@@ -92,11 +92,12 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			throw std::runtime_error("Can't find the 'where' condition");
 		}
 
+		string type = tAttr[position].getType();
 		switch(op)
 		{
 			case 0:						// =
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp==secondCmp)
@@ -110,7 +111,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 1: 					// >
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>secondCmp)
@@ -124,7 +125,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 2: 					// <
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<secondCmp)
@@ -138,7 +139,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 3: 					// <>
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp!=secondCmp)
@@ -152,7 +153,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 4: 					// <=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<=secondCmp)
@@ -166,7 +167,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 5: 					// >=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>=secondCmp)
@@ -326,12 +327,13 @@ int WickyEngine::Delete(Table* t, Condition c){
 		}
 
 		tempIndex.clear();
+		string type = tAttr[position].getType();
 		switch(op)
 		{
 			case 0:						// =
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp==secondCmp)
@@ -346,7 +348,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 1: 					// >
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>secondCmp)
@@ -361,7 +363,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 2: 					// <
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<secondCmp)
@@ -376,7 +378,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 3: 					// <>
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp!=secondCmp)
@@ -391,7 +393,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 4: 					// <=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<=secondCmp)
@@ -406,7 +408,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 5: 					// >=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>=secondCmp)
