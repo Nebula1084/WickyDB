@@ -478,6 +478,7 @@ void WickyEngine::CreateTable(Schema sch){
 	std::vector<Attribute> attrList;
 	sch.copyAttributes(attrList);
 	if(t.CreateTable(attrList)){
+		// std::cout<<"create table------"<<std::endl;
 		rm.writeTable(t, b);
 	}else{
 		throw std::runtime_error("Table should have at least one column");
