@@ -1,6 +1,6 @@
 #include "Block.h"
 
-const int Block::BLOCK_SIZE = 512;
+const int Block::BLOCK_SIZE = 8*1024;
 
 Block::Block(WickyFile* wf, int index){
 	this->wf = wf;
