@@ -5,7 +5,7 @@ const int Index::KEY_DO_NOT_EXIST = -2;
 const int Index::INSERT_SUCCESS = 1;
 
 Index::Index(std::string name, std::string type, int keyLen){
-	this->debug = false;
+	this->debug = true;
 	this->name = name;
 	this->type = type;
 	this->keyLen = keyLen;
@@ -129,7 +129,7 @@ Node* Index::newNode(){
 	} else {
 		n = holes.front();
 		holes.pop_front();
-	}	
+	}
 	BufferManager* bm = BufferManager::getInstance();
 	unsigned char* buf = new unsigned char[Block::BLOCK_SIZE];
 	bm->write(this->getFileName(), n, Block::BLOCK_SIZE, buf); // write block
@@ -152,7 +152,7 @@ void Index::deleteNode(Node* n){
 
 Node* Index::getNode(int ptr){
 	std::map<int, Node*>::iterator itr = nodes.find(ptr);
-	if (itr==nodes.end()){		
+	if (itr==nodes.end()){
 		Node* node = new Node(this, ptr);
 		nodes.insert(std::map<int, Node*>::value_type(ptr, node));
 		return node;
