@@ -10,6 +10,7 @@
 #include "BufferManager.h"
 #include "RecordManager.h"
 #include "CatalogManager.h"
+#include "IndexManager.h"
 #include "WickyFile.h"
 
 class WickyEngine{
@@ -21,7 +22,8 @@ public:
 	static WickyEngine* getInstance();
 	void ShowTables();
 	void DescribeTable(std::string tname);
-	
+	void createIndex(std::string indexName, std::string tableName, std::string attrName);
+	void dropIndex(std::string indexName, std::string tableName);
 	Table* Select(Table* t, Condition c);
 	Table* Project(Table* t, std::vector<std::pair<std::string, std::string> > cs);
 	Table* Join(Table* t1, Table* t2);

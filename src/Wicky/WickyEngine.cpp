@@ -45,6 +45,76 @@ void WickyEngine::DescribeTable(std::string tname){
 	}
 }
 
+void WickyEngine::createIndex(std::string indexName, std::string tableName, std::string attrName){
+	std::string fullIndexName = tableName+"-"+attrName+"-"+indexName;
+	BufferManager* bm = BufferManager::getInstance();
+	CatalogManager* cm = CatalogManager::getInstance();
+	IndexManager *im = IndexManager::getInstance();
+	RecordManager rm;
+
+	/*add index in schema,*/
+	Schema sch = cm->get(tableName);
+	sch.addIndex(indexName, attrName);
+	cm->saveChange(sch);
+
+	/*get the infomation of search key*/
+	std::string type = sch.getType(attrName);
+	int length = sch.getLength(attrName);
+	std::vector<std::string> attrs = sch.getAttributes();
+	int pos;
+	for (int i = 0; i < attrs.size(); ++i)
+	{
+		if (attrs[i].compare(attrName) == 0)
+		{
+			pos = i;
+			break;
+		}
+	}
+    
+    /*create a index file*/
+    Index *index = im->createIndex(fullIndexName, type, length);
+
+	Table tb = rm.readTable(sch, bm);
+	std::vector<Tuple> rows = tb.rows;
+	for (int i = 0; i < rows.size(); ++i)
+	{
+		std::string value = rows[i].col[pos];
+		if (type == Schema::INT)
+		{
+			int intvalue = atoi(value.c_str());
+			Key key(length, (unsigned char*)&intvalue);
+			index->insertKey(key, i);
+		}else if (type == Schema::FLOAT)
+		{
+			float floatvalue = atof(value.c_str());
+			Key key(length, (unsigned char*)&floatvalue);
+			index->insertKey(key, i);
+		}else{
+			Key key(length, (unsigned char*)value.c_str());
+			index->insertKey(key, i);
+		}
+	}
+
+}
+void WickyEngine::dropIndex(std::string indexName, std::string tableName){
+	BufferManager* bm = BufferManager::getInstance();
+	CatalogManager* cm = CatalogManager::getInstance();
+	IndexManager* im = IndexManager::getInstance();
+
+	Schema sch = cm->get(tableName);
+	std::string attrName = sch.getAttrOfIndex(indexName);
+	std::string fullIndexName = tableName+"-"+attrName+"-"+indexName;
+	std::string type = sch.getType(attrName);
+	int length = sch.getLength(attrName);
+
+	//drop index in schema
+	sch.deleteIndex(indexName);
+	cm->saveChange(sch);
+	//delete index in file
+	Index *index = im->getIndex(fullIndexName, type, length);
+	im->dropIndex(index);
+}
+
 Table* WickyEngine::Select(Table* t, Condition c){
 	using namespace std;
 	//initial the mapping between operators

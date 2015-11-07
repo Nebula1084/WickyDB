@@ -86,7 +86,15 @@ void Schema::addAttribute(std::string attrName, std::string type){
         throw std::runtime_error("Attribute " + attrName + "already exist");
     std::list<std::string> properties;
     properties.push_back(type);
-    properties.push_back("20");
+    if (type.compare(INT) == 0)
+    {
+        properties.push_back(Schema::intToString(INT_LENGTH));
+    }else if (type.compare(FLOAT) == 0)
+    {
+        properties.push_back(Schema::intToString(FLOAT_LENGTH));
+    }else{
+        properties.push_back("20");
+    }
     properties.push_back(NOINDEX);
     properties.push_back(DUPLIC);
     Attribute attr(attrName, properties);
@@ -100,6 +108,14 @@ bool Schema::isAttrExists(std::string attrName){
 
 bool Schema::isIndexExists(std::string indexName){
     return indecies.count(indexName);
+}
+
+std::string Schema::getAttrOfIndex(std::string indexName){
+    if (!isIndexExists(indexName))
+    {
+        throw std::runtime_error("Index " + indexName + " already exists");
+    }
+    return indecies[indexName];
 }
 
 std::string Schema::getIndex(std::string attrName){
