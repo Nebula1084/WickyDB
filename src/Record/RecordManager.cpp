@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
-
 bool RecordManager::insertTuple(Table* table, Tuple tuple, int offset){
 	int tupleSize = tuple.col.size();
 	if(table->getAttrNum()!=tupleSize){
@@ -55,6 +54,7 @@ std::vector<Tuple> RecordManager::selectTuple(Table* table, std::vector<int> off
 	return result;
 } 
 
+unsigned char buf[10000000];
 Table RecordManager::readTable(Schema s, BufferManager *b){
 	std::string filename = s.getName();	//get table name 
 
@@ -65,10 +65,13 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 
 	std::vector<std::string> rawVec;
 
-	unsigned char buf[1000000];
 	memset(buf,0,sizeof(buf));
-	b->readAll(filename,0 , buf);
+	int intpoint;
+	b->readAll(filename, Block::BLOCK_SIZE, buf);
 
+	b->read(filename,0,&intpoint);
+	result->setTailOffset(intpoint);
+	// std::cout<<"offset: "<<result->getTailOffset()<<std::endl;
 	std::string raw((char *)buf);
 	// std::cout<<"read: "<<raw<<std::endl;
 	Split(raw, " ", rawVec);
@@ -78,7 +81,6 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 		std::cout<<"WARNING! the data is unsafe!"<<std::endl;
 
 	int count = 1;
-
 	// std::cout<<"****************"<<std::endl;
 	// for(int i = attrNumber; i>0; i--)
 	// 	if(rawVec.size()>5)
@@ -104,7 +106,7 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 }
 
 bool RecordManager::writeTable(Table table, BufferManager *b){
-	char buf[10];
+	char buf[100];
 	sprintf(buf, "%d", table.getAttrNum());
 	std::string filename = table.getTableName();
 	std::string output = buf;
@@ -116,8 +118,10 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 	// std::cout<<"write: "<<output<<std::endl;
 	if(b->isFileExists(filename))
 		b->removeFile(filename);
-	b->write(filename,0, output);
-	 std::cout<<output.size()<<std::endl;
+	b->write(filename,Block::BLOCK_SIZE, output);
+	b->write(filename,0,(int)output.size());
+	return true;
+	 // std::cout<<output.size()<<std::endl;
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)

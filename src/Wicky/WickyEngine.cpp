@@ -1,10 +1,16 @@
 #include "WickyEngine.h"
+#include "key.h"
+#include "block.h"
 #include <set>
 #include <stdexcept>
 #include <map>
 #include <iomanip>
+#include <stdlib.h>
+#include <schema.h>
 
 WickyEngine* WickyEngine::instance = NULL;
+
+int countInsert=0;
 
 WickyEngine::WickyEngine(){
 	
@@ -125,7 +131,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	opMap["<>"]=3;
 	opMap["<="]=4;
 	opMap[">="]=5;
-	
+	countInsert = 0;
 
 	list<pair<string,string> > cond;
 	//initial the table to be returned
@@ -304,7 +310,7 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 }
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
-	
+	countInsert++;
 	//get the primary key
 	CatalogManager* cm = CatalogManager::getInstance();
 	std::string primaryKey;
@@ -359,11 +365,11 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	t->rows.push_back(inputTuple);
 	rm.writeTable(*t, bm);
 
-	// cout<<"last row:";
-	// for(int i = 0; i < t->getAttrNum(); i++){
-	// 	cout<<" "<<t->rows[t->rows.size()-1].col[i];
-	// }
-	// cout<<endl;
+	cout<<"Insert:";
+	for(int i = 0; i < t->getAttrNum(); i++){
+		cout<<" "<<t->rows[t->rows.size()-1].col[i];
+	}
+	cout<<endl;
 	
 	// cout<<"after insertion: "<<t->rows.size()<<endl;
 	// cout<<"insert: "<<endl;
@@ -372,6 +378,7 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 }
 
 int WickyEngine::Delete(Table* t, Condition c){
+	countInsert = 0;
 	using namespace std;
 	//initial the mapping between operators
 	map<string,int> opMap;
@@ -549,14 +556,82 @@ int WickyEngine::Delete(Table* t, Condition c){
 }
 
 
-int WickyEngine::InsertByName(std::string name, std::vector<std::pair<std::string, std::string> > values){
-	std::cout << "WickyEngine::InsertByName()" << std::endl;
+void Split(std::string src, std::string separator, std::vector<std::string>& dest)
+{
+	dest.clear();
+    std::string str = src;
+    std::string substring;
+    std::string::size_type start = 0, index;
+
+    do
+    {
+        index = str.find_first_of(separator,start);
+        if (index != std::string::npos)
+        {    
+            substring = str.substr(start,index-start);
+            dest.push_back(substring);
+            start = str.find_first_not_of(separator,index);
+            if (start == std::string::npos) return;
+        }
+    }while(index != std::string::npos);
+    
+    //the last token
+    substring = str.substr(start);
+    dest.push_back(substring);
 }
 
-int WickyEngine::DeleteByName(std::string name, Condition c){
-	std::cout << "WickyEngine::DeleteByName()" << std::endl;
+bool attrFlag=false;
+std::vector<Attribute> attrStable;
+int WickyEngine::InsertByName(std::string filename, std::vector<std::pair<std::string, std::string> > values){
+	if(countInsert<100){
+		Table* tempTable = GetTable(filename);
+		Insert(tempTable, values);
+	}
+	else{
+		using namespace std;
+		if(attrFlag==false){
+			CatalogManager* cm = CatalogManager::getInstance();
+			Schema s = cm->get(filename);
+			s.copyAttributes(attrStable);
+			attrFlag=true;
+		}
+		BufferManager *b = BufferManager::getInstance();
+		int offset;
+		b->read(filename,0,&offset);
+		RecordManager rm;
+
+		/********************************************************/
+		vector<std::pair<string, string> >::iterator itr;
+		// vector<string> inputCol;
+		// vector<Attribute> attrList = t->getAttrList();
+		for(itr = values.begin(); itr != values.end(); itr++){		
+			if(itr->first=="CHAR")
+				itr->second = itr->second.substr(1,itr->second.size()-2);
+		}
+		string output="";
+		for(itr = values.begin(); itr != values.end(); itr++){
+			output=output+" "+itr->second;
+		}
+
+		b->write(filename, Block::BLOCK_SIZE+offset, output);
+		offset+=output.size();
+		b->write(filename, 0, offset);
+		cout<<"Insert:";
+		for(itr = values.begin(); itr != values.end(); itr++){
+			cout<<" "<<itr->second;
+		}
+		cout<<endl;
+	}
+	return 0;
 }
 
+/////////////////////////////////////////////////////////////////
+int WickyEngine::DeleteByName(std::string filename, Condition c){
+	Table* tempTable = GetTable(filename);
+	Delete(tempTable,c);
+	return 0;
+}
+/***************************************************************/
 int WickyEngine::Update(Table* t, Condition c){
 	
 }

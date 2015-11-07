@@ -7,6 +7,7 @@
 Table::Table(std::string name){
 	tableName = name;
 	attrNum=0;
+	tailOffset=0;
 }
 
 bool Table::CreateTable(std::vector<Attribute> v){

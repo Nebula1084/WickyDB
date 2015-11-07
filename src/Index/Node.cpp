@@ -269,7 +269,7 @@ void Node::insertInParent(Key K1, Node* L1){
 	if (index->debug && 0){
 		std::cout << "-----------after------------" << P->getAddr() << std::endl;
 		P->print();
-		getch();
+		// getch();
 	}
 }
 
@@ -361,7 +361,7 @@ void Node::deleteEntry(Key K, int P){
 				std::cout << "----------Pa-----------" << std::endl;
 				Pa->print();	
 			}			
-			getch();
+			// getch();
 		} else {			
 			if (pN1 < pN){
 				N1->redistribute(this, K1);

@@ -50,7 +50,7 @@ private:
 	std::string tableName;			//the name of table
 	int attrNum;				//the number of attributes(column)
 	std::vector<Attribute> attrList;	//the list of attributes
-	// int length;
+	int tailOffset;
 
 public:
 	std::vector<Tuple> rows;			//the data of the table	
@@ -65,6 +65,9 @@ public:
 	void printTable();					//print all the rows of table
 
 	std::vector<Attribute> getAttrList(){return attrList;}	
+
+	int getTailOffset(){return tailOffset;}
+	void setTailOffset(int x){tailOffset=x;}
 };
 
 #endif
