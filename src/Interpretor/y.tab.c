@@ -50,7 +50,7 @@
 /* Unqualified %code blocks.  */
 
 /* Line 318 of lalr1.cc  */
-#line 74 "src/Interpretor/SqlParser.y"
+#line 75 "src/Interpretor/SqlParser.y"
 
 # include "Parser.h"
 # include "Schema.h"
@@ -433,35 +433,35 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 	  case 2:
 
 /* Line 678 of lalr1.cc  */
-#line 86 "src/Interpretor/SqlParser.y"
+#line 87 "src/Interpretor/SqlParser.y"
     { driver.setNewSmt(true); }
     break;
 
   case 3:
 
 /* Line 678 of lalr1.cc  */
-#line 87 "src/Interpretor/SqlParser.y"
+#line 88 "src/Interpretor/SqlParser.y"
     { driver.setNewSmt(true); }
     break;
 
   case 4:
 
 /* Line 678 of lalr1.cc  */
-#line 88 "src/Interpretor/SqlParser.y"
+#line 89 "src/Interpretor/SqlParser.y"
     { return Parser::EXIT; }
     break;
 
   case 5:
 
 /* Line 678 of lalr1.cc  */
-#line 89 "src/Interpretor/SqlParser.y"
+#line 90 "src/Interpretor/SqlParser.y"
     { return Parser::EXIT; }
     break;
 
   case 10:
 
 /* Line 678 of lalr1.cc  */
-#line 101 "src/Interpretor/SqlParser.y"
+#line 102 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();
 			try {
@@ -476,7 +476,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 11:
 
 /* Line 678 of lalr1.cc  */
-#line 113 "src/Interpretor/SqlParser.y"
+#line 114 "src/Interpretor/SqlParser.y"
     {
 			driver.schema = new Schema(*(yysemantic_stack_[(1) - (1)].strval));			
 		}
@@ -485,7 +485,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 12:
 
 /* Line 678 of lalr1.cc  */
-#line 119 "src/Interpretor/SqlParser.y"
+#line 120 "src/Interpretor/SqlParser.y"
     {
 			
 		}
@@ -494,7 +494,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 13:
 
 /* Line 678 of lalr1.cc  */
-#line 122 "src/Interpretor/SqlParser.y"
+#line 123 "src/Interpretor/SqlParser.y"
     {
 				
 		}
@@ -503,7 +503,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 17:
 
 /* Line 678 of lalr1.cc  */
-#line 137 "src/Interpretor/SqlParser.y"
+#line 138 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();			
 			try {
@@ -518,7 +518,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 19:
 
 /* Line 678 of lalr1.cc  */
-#line 153 "src/Interpretor/SqlParser.y"
+#line 154 "src/Interpretor/SqlParser.y"
     {
 			driver.schema->addAttribute(*(yysemantic_stack_[(3) - (1)].strval), (yysemantic_stack_[(3) - (2)].strval)[0]);
 			int len = std::atoi((yysemantic_stack_[(3) - (2)].strval)[1].c_str());
@@ -538,7 +538,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 20:
 
 /* Line 678 of lalr1.cc  */
-#line 170 "src/Interpretor/SqlParser.y"
+#line 171 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = NULL;
 		}
@@ -547,7 +547,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 21:
 
 /* Line 678 of lalr1.cc  */
-#line 173 "src/Interpretor/SqlParser.y"
+#line 174 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string(Schema::UNIQUE);
 		}
@@ -556,17 +556,28 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   case 23:
 
 /* Line 678 of lalr1.cc  */
-#line 179 "src/Interpretor/SqlParser.y"
+#line 180 "src/Interpretor/SqlParser.y"
     {
 			driver.schema->setPrimaryKey(*(yysemantic_stack_[(5) - (4)].strval));
 			delete (yysemantic_stack_[(5) - (4)].strval);
 		}
     break;
 
-  case 28:
+  case 26:
 
 /* Line 678 of lalr1.cc  */
-#line 196 "src/Interpretor/SqlParser.y"
+#line 193 "src/Interpretor/SqlParser.y"
+    {
+			driver.sqlFileName = * (yysemantic_stack_[(2) - (2)].strval);		
+			delete (yysemantic_stack_[(2) - (2)].strval);
+			return Parser::EXEC;
+		}
+    break;
+
+  case 30:
+
+/* Line 678 of lalr1.cc  */
+#line 207 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
@@ -586,10 +597,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 29:
+  case 31:
 
 /* Line 678 of lalr1.cc  */
-#line 216 "src/Interpretor/SqlParser.y"
+#line 227 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
@@ -610,18 +621,18 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 30:
+  case 32:
 
 /* Line 678 of lalr1.cc  */
-#line 237 "src/Interpretor/SqlParser.y"
+#line 248 "src/Interpretor/SqlParser.y"
     {					
 		}
     break;
 
-  case 31:
+  case 33:
 
 /* Line 678 of lalr1.cc  */
-#line 242 "src/Interpretor/SqlParser.y"
+#line 253 "src/Interpretor/SqlParser.y"
     {			
 			driver.values = new std::vector<std::pair<std::string, std::string> >;		
 			driver.values->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(1) - (1)].strval)[0], (yysemantic_stack_[(1) - (1)].strval)[1]));
@@ -629,38 +640,38 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 32:
+  case 34:
 
 /* Line 678 of lalr1.cc  */
-#line 247 "src/Interpretor/SqlParser.y"
+#line 258 "src/Interpretor/SqlParser.y"
     {
 			driver.values->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]));
 			delete[] (yysemantic_stack_[(3) - (3)].strval);
 		}
     break;
 
-  case 33:
+  case 35:
 
 /* Line 678 of lalr1.cc  */
-#line 254 "src/Interpretor/SqlParser.y"
+#line 265 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval);
 		}
     break;
 
-  case 34:
+  case 36:
 
 /* Line 678 of lalr1.cc  */
-#line 257 "src/Interpretor/SqlParser.y"
+#line 268 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string("NULL");
 		}
     break;
 
-  case 35:
+  case 37:
 
 /* Line 678 of lalr1.cc  */
-#line 263 "src/Interpretor/SqlParser.y"
+#line 274 "src/Interpretor/SqlParser.y"
     {
 			{
 				Table* t1 = driver.table;
@@ -698,32 +709,32 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 39:
-
-/* Line 678 of lalr1.cc  */
-#line 307 "src/Interpretor/SqlParser.y"
-    { (yyval.intval) = 1; }
-    break;
-
-  case 40:
-
-/* Line 678 of lalr1.cc  */
-#line 308 "src/Interpretor/SqlParser.y"
-    { (yyval.intval) = 0;}
-    break;
-
   case 41:
 
 /* Line 678 of lalr1.cc  */
-#line 312 "src/Interpretor/SqlParser.y"
-    {			
-		}
+#line 318 "src/Interpretor/SqlParser.y"
+    { (yyval.intval) = 1; }
     break;
 
   case 42:
 
 /* Line 678 of lalr1.cc  */
-#line 317 "src/Interpretor/SqlParser.y"
+#line 319 "src/Interpretor/SqlParser.y"
+    { (yyval.intval) = 0;}
+    break;
+
+  case 43:
+
+/* Line 678 of lalr1.cc  */
+#line 323 "src/Interpretor/SqlParser.y"
+    {			
+		}
+    break;
+
+  case 44:
+
+/* Line 678 of lalr1.cc  */
+#line 328 "src/Interpretor/SqlParser.y"
     {
 			driver.cs = new std::vector<std::pair<std::string, std::string> >;		
 			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(1) - (1)].strval)[0], (yysemantic_stack_[(1) - (1)].strval)[1]));
@@ -731,30 +742,13 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 43:
-
-/* Line 678 of lalr1.cc  */
-#line 322 "src/Interpretor/SqlParser.y"
-    {
-			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]));
-			delete[] (yysemantic_stack_[(3) - (3)].strval);
-		}
-    break;
-
   case 45:
 
 /* Line 678 of lalr1.cc  */
-#line 330 "src/Interpretor/SqlParser.y"
+#line 333 "src/Interpretor/SqlParser.y"
     {
-
-		}
-    break;
-
-  case 46:
-
-/* Line 678 of lalr1.cc  */
-#line 336 "src/Interpretor/SqlParser.y"
-    {			
+			driver.cs->push_back(std::pair<std::string, std::string>((yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]));
+			delete[] (yysemantic_stack_[(3) - (3)].strval);
 		}
     break;
 
@@ -762,6 +756,23 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 /* Line 678 of lalr1.cc  */
 #line 341 "src/Interpretor/SqlParser.y"
+    {
+
+		}
+    break;
+
+  case 48:
+
+/* Line 678 of lalr1.cc  */
+#line 347 "src/Interpretor/SqlParser.y"
+    {			
+		}
+    break;
+
+  case 49:
+
+/* Line 678 of lalr1.cc  */
+#line 352 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();			
 			try {
@@ -773,10 +784,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 48:
+  case 50:
 
 /* Line 678 of lalr1.cc  */
-#line 350 "src/Interpretor/SqlParser.y"
+#line 361 "src/Interpretor/SqlParser.y"
     {
 			WickyEngine* we = WickyEngine::getInstance();			
 			try {
@@ -793,19 +804,19 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 49:
+  case 51:
 
 /* Line 678 of lalr1.cc  */
-#line 367 "src/Interpretor/SqlParser.y"
+#line 378 "src/Interpretor/SqlParser.y"
     {			
 			delete (yysemantic_stack_[(1) - (1)].strval);
 		}
     break;
 
-  case 50:
+  case 52:
 
 /* Line 678 of lalr1.cc  */
-#line 373 "src/Interpretor/SqlParser.y"
+#line 384 "src/Interpretor/SqlParser.y"
     {				
 /*			std::vector< std::pair<std::string, std::string> > cond = driver.getCondition()->popCondition();
 			
@@ -816,18 +827,18 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 52:
+  case 54:
 
 /* Line 678 of lalr1.cc  */
-#line 384 "src/Interpretor/SqlParser.y"
+#line 395 "src/Interpretor/SqlParser.y"
     {		
 	}
     break;
 
-  case 55:
+  case 57:
 
 /* Line 678 of lalr1.cc  */
-#line 394 "src/Interpretor/SqlParser.y"
+#line 405 "src/Interpretor/SqlParser.y"
     {			
 			driver.getCondition()->pushCondition((yysemantic_stack_[(3) - (1)].strval)[0], (yysemantic_stack_[(3) - (1)].strval)[1], *(yysemantic_stack_[(3) - (2)].strval), (yysemantic_stack_[(3) - (3)].strval)[0], (yysemantic_stack_[(3) - (3)].strval)[1]);			
 			delete[] (yysemantic_stack_[(3) - (1)].strval);			
@@ -836,26 +847,26 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 56:
+  case 58:
 
 /* Line 678 of lalr1.cc  */
-#line 403 "src/Interpretor/SqlParser.y"
+#line 414 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
-  case 57:
+  case 59:
 
 /* Line 678 of lalr1.cc  */
-#line 404 "src/Interpretor/SqlParser.y"
+#line 415 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); 
 		}
     break;
 
-  case 58:
+  case 60:
 
 /* Line 678 of lalr1.cc  */
-#line 410 "src/Interpretor/SqlParser.y"
+#line 421 "src/Interpretor/SqlParser.y"
     {			
 			std::string* ret = new std::string[2];
 			ret[0] = "COLUMN";
@@ -864,10 +875,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 59:
+  case 61:
 
 /* Line 678 of lalr1.cc  */
-#line 416 "src/Interpretor/SqlParser.y"
+#line 427 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = "COLUMN";
@@ -876,26 +887,26 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 60:
+  case 62:
 
 /* Line 678 of lalr1.cc  */
-#line 425 "src/Interpretor/SqlParser.y"
+#line 436 "src/Interpretor/SqlParser.y"
     { 
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval);			
 		}
     break;
 
-  case 61:
+  case 63:
 
 /* Line 678 of lalr1.cc  */
-#line 431 "src/Interpretor/SqlParser.y"
+#line 442 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
-  case 62:
+  case 64:
 
 /* Line 678 of lalr1.cc  */
-#line 435 "src/Interpretor/SqlParser.y"
+#line 446 "src/Interpretor/SqlParser.y"
     {			
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::CHAR;
@@ -905,10 +916,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 63:
+  case 65:
 
 /* Line 678 of lalr1.cc  */
-#line 442 "src/Interpretor/SqlParser.y"
+#line 453 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::INT;
@@ -918,10 +929,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 64:
+  case 66:
 
 /* Line 678 of lalr1.cc  */
-#line 449 "src/Interpretor/SqlParser.y"
+#line 460 "src/Interpretor/SqlParser.y"
     {
 			std::string* ret = new std::string[2];
 			ret[0] = Schema::FLOAT;
@@ -931,26 +942,26 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 65:
+  case 67:
 
 /* Line 678 of lalr1.cc  */
-#line 459 "src/Interpretor/SqlParser.y"
+#line 470 "src/Interpretor/SqlParser.y"
     { 
 			(yyval.strval) = (yysemantic_stack_[(1) - (1)].strval);			 
 		}
     break;
 
-  case 66:
+  case 68:
 
 /* Line 678 of lalr1.cc  */
-#line 465 "src/Interpretor/SqlParser.y"
+#line 476 "src/Interpretor/SqlParser.y"
     { (yyval.strval) = (yysemantic_stack_[(1) - (1)].strval); }
     break;
 
-  case 67:
+  case 69:
 
 /* Line 678 of lalr1.cc  */
-#line 469 "src/Interpretor/SqlParser.y"
+#line 480 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::INT;
@@ -960,10 +971,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 68:
+  case 70:
 
 /* Line 678 of lalr1.cc  */
-#line 476 "src/Interpretor/SqlParser.y"
+#line 487 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::CHAR;
@@ -972,10 +983,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 		}
     break;
 
-  case 69:
+  case 71:
 
 /* Line 678 of lalr1.cc  */
-#line 482 "src/Interpretor/SqlParser.y"
+#line 493 "src/Interpretor/SqlParser.y"
     {
 			(yyval.strval) = new std::string[2];
 			(yyval.strval)[0] = Schema::FLOAT;
@@ -988,7 +999,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
 
 /* Line 678 of lalr1.cc  */
-#line 992 "y.tab.c"
+#line 1003 "y.tab.c"
 	default:
           break;
       }
@@ -1193,22 +1204,22 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char SqlParser::yypact_ninf_ = -69;
+  const signed char SqlParser::yypact_ninf_ = -68;
   const signed char
   SqlParser::yypact_[] =
   {
-         0,    16,    -3,    18,    26,    28,   -69,     7,    19,   -69,
-     -69,   -69,   -69,   -69,   -69,   -69,   -69,   -69,   -69,     8,
-      34,    34,    34,    52,    34,    52,   -69,   -69,    20,   -69,
-      17,   -69,   -69,   -69,   -69,    35,    21,   -69,   -69,   -69,
-     -69,   -69,    39,    33,    25,   -69,   -69,    37,   -69,   -69,
-     -69,    61,    34,   -69,    33,    36,    27,   -69,    36,   -69,
-     -69,     2,    34,   -69,    30,   -69,   -69,   -69,   -69,     4,
-      58,   -69,   -69,    57,   -69,    43,    12,   -69,   -69,   -69,
-      -1,    38,    34,   -69,    14,   -69,   -69,    36,    36,    40,
-     -69,     2,   -69,    41,   -69,    42,    69,   -69,   -69,     4,
-     -69,   -69,    69,   -69,    68,   -69,   -69,    44,   -69,    45,
-      46,   -69,   -69,   -69
+        -7,   -15,    -8,     7,    19,    22,   -68,    31,     1,    20,
+     -68,   -68,   -68,   -68,   -68,   -68,   -68,   -68,   -68,   -68,
+     -68,    23,    54,    54,    54,    56,    54,    56,   -68,   -68,
+     -68,    24,   -68,    21,   -68,   -68,   -68,   -68,    35,    25,
+     -68,   -68,   -68,   -68,   -68,    38,    39,    28,   -68,   -68,
+      33,   -68,   -68,   -68,    65,    54,   -68,    39,    43,    30,
+     -68,    43,   -68,   -68,     4,    54,   -68,    32,   -68,   -68,
+     -68,   -68,    18,    63,   -68,   -68,    62,   -68,    46,    13,
+     -68,   -68,   -68,    16,    36,    54,   -68,    15,   -68,   -68,
+      43,    43,    37,   -68,     4,   -68,    40,   -68,    45,    75,
+     -68,   -68,    18,   -68,   -68,    75,   -68,    76,   -68,   -68,
+      42,   -68,    44,    47,   -68,   -68,   -68
   };
 
   /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -1217,38 +1228,40 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const unsigned char
   SqlParser::yydefact_[] =
   {
-         0,    36,     0,     0,     0,     0,     4,     0,     0,     6,
-       7,     8,     9,    24,    25,    26,    27,    37,    38,     0,
-       0,     0,     0,     0,     0,     0,     1,     5,     0,     2,
-      58,    62,    63,    64,    40,     0,    39,    42,    57,    56,
-      60,    61,     0,    44,     0,    11,    66,     0,    17,    18,
-       3,     0,     0,    35,    44,     0,     0,    29,    51,    28,
-      45,    22,     0,    59,    46,    47,    49,    41,    43,     0,
-      50,    53,    54,     0,    65,     0,     0,    12,    14,    15,
-       0,     0,     0,    34,     0,    31,    33,    51,     0,     0,
-      10,    22,    67,     0,    69,    20,     0,    48,    30,     0,
-      52,    55,     0,    13,     0,    21,    19,     0,    32,     0,
-       0,    16,    23,    68
+         0,    38,     0,     0,     0,     0,     4,     0,     0,     0,
+       6,     7,     8,     9,    25,    24,    27,    28,    29,    39,
+      40,     0,     0,     0,     0,     0,     0,     0,    26,     1,
+       5,     0,     2,    60,    64,    65,    66,    42,     0,    41,
+      44,    59,    58,    62,    63,     0,    46,     0,    11,    68,
+       0,    17,    18,     3,     0,     0,    37,    46,     0,     0,
+      31,    53,    30,    47,    22,     0,    61,    48,    49,    51,
+      43,    45,     0,    52,    55,    56,     0,    67,     0,     0,
+      12,    14,    15,     0,     0,     0,    36,     0,    33,    35,
+      53,     0,     0,    10,    22,    69,     0,    71,    20,     0,
+      50,    32,     0,    54,    57,     0,    13,     0,    21,    19,
+       0,    34,     0,     0,    16,    23,    70
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const signed char
   SqlParser::yypgoto_[] =
   {
-       -69,   -69,    70,   -69,   -69,   -69,   -16,   -69,   -69,   -69,
-     -69,   -69,   -69,   -69,   -69,   -69,   -69,   -69,   -17,   -69,
-     -69,   -69,   -69,   -69,    32,   -69,   -69,    -2,   -69,    -6,
-     -69,   -69,   -19,   -69,   -68,   -18,   -69,   -64,    62,   -69
+       -68,   -68,    72,   -68,   -68,   -68,   -11,   -68,   -68,   -68,
+     -68,   -68,   -68,   -68,   -68,   -68,   -68,   -68,   -68,   -17,
+     -68,   -68,   -68,   -68,   -68,    29,   -68,   -68,     3,   -68,
+      -1,   -68,   -68,   -21,   -68,   -67,   -20,   -68,   -66,    64,
+     -68
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const signed char
   SqlParser::yydefgoto_[] =
   {
-        -1,     7,     8,     9,    44,    76,    77,    10,    11,    12,
-      78,   106,    79,    13,    14,    15,    57,    84,    85,    16,
-      19,    35,    53,    36,    59,    54,    64,    65,    60,    70,
-      71,    72,    73,    38,    39,    66,    40,    80,    47,    95
+        -1,     8,     9,    10,    47,    79,    80,    11,    12,    13,
+      81,   109,    82,    14,    15,    16,    17,    60,    87,    88,
+      18,    21,    38,    56,    39,    62,    57,    67,    68,    63,
+      73,    74,    75,    76,    41,    42,    69,    43,    83,    50,
+      98
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1258,30 +1271,32 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const unsigned char
   SqlParser::yytable_[] =
   {
-        37,    86,    42,    43,    45,    74,    48,    26,    31,    32,
-      33,    30,    31,    32,    33,     1,     2,     3,     4,     5,
-       6,    34,     1,     2,     3,     4,     5,    27,    83,    75,
-      20,    86,   107,    92,    93,    94,    68,    41,   109,    30,
-      31,    32,    33,    21,    81,    17,    18,    22,    23,    24,
-      25,    90,    91,    98,    99,    46,    29,    50,    51,    58,
-      52,    55,    56,    61,    63,    69,    87,    88,    62,   101,
-      82,    89,    74,   110,   105,   103,    96,    28,   102,   104,
-      97,   100,   108,   111,   112,   113,    67,    49
+        40,    29,    45,    46,    48,    89,    51,    77,     1,     2,
+       3,     4,     5,     6,    19,    20,     1,     2,     3,     4,
+       5,    30,    34,    35,    36,    22,    33,    34,    35,    36,
+       7,    78,    23,   110,    28,    89,    37,    71,     7,   112,
+      24,    25,    86,    26,    27,    84,    33,    34,    35,    36,
+      95,    96,    97,    93,    94,   101,   102,    44,    32,    49,
+      55,    59,    53,    54,    65,    61,    58,    64,    66,    72,
+     104,    90,    91,    85,    92,    99,   105,   108,    77,   107,
+      31,   113,   114,   106,   115,   111,    70,   116,   100,   103,
+       0,    52
   };
 
   /* YYCHECK.  */
-  const unsigned char
+  const signed char
   SqlParser::yycheck_[] =
   {
-        19,    69,    20,    21,    22,     3,    24,     0,     4,     5,
-       6,     3,     4,     5,     6,    15,    16,    17,    18,    19,
-      20,    13,    15,    16,    17,    18,    19,    20,    24,    27,
-      33,    99,    96,    34,    35,    36,    55,     3,   102,     3,
-       4,     5,     6,    25,    62,    29,    30,    21,    22,    21,
-      22,    39,    40,    39,    40,     3,    37,    37,    41,    26,
-      25,    40,    23,    38,     3,    38,     8,    10,    31,    88,
-      40,    28,     3,     5,    32,    91,    38,     7,    38,    38,
-      82,    87,    99,    39,    39,    39,    54,    25
+        21,     0,    22,    23,    24,    72,    26,     3,    15,    16,
+      17,    18,    19,    20,    29,    30,    15,    16,    17,    18,
+      19,    20,     4,     5,     6,    33,     3,     4,     5,     6,
+      37,    27,    25,    99,     3,   102,    13,    58,    37,   105,
+      21,    22,    24,    21,    22,    65,     3,     4,     5,     6,
+      34,    35,    36,    40,    41,    40,    41,     3,    38,     3,
+      25,    23,    38,    42,    31,    26,    41,    39,     3,    39,
+      91,     8,    10,    41,    28,    39,    39,    32,     3,    39,
+       8,     5,    40,    94,    40,   102,    57,    40,    85,    90,
+      -1,    27
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1289,18 +1304,18 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const unsigned char
   SqlParser::yystos_[] =
   {
-         0,    15,    16,    17,    18,    19,    20,    43,    44,    45,
-      49,    50,    51,    55,    56,    57,    61,    29,    30,    62,
-      33,    25,    21,    22,    21,    22,     0,    20,    44,    37,
-       3,     4,     5,     6,    13,    63,    65,    74,    75,    76,
-      78,     3,    77,    77,    46,    77,     3,    80,    77,    80,
-      37,    41,    25,    64,    67,    40,    23,    58,    26,    66,
-      70,    38,    31,     3,    68,    69,    77,    66,    74,    38,
-      71,    72,    73,    74,     3,    27,    47,    48,    52,    54,
-      79,    77,    40,    24,    59,    60,    76,     8,    10,    28,
-      39,    40,    34,    35,    36,    81,    38,    69,    39,    40,
-      71,    74,    38,    48,    38,    32,    53,    79,    60,    79,
-       5,    39,    39,    39
+         0,    15,    16,    17,    18,    19,    20,    37,    44,    45,
+      46,    50,    51,    52,    56,    57,    58,    59,    63,    29,
+      30,    64,    33,    25,    21,    22,    21,    22,     3,     0,
+      20,    45,    38,     3,     4,     5,     6,    13,    65,    67,
+      76,    77,    78,    80,     3,    79,    79,    47,    79,     3,
+      82,    79,    82,    38,    42,    25,    66,    69,    41,    23,
+      60,    26,    68,    72,    39,    31,     3,    70,    71,    79,
+      68,    76,    39,    73,    74,    75,    76,     3,    27,    48,
+      49,    53,    55,    81,    79,    41,    24,    61,    62,    78,
+       8,    10,    28,    40,    41,    34,    35,    36,    83,    39,
+      71,    40,    41,    73,    76,    39,    49,    39,    32,    54,
+      81,    62,    81,     5,    40,    40,    40
   };
 
 #if YYDEBUG
@@ -1312,8 +1327,8 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
          0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,    43,    45,    42,    47,   266,   267,   268,   269,   270,
      271,   272,   273,   274,   275,   276,   277,   278,   279,   280,
-     281,   282,   283,   284,   285,   286,   287,    59,    40,    41,
-      44,    46
+     281,   282,   283,   284,   285,   286,   287,   288,    59,    40,
+      41,    44,    46
   };
 #endif
 
@@ -1321,13 +1336,14 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const unsigned char
   SqlParser::yyr1_[] =
   {
-         0,    42,    43,    43,    43,    43,    44,    44,    44,    44,
-      45,    46,    47,    47,    48,    48,    49,    50,    51,    52,
-      53,    53,    54,    54,    44,    55,    55,    55,    56,    57,
-      58,    59,    59,    60,    60,    61,    62,    62,    62,    63,
-      63,    64,    65,    65,    66,    66,    67,    68,    68,    69,
-      70,    71,    71,    71,    72,    73,    74,    74,    75,    75,
-      76,    77,    78,    78,    78,    79,    80,    81,    81,    81
+         0,    43,    44,    44,    44,    44,    45,    45,    45,    45,
+      46,    47,    48,    48,    49,    49,    50,    51,    52,    53,
+      54,    54,    55,    55,    45,    45,    56,    57,    57,    57,
+      58,    59,    60,    61,    61,    62,    62,    63,    64,    64,
+      64,    65,    65,    66,    67,    67,    68,    68,    69,    70,
+      70,    71,    72,    73,    73,    73,    74,    75,    76,    76,
+      77,    77,    78,    79,    80,    80,    80,    81,    82,    83,
+      83,    83
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1336,11 +1352,12 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   {
          0,     2,     2,     3,     1,     2,     1,     1,     1,     1,
        6,     1,     1,     3,     1,     1,     8,     3,     3,     3,
-       0,     1,     0,     5,     1,     1,     1,     1,     4,     4,
-       4,     1,     3,     1,     1,     4,     0,     1,     1,     1,
-       1,     2,     1,     3,     0,     1,     2,     1,     3,     1,
-       2,     0,     3,     1,     1,     3,     1,     1,     1,     3,
-       1,     1,     1,     1,     1,     1,     1,     1,     4,     1
+       0,     1,     0,     5,     1,     1,     2,     1,     1,     1,
+       4,     4,     4,     1,     3,     1,     1,     4,     0,     1,
+       1,     1,     1,     2,     1,     3,     0,     1,     2,     1,
+       3,     1,     2,     0,     3,     1,     1,     3,     1,     1,
+       1,     3,     1,     1,     1,     1,     1,     1,     1,     1,
+       4,     1
   };
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
@@ -1353,18 +1370,18 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   "APPROXNUM", "OR", "AND", "NOT", "COMPARISON", "'+'", "'-'", "'*'",
   "'/'", "SELECT", "INSERT", "DELETE", "CREATE", "DROP", "EXIT", "TABLE",
   "INDEX", "VALUES", "NULLX", "FROM", "WHERE", "PRIMARY", "KEY", "ALL",
-  "DISTINCT", "ON", "UNIQUE", "INTO", "INT", "CHAR", "FLOAT", "';'", "'('",
-  "')'", "','", "'.'", "$accept", "sql_list", "sql", "base_table_def",
-  "def_table", "base_table_element_commalist", "base_table_element",
-  "base_index_def", "drop_table", "drop_index", "column_def",
-  "column_def_opt", "table_constraint_def", "manipulative_statement",
-  "delete_statement_searched", "insert_statement", "values_or_query_spec",
-  "insert_atom_commalist", "insert_atom", "select_statement",
-  "opt_all_distinct", "selection", "table_exp", "scalar_exp_commalist",
-  "opt_where_clause", "from_clause", "table_ref_commalist", "table_ref",
-  "where_clause", "search_condition", "predicate", "comparison_predicate",
-  "scalar_exp", "column_ref", "atom", "table", "literal", "column",
-  "index", "data_type", 0
+  "DISTINCT", "ON", "UNIQUE", "INTO", "INT", "CHAR", "FLOAT", "EXEC",
+  "';'", "'('", "')'", "','", "'.'", "$accept", "sql_list", "sql",
+  "base_table_def", "def_table", "base_table_element_commalist",
+  "base_table_element", "base_index_def", "drop_table", "drop_index",
+  "column_def", "column_def_opt", "table_constraint_def", "exec_statement",
+  "manipulative_statement", "delete_statement_searched",
+  "insert_statement", "values_or_query_spec", "insert_atom_commalist",
+  "insert_atom", "select_statement", "opt_all_distinct", "selection",
+  "table_exp", "scalar_exp_commalist", "opt_where_clause", "from_clause",
+  "table_ref_commalist", "table_ref", "where_clause", "search_condition",
+  "predicate", "comparison_predicate", "scalar_exp", "column_ref", "atom",
+  "table", "literal", "column", "index", "data_type", 0
   };
 #endif
 
@@ -1373,26 +1390,26 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   const SqlParser::rhs_number_type
   SqlParser::yyrhs_[] =
   {
-        43,     0,    -1,    44,    37,    -1,    43,    44,    37,    -1,
-      20,    -1,    43,    20,    -1,    45,    -1,    49,    -1,    50,
-      -1,    51,    -1,    18,    21,    46,    38,    47,    39,    -1,
-      77,    -1,    48,    -1,    47,    40,    48,    -1,    52,    -1,
-      54,    -1,    18,    22,    80,    31,    77,    38,    79,    39,
-      -1,    19,    21,    77,    -1,    19,    22,    80,    -1,    79,
-      81,    53,    -1,    -1,    32,    -1,    -1,    27,    28,    38,
-      79,    39,    -1,    55,    -1,    56,    -1,    57,    -1,    61,
-      -1,    17,    25,    77,    66,    -1,    16,    33,    77,    58,
-      -1,    23,    38,    59,    39,    -1,    60,    -1,    59,    40,
-      60,    -1,    76,    -1,    24,    -1,    15,    62,    63,    64,
-      -1,    -1,    29,    -1,    30,    -1,    65,    -1,    13,    -1,
-      67,    66,    -1,    74,    -1,    65,    40,    74,    -1,    -1,
-      70,    -1,    25,    68,    -1,    69,    -1,    68,    40,    69,
-      -1,    77,    -1,    26,    71,    -1,    -1,    71,     8,    71,
-      -1,    72,    -1,    73,    -1,    74,    10,    74,    -1,    76,
-      -1,    75,    -1,     3,    -1,     3,    41,     3,    -1,    78,
-      -1,     3,    -1,     4,    -1,     5,    -1,     6,    -1,     3,
-      -1,     3,    -1,    34,    -1,    35,    38,     5,    39,    -1,
-      36,    -1
+        44,     0,    -1,    45,    38,    -1,    44,    45,    38,    -1,
+      20,    -1,    44,    20,    -1,    46,    -1,    50,    -1,    51,
+      -1,    52,    -1,    18,    21,    47,    39,    48,    40,    -1,
+      79,    -1,    49,    -1,    48,    41,    49,    -1,    53,    -1,
+      55,    -1,    18,    22,    82,    31,    79,    39,    81,    40,
+      -1,    19,    21,    79,    -1,    19,    22,    82,    -1,    81,
+      83,    54,    -1,    -1,    32,    -1,    -1,    27,    28,    39,
+      81,    40,    -1,    57,    -1,    56,    -1,    37,     3,    -1,
+      58,    -1,    59,    -1,    63,    -1,    17,    25,    79,    68,
+      -1,    16,    33,    79,    60,    -1,    23,    39,    61,    40,
+      -1,    62,    -1,    61,    41,    62,    -1,    78,    -1,    24,
+      -1,    15,    64,    65,    66,    -1,    -1,    29,    -1,    30,
+      -1,    67,    -1,    13,    -1,    69,    68,    -1,    76,    -1,
+      67,    41,    76,    -1,    -1,    72,    -1,    25,    70,    -1,
+      71,    -1,    70,    41,    71,    -1,    79,    -1,    26,    73,
+      -1,    -1,    73,     8,    73,    -1,    74,    -1,    75,    -1,
+      76,    10,    76,    -1,    78,    -1,    77,    -1,     3,    -1,
+       3,    42,     3,    -1,    80,    -1,     3,    -1,     4,    -1,
+       5,    -1,     6,    -1,     3,    -1,     3,    -1,    34,    -1,
+      35,    39,     5,    40,    -1,    36,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1402,24 +1419,26 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   {
          0,     0,     3,     6,    10,    12,    15,    17,    19,    21,
       23,    30,    32,    34,    38,    40,    42,    51,    55,    59,
-      63,    64,    66,    67,    73,    75,    77,    79,    81,    86,
-      91,    96,    98,   102,   104,   106,   111,   112,   114,   116,
-     118,   120,   123,   125,   129,   130,   132,   135,   137,   141,
-     143,   146,   147,   151,   153,   155,   159,   161,   163,   165,
-     169,   171,   173,   175,   177,   179,   181,   183,   185,   190
+      63,    64,    66,    67,    73,    75,    77,    80,    82,    84,
+      86,    91,    96,   101,   103,   107,   109,   111,   116,   117,
+     119,   121,   123,   125,   128,   130,   134,   135,   137,   140,
+     142,   146,   148,   151,   152,   156,   158,   160,   164,   166,
+     168,   170,   174,   176,   178,   180,   182,   184,   186,   188,
+     190,   195
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   const unsigned short int
   SqlParser::yyrline_[] =
   {
-         0,    86,    86,    87,    88,    89,    94,    95,    96,    97,
-     101,   113,   119,   122,   128,   129,   133,   137,   149,   153,
-     170,   173,   178,   179,   186,   190,   191,   192,   196,   216,
-     237,   242,   247,   254,   257,   263,   300,   302,   303,   307,
-     308,   312,   317,   322,   328,   330,   336,   341,   350,   367,
-     373,   383,   384,   386,   390,   394,   403,   404,   410,   416,
-     425,   431,   435,   442,   449,   459,   465,   469,   476,   482
+         0,    87,    87,    88,    89,    90,    95,    96,    97,    98,
+     102,   114,   120,   123,   129,   130,   134,   138,   150,   154,
+     171,   174,   179,   180,   187,   188,   193,   201,   202,   203,
+     207,   227,   248,   253,   258,   265,   268,   274,   311,   313,
+     314,   318,   319,   323,   328,   333,   339,   341,   347,   352,
+     361,   378,   384,   394,   395,   397,   401,   405,   414,   415,
+     421,   427,   436,   442,   446,   453,   460,   470,   476,   480,
+     487,   493
   };
 
   // Print the state stack on the debug stream.
@@ -1463,8 +1482,8 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      38,    39,    13,    11,    40,    12,    41,    14,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    37,
+      39,    40,    13,    11,    41,    12,    42,    14,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    38,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1487,7 +1506,7 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    15,    16,    17,    18,
       19,    20,    21,    22,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    36
+      29,    30,    31,    32,    33,    34,    35,    36,    37
     };
     if ((unsigned int) t <= yyuser_token_number_max_)
       return translate_table[t];
@@ -1496,15 +1515,15 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
   }
 
   const int SqlParser::yyeof_ = 0;
-  const int SqlParser::yylast_ = 87;
-  const int SqlParser::yynnts_ = 40;
+  const int SqlParser::yylast_ = 91;
+  const int SqlParser::yynnts_ = 41;
   const int SqlParser::yyempty_ = -2;
-  const int SqlParser::yyfinal_ = 26;
+  const int SqlParser::yyfinal_ = 29;
   const int SqlParser::yyterror_ = 1;
   const int SqlParser::yyerrcode_ = 256;
-  const int SqlParser::yyntokens_ = 42;
+  const int SqlParser::yyntokens_ = 43;
 
-  const unsigned int SqlParser::yyuser_token_number_max_ = 287;
+  const unsigned int SqlParser::yyuser_token_number_max_ = 288;
   const SqlParser::token_number_type SqlParser::yyundef_token_ = 2;
 
 
@@ -1514,11 +1533,11 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 } // yy
 
 /* Line 1054 of lalr1.cc  */
-#line 1518 "y.tab.c"
+#line 1537 "y.tab.c"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 491 "src/Interpretor/SqlParser.y"
+#line 502 "src/Interpretor/SqlParser.y"
 
 
 void

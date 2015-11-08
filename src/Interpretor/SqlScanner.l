@@ -65,7 +65,7 @@ int		{ return token::INT; }
 char	{ return token::CHAR; }
 float	{ return token::FLOAT; }
 exit	{ return token::EXIT; }
-
+execfile { return token::EXEC; }
 	/* punctuation */
 
 "="		|

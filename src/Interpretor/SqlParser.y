@@ -70,6 +70,7 @@ class Condition;
 %token FROM WHERE OR AND NOT PRIMARY KEY
 %token ALL DISTINCT ON UNIQUE INTO
 %token INT CHAR FLOAT
+%token EXEC
 
 %code {
 # include "Parser.h"
@@ -184,6 +185,16 @@ table_constraint_def:
 	
 sql:
 		manipulative_statement
+	|	exec_statement
+	;
+
+
+exec_statement:
+		EXEC NAME {
+			driver.sqlFileName = * $2;		
+			delete $2;
+			return Parser::EXEC;
+		}
 	;
 	
 manipulative_statement:

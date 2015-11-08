@@ -16,8 +16,16 @@ int main(int argc, char* argv[]){
 	std::cout << "This is our team work. The team compose of Hai Jiewen Zhang Haiwei Yu Qiubin and Xiao Shaobin." << std::endl;
 	  	
 	parser.printHead();		
-	while (parser.parse("")!=Parser::EXIT){		
-		parser.setErr(true);
+	while (true){
+		parser.setEcho(true);	
+		int no=parser.parse("");
+		if (no==Parser::EXIT) break;
+		if (no==Parser::EXEC){
+			parser.setEcho(false);
+			parser.parse(parser.sqlFileName);
+			parser.setEcho(true);	
+		}	
+		parser.setErr(true);		
 	}
 			
 	delete im;
