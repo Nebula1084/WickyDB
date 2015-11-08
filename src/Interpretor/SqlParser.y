@@ -105,6 +105,7 @@ base_table_def:
 				we->CreateTable(*(driver.schema));
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}						
 			delete driver.schema;			
 		}
@@ -141,6 +142,7 @@ drop_table:
 				we->DropTable(*$3);
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}		
 			delete $3;
 		}
@@ -219,6 +221,7 @@ delete_statement_searched:
 					t = NULL;
 				}		
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}			
 		}
 	;
@@ -237,6 +240,7 @@ insert_statement:
 				if (t != NULL){
 					delete t;
 					t = NULL;
+					return Parser::SYNTAX_ERR;
 				}		
 				driver.error(e.what());
 			}
@@ -280,6 +284,7 @@ select_statement:
 				} catch (std::runtime_error& e){
 					driver.table = NULL;
 					driver.error(e.what());
+					return Parser::SYNTAX_ERR;
 				}
 				delete t1;
 			}				
@@ -303,6 +308,7 @@ select_statement:
 				} catch (std::runtime_error& e){
 					driver.table = NULL;
 					driver.error(e.what());
+					return Parser::SYNTAX_ERR;
 				}
 							
 		}
@@ -351,11 +357,12 @@ from_clause:
 table_ref_commalist:
 		table_ref {
 			WickyEngine* we = WickyEngine::getInstance();			
-			try {
-				driver.table = we->GetTable(*$1);
+			try {				
+				driver.table = we->GetTable(*$1);				
 			} catch (std::runtime_error& e){
 				driver.table = NULL;
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}
 		}
 	|	table_ref_commalist ',' table_ref {
@@ -370,6 +377,7 @@ table_ref_commalist:
 			} catch (std::runtime_error& e){
 				driver.table = NULL;
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}		
 		}
 	;
