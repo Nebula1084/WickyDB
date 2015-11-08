@@ -21,20 +21,25 @@ int main(int argc, char* argv[]){
 	// }
 	
 	Index* index = im->createIndex("test", Schema::INT, Schema::INT_LENGTH);
-	for (int i = 0; i < 3000; i++){
+	std::cout << index->getMaxKeyNum() << std::endl;
+	for (int i = 0; i < 8; i++){
 		Key k = Key::intToKey(i);
 		index->insertKey(k, i*2);
 	}
-	
-	// for (int i = 50; i < 51; i++){
-	// 	Key k = Key::intToKey(i);
-	// 	index->deleteKey(k);
-	// }
-	index->getRoot()->print();
-	for (int i = 0; i < 1000; i++){
+	index->getRoot()->printRecursive();	
+	for (int i = 0; i < 6; i++){
+		Key k = Key::intToKey(i);
+		std::cout << i << "===========: delete========== " << index->deleteKey(k) << std::endl;
+		if (index->getRoot()!= NULL)
+			index->getRoot()->printRecursive();	
+	}
+	std::cout << "---------sdfsdf------" << std::endl;
+	if (index->getRoot()!= NULL)
+		index->getRoot()->printRecursive();
+	for (int i = 0; i < 5; i++){
 		Key k = Key::intToKey(i);
 		std::cout << i << " : "<< index->search(k) << std::endl;
-	}
+	}			
 	delete im;
 	delete cm;	
 	delete bm;	

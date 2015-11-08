@@ -40,7 +40,8 @@ public:
 	void redistribute(Node* N, Key K1);
 	void aredistribute(Node* N, Key K1);
 	void print();
-	void printRecursive(Node* n);
+	void printRecursive();
+	int getParent();
 };
 
 #endif
