@@ -99,7 +99,8 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 		}
 	}
 	// std::cout<<"write: "<<output<<std::endl;
-	b->removeFile(filename);
+	if(b->isFileExists(filename))
+		b->removeFile(filename);
 	b->write(filename,0, output);
 }
 

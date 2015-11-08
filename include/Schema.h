@@ -81,7 +81,7 @@ public:
 	* if the index is not exist, it will throw a runtime error
 	*/
 	void deleteIndex(std::string indexName);
-	void setPrimaryKey(std::string attrName);
+	void setPrimaryKey(std::string attrName); //set the attribute to be unique at the same time
 	std::string getPrimaryKey(); //returns "NULL" if is not defined
 	void setUnique(std::string attrName);
 	bool isUnique(std::string attrName);

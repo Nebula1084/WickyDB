@@ -139,6 +139,7 @@ void Schema::setPrimaryKey(std::string attrName){
     if(!isAttrExists(attrName))
         throw std::runtime_error("Attribute " + attrName + " doesn't exist");
     primaryKey = attrName;
+    attributes[attrName].unique = true;
 }
 
 std::string Schema::getPrimaryKey(){
