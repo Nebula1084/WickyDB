@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 	  	
 	parser.printHead();		
 	while (true){
-		parser.setEcho(true);	
+		parser.setEcho(true);
 		int no=parser.parse("");
 		if (no==Parser::EXIT) break;
 		if (no==Parser::EXEC){
@@ -25,9 +25,10 @@ int main(int argc, char* argv[]){
 			parser.parse(parser.sqlFileName);
 			parser.setEcho(true);	
 		}	
-		parser.setErr(true);		
+		parser.setErr(true);
 	}
-			
+		
+	WickyEngine* we = WickyEngine::getInstance();	
 	delete im;
 	delete cm;	
 	delete bm;	

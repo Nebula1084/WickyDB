@@ -239,10 +239,11 @@ insert_statement:
 			} catch (std::runtime_error& e){
 				if (t != NULL){
 					delete t;
-					t = NULL;
-					return Parser::SYNTAX_ERR;
+					t = NULL;					
 				}		
 				driver.error(e.what());
+				delete driver.values; 
+				return Parser::SYNTAX_ERR;
 			}
 			delete driver.values; 
 		}
