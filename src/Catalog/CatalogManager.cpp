@@ -76,6 +76,10 @@ void CatalogManager::writeBack(std::map<std::string, Schema> schemaQueue){
     int strLength;
     std::string schString;
     BufferManager* bm = BufferManager::getInstance();
+    if (bm->isFileExists(CATALOG))
+    {
+	    bm->removeFile(CATALOG);
+    }
     bm->redirect(CATALOG);
     std::map<std::string, Schema>::iterator iter;
     for(iter = schemaQueue.begin();iter != schemaQueue.end(); iter++){

@@ -72,6 +72,7 @@ public:
 	* return the index name if the index is exist
 	*/
 	std::string getIndex(std::string attrName); 
+	std::vector<std::string> getIndecies();
 	/**
 	* add b+ Tree index to the attribute
 	* if the index is exist, it will throw a runtime error

@@ -125,6 +125,15 @@ std::string Schema::getIndex(std::string attrName){
     return attributes[attrName].index;
 }
 
+std::vector<std::string> Schema::getIndecies(){
+    std::vector<std::string> v;
+    std::map<std::string, std::string>::iterator it;
+    for(it = indecies.begin(); it != indecies.end(); it++){
+        v.push_back(it->first);
+    }
+    return v;
+}
+
 void Schema::addIndex(std::string indexName, std::string attrName){
     if(!isAttrExists(attrName)){
         throw std::runtime_error("Attribute " + attrName + " doesn't exist");

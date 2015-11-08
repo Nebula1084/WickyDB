@@ -671,6 +671,12 @@ int WickyEngine::DropTable(std::string name){
     if(cm->isExist(name)){
     	BufferManager *bm = BufferManager::getInstance();
 		RecordManager rm;
+		Schema sch = cm->get(name);
+		std::vector<std::string> v = sch.getIndecies();
+		for (int i = 0; i < v.size(); ++i)
+		{
+			dropIndex(v[i], name);
+		}
     	cm->drop(name);
     	rm.deleteTable(name, bm);
     }else{
