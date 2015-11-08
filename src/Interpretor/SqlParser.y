@@ -158,12 +158,22 @@ base_table_element:
 	;
 	
 base_index_def:
-		CREATE INDEX index ON table '(' column ')'
+		CREATE INDEX index ON table '(' column ')' {
+			WickyEngine* we = WickyEngine::getInstance();
+			try {
+				we->createIndex(*$3, *$5, *$7);
+				delete $3;
+				delete $5;
+				delete $7;
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}
+		}
 	;
 		
 drop_table:
 		DROP TABLE table{
-			WickyEngine* we = WickyEngine::getInstance();			
+			WickyEngine* we = WickyEngine::getInstance();
 			try {
 				we->DropTable(*$3);
 			} catch (std::runtime_error& e){
@@ -175,7 +185,15 @@ drop_table:
 	;
 
 drop_index:
-		DROP INDEX index
+		DROP INDEX index ON table {
+			WickyEngine* we = WickyEngine::getInstance();
+			try {
+				we->dropIndex(*$3, *$5);
+				delete $3;				
+			} catch (std::runtime_error& e){
+				driver.error(e.what());
+			}
+		}
 	;
 
 column_def:
@@ -236,7 +254,10 @@ delete_statement_searched:
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
 			try {								
-				we->DeleteByName(*$3, *(driver.getCondition()));				
+				t=we->GetTable(*$3);				
+				we->Delete(t, *(driver.getCondition()));
+				delete t;
+				//we->DeleteByName(*$3, *(driver.getCondition()));				
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){
@@ -253,8 +274,11 @@ insert_statement:
 		INSERT INTO table values_or_query_spec {
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
-			try {								
-				we->InsertByName(*$3, *(driver.values));
+			try {
+				t=we->GetTable(*$3);
+				//we->InsertByName(*$3, *(driver.values));
+				we->Insert(t, *(driver.values));
+				delete t;
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){
