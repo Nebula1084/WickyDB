@@ -63,7 +63,7 @@ void Node::setPointer(int i, int pointer){
 }
 
 Key Node::getKey(int i){
-	if (i >= keyNum) {
+	if (i > keyNum) {
 		std::cout << "i==" << i << " keyNum =" << keyNum << std::endl; 
 		throw std::runtime_error("Node::getKey(i) where i is out of range.");
 	}
@@ -191,15 +191,37 @@ void Node::deletePK(Key K, int P){
 }
 
 Node* Node::split(){
+	if (index->debug && 0){
+		std::cout << "----------split----------" << getParent() << " " << this->getAddr() << std::endl;
+		this->print();
+	}
 	Node* L1 = index->newNode();
-	L1->setPointer(index->getMaxKeyNum(), this->getPointer(index->getMaxKeyNum()));
-	this->setPointer(index->getMaxKeyNum(), L1->getAddr());
+	L1->setInter(this->inter);
+	// L1->setPointer(index->getMaxKeyNum(), this->getPointer(index->getMaxKeyNum()));
+	// this->setPointer(index->getMaxKeyNum(), L1->getAddr());
 	int i, j;
 	for (i=(keyNum+1)/2, j=0; i<keyNum; i++, j++){
 		L1->add(this->getPointer(i), this->getKey(i));
 	}
 	L1->setPointer(j, this->getPointer(i));
+	L1->parent = this->parent;
+	if (L1->isInternal()){
+		for (i = 0; i <= L1->getKeyNum(); i++){
+			index->getNode(L1->getPointer(i))->parent = L1->getAddr();		
+		}
+	}
 	keyNum = (keyNum+1)/2;
+	if (this->inter)
+		keyNum --;
+	if (index->debug && 0){
+		std::cout << "keyNum==" << keyNum << std::endl;
+		std::cout << "----------this-----------" << keyNum << " " << this->getAddr() << std::endl;
+		this->print();
+		std::cout << "----------L1-----------" << L1->keyNum << " " << L1->getAddr() << std::endl;
+		L1->print();
+	}
+	 
+	
 	return L1;
 }
 
@@ -215,7 +237,7 @@ void Node::insertInLeaf(Key key, int pointer){
 	add(pointer, key);
 }
 
-void Node::insertInParent(Key K1, Node* L1){	
+void Node::insertInParent(Key K1, Node* L1){
 	if (this == index->getRoot()){		
 		Node* R = index->newNode();
 		this->parent = R->getAddr();
@@ -225,23 +247,43 @@ void Node::insertInParent(Key K1, Node* L1){
 		R->setInter(true);
 		index->setRoot(R);
 		return;
-	}	
+	}
 	Node* P =index->getNode(this->parent);
+	if (index->debug && 0){
+		std::cout << "-----------before------------" << P->getAddr()<< "--"<< P->parent << std::endl;
+		P->print();	
+		K1.print();
+	}
 	L1->parent = this->parent;
+	if (index->debug && 0){
+		std::cout << L1->getAddr() << std::endl;
+	}		
 	if (P->getKeyNum() < index->getMaxKeyNum() - 1){
 		P->add(K1, L1->getAddr());
 	} else {
 		P->add(K1, L1->getAddr());
 		Node* P1 = P->split();
-		Key K2 = P->getKey(P->getKeyNum()-1);
-		P->insertInParent(K2, P);
+		Key K2 = P->getKey(P->getKeyNum());
+		P->insertInParent(K2, P1);
+	}
+	if (index->debug && 0){
+		std::cout << "-----------after------------" << P->getAddr() << std::endl;
+		P->print();
+		getch();
 	}
 }
 
-void Node::deleteEntry(Key K, int P){	
+void Node::deleteEntry(Key K, int P){
+	if (index->debug){
+		std::cout << "---------------deleteEntry---------" << std::endl;
+	}
 	deletePK(K, P);	
 	if (index->getRoot() == this){
 		if (keyNum == 0){
+			if (!isInternal()){
+				index->setRoot(NULL);
+				return;
+			}
 			index->setRoot(index->getNode(this->getPointer(0)));
 			index->deleteNode(this);	
 		}
@@ -259,7 +301,7 @@ void Node::deleteEntry(Key K, int P){
 		
 		if (pN == -1){
 			pN = Pa->keyNum;
-			pN1 = pN - 1;			
+			pN1 = pN - 1;
 			K1 = Pa->getKey(Pa->keyNum-1);
 		} else {
 			if (Pa->getKey(pN) == this->getKey(0)) pN ++;
@@ -275,18 +317,16 @@ void Node::deleteEntry(Key K, int P){
 			std::cout << keyNum << std::endl;
 			std::cout << "pa"<< pN1 << std::endl;	
 		}		
-		N1 = index->getNode(Pa->getPointer(pN1));
-		
+		N1 = index->getNode(Pa->getPointer(pN1));		
 		if (index->debug){
 			std::cout << "this:" << this->getAddr() << std::endl;
 			std::cout << "N1:" << N1->getAddr() << std::endl;	
 		}
-		
-		
+				
 		if (this->getKeyNum() + N1->getKeyNum() < index->getMaxKeyNum()){
 			if (index->debug){
-				std::cout << "---------------------" << std::endl;			
-				K1.print();		
+				std::cout << "------------K1---------" << std::endl;			
+				K1.print();
 			}
 	
 			if (pN1 < pN){
@@ -305,7 +345,7 @@ void Node::deleteEntry(Key K, int P){
 				if (index->debug){
 					std::cout << N1->getAddr() << std::endl;
 					Pa->print();	
-				}				
+				}
 				this->coalesce(N1, K1);
 				Pa->deleteEntry(K1, N1->getAddr());
 				index->deleteNode(N1);
@@ -316,10 +356,10 @@ void Node::deleteEntry(Key K, int P){
 				
 			}
 			if (index->debug){
-				std::cout << "---------------------" << std::endl;
+				std::cout << "----------Pa-----------" << std::endl;
 				Pa->print();	
 			}			
-			// getch();
+			getch();
 		} else {			
 			if (pN1 < pN){
 				N1->redistribute(this, K1);
@@ -343,7 +383,7 @@ void Node::coalesce(Node* N, Key K1){
 		for (int i=0; i<N->getKeyNum(); i++){
 			this->add(N->getPointer(i), N->getKey(i));
 		}
-		this->setPointer(index->getMaxKeyNum(), N->getPointer(index->getMaxKeyNum()));
+		// this->setPointer(index->getMaxKeyNum(), N->getPointer(index->getMaxKeyNum()));
 	}
 	
 }
@@ -409,12 +449,17 @@ void Node::print(){
 	}
 }
 
-void Node::printRecursive(Node* n){
-	n->print();
+void Node::printRecursive(){
+	std::cout << getAddr() << "-----------" << getParent() << std::endl;
+	print();
 	if (this->inter){
 		for (int i=0; i<=this->getKeyNum(); i++){
 			std::cout << i << std::endl;
-			printRecursive(index->getNode(this->getPointer(i)));
+			index->getNode(this->getPointer(i))->printRecursive();
 		}	
 	};
+}
+
+int Node::getParent(){
+	return parent;
 }

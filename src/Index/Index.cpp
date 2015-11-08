@@ -65,17 +65,25 @@ int Index::insertKey(Key K, int P){
 		throw std::runtime_error("key length does not match");
 	Node* L;
 	if (root == NULL) {
+		if (debug&&0)
+			std::cout <<"---------new Root!? -----------" << std::endl;
 		root = newNode();
 		L = root;
-	} else {
-		std::pair<Node*, int> p = find(K);
+	} else {		
+		std::pair<Node*, int> p = find(K);		
 		if (p.second != -1)
 			return KEY_EXIST;
 		L = p.first;
-	}
+		if (debug&&0)
+			std::cout <<"---------find Key -----------" << L->getAddr() << std::endl;
+	}	
 	if (L->getKeyNum() < maxKeyNum - 1){
 		L->insertInLeaf(K, P);
 	} else {
+		if (debug&&0) {
+			std::cout <<"---------insert Key -----------" << L->getParent() << std::endl;
+			if (L->getParent()!=-1) getNode(L->getParent())->print();
+		}
 		L->add(P, K);
 		Node* L1 = L->split();
 		L->insertInParent(L1->getKey(0), L1);
@@ -129,7 +137,7 @@ Node* Index::newNode(){
 	} else {
 		n = holes.front();
 		holes.pop_front();
-	}	
+	}
 	BufferManager* bm = BufferManager::getInstance();
 	unsigned char* buf = new unsigned char[Block::BLOCK_SIZE];
 	bm->write(this->getFileName(), n, Block::BLOCK_SIZE, buf); // write block
@@ -152,7 +160,7 @@ void Index::deleteNode(Node* n){
 
 Node* Index::getNode(int ptr){
 	std::map<int, Node*>::iterator itr = nodes.find(ptr);
-	if (itr==nodes.end()){		
+	if (itr==nodes.end()){
 		Node* node = new Node(this, ptr);
 		nodes.insert(std::map<int, Node*>::value_type(ptr, node));
 		return node;
@@ -173,6 +181,12 @@ std::pair<Node*, int> Index::find(Key k){
 	if (C == NULL) return std::pair<Node*, int>(NULL, -1);
 	while (C->isInternal()){
 		int i = C->findV(k);
+		if (debug&&0){
+			std::cout<<"-------------" << C->getAddr() << std::endl;
+			C->print();
+			std::cout << i << std::endl;	
+		}				
+		
 		if (i == -1) {
 			C = getNode(C->getPointer(C->getKeyNum()));			 
 		} else if (k == C->getKey(i)){
@@ -180,7 +194,10 @@ std::pair<Node*, int> Index::find(Key k){
 		} else {
 			C = getNode(C->getPointer(i));
 		}
-	}	
+	}
+	if (debug&&0){
+		C->print();		
+	}
 	int i = C->findV(k);
 	if (C->getKey(i) == k) {		
 	 	return std::pair<Node*, int>(C, i);
