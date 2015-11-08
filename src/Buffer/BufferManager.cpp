@@ -109,7 +109,12 @@ void BufferManager::removeFile(std::string name){
 		}		
 		delete wf;
 	}
-	remove(name.c_str());
+	std::string tmp;
+	std::stringstream ss;
+	ss << "res/";
+	ss << name;
+	ss >> tmp;
+	remove(tmp.c_str());
 }
 
 int BufferManager::eof(std::string name){
@@ -196,7 +201,12 @@ WickyFile* BufferManager::getFile(std::string name, int flag){
 }
 
 bool BufferManager::isFileExists(std::string name){
-	return access(name.c_str(), 0)==0;
+	std::string tmp;
+	std::stringstream ss;
+	ss << "res/";
+	ss << name;
+	ss >> tmp;
+	return access(tmp.c_str(), 0)==0;
 }
 
 int BufferManager::write(std::string name, int offset, int n){
