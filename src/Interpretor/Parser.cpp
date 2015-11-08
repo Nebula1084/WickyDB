@@ -10,8 +10,7 @@ Parser::Parser ()
 {
 	line=0;
 	condition = NULL;
-	schema = NULL;	
-	setNewSmt(true);
+	schema = NULL;		
 	values = NULL;
 	cs = NULL;
 }
@@ -21,9 +20,6 @@ Parser::~Parser ()
 }
 
 int Parser::parse(const std::string &f){	
-	if (line != 1 || err) {
-		setNewSmt(true);		
-	}
 	file = f;
 	scan_begin ();	
 	yy::SqlParser parser (*this);

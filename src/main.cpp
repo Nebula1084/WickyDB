@@ -16,6 +16,7 @@ int main(int argc, char* argv[]){
 	std::cout << "This is our team work. The team compose of Hai Jiewen Zhang Haiwei Yu Qiubin and Xiao Shaobin." << std::endl;
 	  		
 	while (true){
+		parser.setNewSmt(true);
 		parser.printHead();
 		int no=parser.parse("");
 		if (no==Parser::EXIT) break;
@@ -23,7 +24,7 @@ int main(int argc, char* argv[]){
 			parser.setEcho(false);
 			parser.parse(parser.sqlFileName);
 			parser.setEcho(true);	
-		}	
+		}
 		parser.setErr(true);
 	}
 		
