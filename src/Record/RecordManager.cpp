@@ -107,21 +107,30 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 
 bool RecordManager::writeTable(Table table, BufferManager *b){
 	char buf[100];
+	memset(buf,0,sizeof(buf));
 	sprintf(buf, "%d", table.getAttrNum());
+	// std::cout<<" in write table"<<std::endl;
 	std::string filename = table.getTableName();
 	std::string output = buf;
 	for(int i = 0; i < table.rows.size(); i++){
+		std::cout<<i<<std::endl;
 		for(int j = 0; j < table.rows[i].col.size(); j++){
 			output = output + " " + table.rows[i].col[j];
 		}
 	}
+	// std::cout<<"after for loop"<<std::endl;
 	// std::cout<<"write: "<<output<<std::endl;
 	if(b->isFileExists(filename))
 		b->removeFile(filename);
+	// std::cout<<"before write table"<<std::endl;
 	b->write(filename,Block::BLOCK_SIZE, output);
 	b->write(filename,0,(int)output.size());
 	return true;
 	 // std::cout<<output.size()<<std::endl;
+}
+
+void triWrite(std::string tableName, BufferManager *b, int key){
+	b->write(tableName,0,key);
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)
