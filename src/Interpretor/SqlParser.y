@@ -235,11 +235,8 @@ delete_statement_searched:
 		DELETE FROM table opt_where_clause{
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
-			try {				
-				t = we->GetTable(*$3);
-				we->Delete(t, *(driver.getCondition()));
-				delete t;
-				t = NULL;
+			try {								
+				we->DeleteByName(*$3, *(driver.getCondition()));				
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){
@@ -256,11 +253,8 @@ insert_statement:
 		INSERT INTO table values_or_query_spec {
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
-			try {				
-				t = we->GetTable(*$3);
-				we->Insert(t, *(driver.values));
-				delete t;
-				t = NULL;
+			try {								
+				we->InsertByName(*$3, *(driver.values));
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){

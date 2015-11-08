@@ -548,6 +548,15 @@ int WickyEngine::Delete(Table* t, Condition c){
 	return 0;
 }
 
+
+int WickyEngine::InsertByName(std::string name, std::vector<std::pair<std::string, std::string> > values){
+	std::cout << "WickyEngine::InsertByName()" << std::endl;
+}
+
+int WickyEngine::DeleteByName(std::string name, Condition c){
+	std::cout << "WickyEngine::DeleteByName()" << std::endl;
+}
+
 int WickyEngine::Update(Table* t, Condition c){
 	
 }

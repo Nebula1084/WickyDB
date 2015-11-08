@@ -33,6 +33,10 @@ public:
 	*/
 	int Insert(Table* t, std::vector<std::pair<std::string, std::string> > values);
 	int Delete(Table* t, Condition c);
+	
+	int InsertByName(std::string name, std::vector<std::pair<std::string, std::string> > values);
+	int DeleteByName(std::string name, Condition c);
+	
 	int Update(Table* t, Condition c);
 	void CreateTable(Schema sch);
 	int DropTable(std::string name);
