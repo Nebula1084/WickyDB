@@ -277,7 +277,9 @@ void Node::deleteEntry(Key K, int P){
 	if (index->debug){
 		std::cout << "---------------deleteEntry---------" << std::endl;
 	}
-	deletePK(K, P);	
+	deletePK(K, P);
+	if (!index->d)
+		return;	
 	if (index->getRoot() == this){
 		if (keyNum == 0){
 			if (!isInternal()){
@@ -439,6 +441,7 @@ void Node::aredistribute(Node* N, Key K1){
 }
 
 void Node::print(){	
+	if (!index->debug) return;
 	for (int i=0; i<this->getKeyNum(); i++){
 		std::cout << i << " pointer:" << this->getPointer(i) << std::endl;
 		std::cout << i << " key:";
@@ -450,6 +453,7 @@ void Node::print(){
 }
 
 void Node::printRecursive(){
+	if (!index->debug) return;
 	std::cout << getAddr() << "-----------" << getParent() << std::endl;
 	print();
 	if (this->inter){

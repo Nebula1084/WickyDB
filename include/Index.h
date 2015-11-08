@@ -13,7 +13,7 @@
 
 class Node;
 class Index{
-protected:
+protected:	
 	std::string name, type, fileName;
 	int keyLen;
 	int maxKeyNum, last;	
@@ -22,6 +22,7 @@ protected:
 	std::map<int, Node*> nodes;		
 public:
 	int debug;
+	bool d;
 	Index(std::string name, std::string type, int keyLen);
 	~Index();
 	/*

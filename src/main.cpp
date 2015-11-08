@@ -20,24 +20,19 @@ int main(int argc, char* argv[]){
 	// 	parser.setErr(true);
 	// }
 	
-	Index* index = im->createIndex("test", Schema::INT, Schema::INT_LENGTH);
+	Index* index = im->createIndex("test", Schema::FLOAT, Schema::FLOAT_LENGTH);
 	std::cout << index->getMaxKeyNum() << std::endl;
-	for (int i = 0; i < 8; i++){
-		Key k = Key::intToKey(i);
+	for (int i = 0; i < 80000; i++){
+		Key k = Key::doubleToKey(i*1.0);
 		index->insertKey(k, i*2);
 	}
 	index->getRoot()->printRecursive();	
-	for (int i = 0; i < 6; i++){
-		Key k = Key::intToKey(i);
-		std::cout << i << "===========: delete========== " << index->deleteKey(k) << std::endl;
-		if (index->getRoot()!= NULL)
-			index->getRoot()->printRecursive();	
+	for (int i = 0; i < 40000; i++){
+		Key k = Key::doubleToKey(i*2.0);
+		index->deleteKey(k);
 	}
-	std::cout << "---------sdfsdf------" << std::endl;
-	if (index->getRoot()!= NULL)
-		index->getRoot()->printRecursive();
-	for (int i = 0; i < 5; i++){
-		Key k = Key::intToKey(i);
+	for (int i = 0; i < 5000; i++){
+		Key k = Key::doubleToKey(i*1.0);
 		std::cout << i << " : "<< index->search(k) << std::endl;
 	}			
 	delete im;

@@ -6,6 +6,7 @@ const int Index::INSERT_SUCCESS = 1;
 
 Index::Index(std::string name, std::string type, int keyLen){
 	this->debug = false;
+	this->d = false;
 	this->name = name;
 	this->type = type;
 	this->keyLen = keyLen;
