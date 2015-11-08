@@ -20,12 +20,12 @@ bool Table::CreateTable(std::vector<Attribute> v){
 
 void Table::printTable(){
 	for(int i=0; i<attrList.size(); i++){
-		std::cout<<std::setw(10)<<attrList[i].getName();
+		std::cout<<std::setw(12)<<attrList[i].getName();
 	}
 	std::cout<<std::endl;
 	for(int i=0; i<rows.size(); i++){
 		for(int j=0; j<rows[i].col.size(); j++){
-			std::cout<<std::setw(10)<<rows[i].col[j];
+			std::cout<<std::setw(12)<<rows[i].col[j];
 		}
 		std::cout<<std::endl;
 	}
