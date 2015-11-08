@@ -2393,7 +2393,7 @@ void yyfree (void * ptr )
 
 
 
-void
+int
 Parser::scan_begin ()
 {
 	yy_flex_debug = trace_scanning;	
@@ -2403,7 +2403,7 @@ Parser::scan_begin ()
 	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file);
-		exit (EXIT_FAILURE);
+		return Parser::SYNTAX_ERR;
 	}
 }
 

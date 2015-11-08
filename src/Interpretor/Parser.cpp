@@ -21,7 +21,8 @@ Parser::~Parser ()
 
 int Parser::parse(const std::string &f){	
 	file = f;
-	scan_begin ();	
+	if (scan_begin () == Parser::SYNTAX_ERR) 
+		return Parser::SYNTAX_ERR;
 	yy::SqlParser parser (*this);
 	parser.set_debug_level (trace_parsing);
 	int res = parser.parse ();	
