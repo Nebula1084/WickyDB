@@ -647,10 +647,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
 			try {								
-				t=we->GetTable(*(yysemantic_stack_[(4) - (3)].strval));				
-				we->Delete(t, *(driver.getCondition()));
-				delete t;
-				//we->DeleteByName(*$3, *(driver.getCondition()));				
+				//t=we->GetTable(*$3);				
+				//we->Delete(t, *(driver.getCondition()));
+				//delete t;
+				we->DeleteByName(*(yysemantic_stack_[(4) - (3)].strval), *(driver.getCondition()));				
 				delete (yysemantic_stack_[(4) - (3)].strval);
 			} catch (std::runtime_error& e){
 				if (t != NULL){
@@ -671,10 +671,10 @@ yylloc.begin.filename = yylloc.end.filename = &driver.file;
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
 			try {
-				t=we->GetTable(*(yysemantic_stack_[(4) - (3)].strval));
-				//we->InsertByName(*$3, *(driver.values));
-				we->Insert(t, *(driver.values));
-				delete t;
+				//t=we->GetTable(*$3);
+				we->InsertByName(*(yysemantic_stack_[(4) - (3)].strval), *(driver.values));
+				//we->Insert(t, *(driver.values));
+				//delete t;
 				delete (yysemantic_stack_[(4) - (3)].strval);
 			} catch (std::runtime_error& e){
 				if (t != NULL){
