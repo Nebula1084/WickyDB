@@ -66,6 +66,8 @@ char	{ return token::CHAR; }
 float	{ return token::FLOAT; }
 exit	{ return token::EXIT; }
 execfile { return token::EXEC; }
+show	{ return token::SHOW; }
+desc	{ return token::DESC; }
 	/* punctuation */
 
 "="		|

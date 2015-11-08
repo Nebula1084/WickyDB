@@ -71,6 +71,8 @@ class Condition;
 %token ALL DISTINCT ON UNIQUE INTO
 %token INT CHAR FLOAT
 %token EXEC
+%token SHOW
+%token DESC
 
 %code {
 # include "Parser.h"
@@ -96,7 +98,30 @@ sql:
 	|	base_index_def
 	|	drop_table
 	|	drop_index
+	|	show_tables
+	|	show_indexs
+	|	desc_table
 	;
+
+show_tables:
+		SHOW TABLE{
+			WickyEngine* we = WickyEngine::getInstance();
+			we->ShowTables();
+		}
+	;
+	
+show_indexs:
+		SHOW INDEX{
+			
+		}
+	;
+
+desc_table:
+		DESC TABLE NAME{
+				WickyEngine* we = WickyEngine::getInstance();
+			we->DescribeTable(*$3);
+			delete $3;
+		}
 	
 base_table_def:
 		CREATE TABLE def_table '(' base_table_element_commalist ')' {
