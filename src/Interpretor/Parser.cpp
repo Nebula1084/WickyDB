@@ -3,6 +3,7 @@
 
 const int Parser::EXIT=-1;
 const int Parser::SYNTAX_ERR=-2;
+const int Parser::EXEC = 2;
 	
 Parser::Parser ()
 	: trace_scanning (false), trace_parsing (false), echoEn(true), err(false)
@@ -19,8 +20,7 @@ Parser::~Parser ()
 {
 }
 
-int Parser::parse(const std::string &f){
-	echoEn = true; 
+int Parser::parse(const std::string &f){	
 	if (line != 1 || err) {
 		setNewSmt(true);		
 	}
@@ -78,6 +78,8 @@ void Parser::printHead(){
 		} else {
 			std::cout << "------->";
 		}
+	} else {
+		std::cout << line << std::endl;
 	}
 }
 

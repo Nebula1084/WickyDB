@@ -15,26 +15,19 @@ int main(int argc, char* argv[]){
 	std::cout << "Welcome to the WicyDB monitor. Commands end with ;" << std::endl;	
 	std::cout << "This is our team work. The team compose of Hai Jiewen Zhang Haiwei Yu Qiubin and Xiao Shaobin." << std::endl;
 	  	
-	// parser.printHead();		
-	// while (parser.parse("")!=Parser::EXIT){		
-	// 	parser.setErr(true);
-	// }
-	
-	Index* index = im->createIndex("test", Schema::FLOAT, Schema::FLOAT_LENGTH);
-	std::cout << index->getMaxKeyNum() << std::endl;
-	for (int i = 0; i < 80000; i++){
-		Key k = Key::doubleToKey(i*1.0);
-		index->insertKey(k, i*2);
+	parser.printHead();		
+	while (true){
+		parser.setEcho(true);
+		int no=parser.parse("");
+		if (no==Parser::EXIT) break;
+		if (no==Parser::EXEC){
+			parser.setEcho(false);
+			parser.parse(parser.sqlFileName);
+			parser.setEcho(true);	
+		}	
+		parser.setErr(true);
 	}
-	index->getRoot()->printRecursive();	
-	for (int i = 0; i < 40000; i++){
-		Key k = Key::doubleToKey(i*2.0);
-		index->deleteKey(k);
-	}
-	for (int i = 0; i < 5000; i++){
-		Key k = Key::doubleToKey(i*1.0);
-		std::cout << i << " : "<< index->search(k) << std::endl;
-	}			
+		
 	delete im;
 	delete cm;	
 	delete bm;	

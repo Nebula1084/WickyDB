@@ -92,11 +92,12 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			throw std::runtime_error("Can't find the 'where' condition");
 		}
 
+		string type = tAttr[position].getType();
 		switch(op)
 		{
 			case 0:						// =
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp==secondCmp)
@@ -110,7 +111,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 1: 					// >
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>secondCmp)
@@ -124,7 +125,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 2: 					// <
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<secondCmp)
@@ -138,7 +139,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 3: 					// <>
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp!=secondCmp)
@@ -152,7 +153,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 4: 					// <=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<=secondCmp)
@@ -166,7 +167,7 @@ Table* WickyEngine::Select(Table* t, Condition c){
 			break;				
 			case 5: 					// >=
 			for(int i = 0; i < resultRow.size(); i++){
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(resultRow[i].col[position].c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>=secondCmp)
@@ -233,6 +234,15 @@ Table* WickyEngine::Join(Table* t1, Table* t2){
 }
 
 int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string> > values){	
+	
+	//get the primary key
+	CatalogManager* cm = CatalogManager::getInstance();
+	std::string primaryKey;
+	if(cm->isExist(t->getTableName())){
+		Schema s = cm->get(t->getTableName());
+		primaryKey = s.getPrimaryKey();
+	}
+
 	//judge whether the input fits the table
 	using namespace std;
 	if(t->getAttrNum()!=values.size())
@@ -247,36 +257,38 @@ int WickyEngine::Insert(Table* t, std::vector<std::pair<std::string, std::string
 	}
 	int countAttr = 0;
 	for(itr = values.begin(); itr != values.end(); itr++){
-		if(itr->first!=attrList[countAttr].getType()){
+		if(itr->first!=attrList[countAttr].getType()){		//wrong type
 			throw std::runtime_error("Required a "+ attrList[countAttr].getType() +" type！ Insertion failed");		
 		}
+		//if it's a primary key or unique key
+		if(attrList[countAttr].isUnique() || attrList[countAttr].getName()==primaryKey){
+			for(int k = 0; k < t->rows.size(); k++){
+				if(t->rows[k].col[countAttr]==itr->second)
+					throw std::runtime_error("The attribute" + attrList[countAttr].getName()
+						+ " is unique or primary! And the value is already exist! Insertion failed");
+			}
+		}
+
 		if(itr->first!="CHAR")
 			inputCol.push_back(itr->second);
 		else{
 			int attrLength = attrList[countAttr].getLength();
 			// cout<<attrLength<<" "<<countAttr<<endl;
-			if(attrLength < itr->second.size()){
+			if(attrLength < itr->second.size()){			//the string is too long
 				throw std::runtime_error("The string "+itr->second + " is too long! Insertion failed");
 			}
 			inputCol.push_back(itr->second);
 		}
 		countAttr++;
 	}
-	// vector<Attribute> attrList = t->getAttrList();
-	// for(int i = 0; i < attrList.size(); i++){
-	// 	cout<<i<<": "<<attrList[i].getName()<<" "<<attrList[i].getType()<<
-	// 	" "<<attrList[i].getLength()<<endl;
-	// }
+	
 	BufferManager *bm = BufferManager::getInstance();
 	RecordManager rm;
 
 	Tuple inputTuple(inputCol);
 	t->rows.push_back(inputTuple);
 	rm.writeTable(*t, bm);
-	// t->printTable();
-	// for(int i=0; i<t->rows[t->rows.size()-1].col.size(); i++){
-	// 	cout<<t->rows[t->rows.size()-1].col[i]<<endl;
-	// }
+	
 	return 0;
 }
 
@@ -326,12 +338,13 @@ int WickyEngine::Delete(Table* t, Condition c){
 		}
 
 		tempIndex.clear();
+		string type = tAttr[position].getType();
 		switch(op)
 		{
 			case 0:						// =
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp==secondCmp)
@@ -346,7 +359,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 1: 					// >
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>secondCmp)
@@ -361,7 +374,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 2: 					// <
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<secondCmp)
@@ -376,7 +389,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 3: 					// <>
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp!=secondCmp)
@@ -391,7 +404,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 4: 					// <=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp<=secondCmp)
@@ -406,7 +419,7 @@ int WickyEngine::Delete(Table* t, Condition c){
 			case 5: 					// >=
 			for(int i = 0; i < toDeleteIndex.size(); i++){
 				string target = rawRow[toDeleteIndex[i]].col[position];
-				if(tempStore[0]!="CHAR"){
+				if(type!="CHAR"){
 					float firstCmp = atof(target.c_str());
 					float secondCmp = atof(tempStore[2].c_str());
 					if(firstCmp>=secondCmp)
@@ -478,6 +491,7 @@ void WickyEngine::CreateTable(Schema sch){
 	std::vector<Attribute> attrList;
 	sch.copyAttributes(attrList);
 	if(t.CreateTable(attrList)){
+		// std::cout<<"create table------"<<std::endl;
 		rm.writeTable(t, b);
 	}else{
 		throw std::runtime_error("Table should have at least one column");

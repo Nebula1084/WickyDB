@@ -5,6 +5,7 @@
 #include <string>
 #include <stdexcept>
 #include <stdio.h>
+#include <sstream>
 
 class WickyFile{
 protected:

@@ -1,6 +1,3 @@
-select c1, c2 from t1;
-delete from t2;
-
 drop index stunameidx;
 
 create index stunameidx on student ( sname );

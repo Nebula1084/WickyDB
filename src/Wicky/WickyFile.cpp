@@ -7,11 +7,16 @@ const int WickyFile::FILE_WRITE = 2;
 WickyFile::WickyFile(std::string fileName, int flag)
 	:fileName(fileName), flag(flag), fptr(0){
 	//open file and create file if not exists
-	file = fopen(fileName.c_str(), "rb+");
+	std::string tmp;
+	std::stringstream ss;
+	ss << "res/";
+	ss << fileName;
+	ss >> tmp;
+	file = fopen(tmp.c_str(), "rb+");
 	if (file == NULL) {
-		file = fopen(fileName.c_str(), "w");
+		file = fopen(tmp.c_str(), "w");
 		fclose(file);
-		file = fopen(fileName.c_str(), "rb+");
+		file = fopen(tmp.c_str(), "rb+");
 	}
 	if (file == NULL)
 		throw std::runtime_error("file " + fileName + " create faile");

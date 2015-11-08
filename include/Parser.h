@@ -27,9 +27,10 @@ private:
 	int line;
 	bool echoEn;
 	bool newSmt;
-	bool err;
+	bool err;	
 	Condition* condition;	
 public:
+	std::string sqlFileName;
 	Parser();
 	virtual ~Parser();
 	
@@ -68,6 +69,7 @@ public:
 	
 	const static int SYNTAX_ERR;
 	const static int EXIT;
+	const static int EXEC;
 };
 
 #endif

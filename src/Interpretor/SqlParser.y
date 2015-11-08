@@ -70,6 +70,7 @@ class Condition;
 %token FROM WHERE OR AND NOT PRIMARY KEY
 %token ALL DISTINCT ON UNIQUE INTO
 %token INT CHAR FLOAT
+%token EXEC
 
 %code {
 # include "Parser.h"
@@ -104,6 +105,7 @@ base_table_def:
 				we->CreateTable(*(driver.schema));
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}						
 			delete driver.schema;			
 		}
@@ -140,6 +142,7 @@ drop_table:
 				we->DropTable(*$3);
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}		
 			delete $3;
 		}
@@ -184,6 +187,16 @@ table_constraint_def:
 	
 sql:
 		manipulative_statement
+	|	exec_statement
+	;
+
+
+exec_statement:
+		EXEC NAME {
+			driver.sqlFileName = * $2;		
+			delete $2;
+			return Parser::EXEC;
+		}
 	;
 	
 manipulative_statement:
@@ -208,6 +221,7 @@ delete_statement_searched:
 					t = NULL;
 				}		
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}			
 		}
 	;
@@ -225,9 +239,11 @@ insert_statement:
 			} catch (std::runtime_error& e){
 				if (t != NULL){
 					delete t;
-					t = NULL;
+					t = NULL;					
 				}		
 				driver.error(e.what());
+				delete driver.values; 
+				return Parser::SYNTAX_ERR;
 			}
 			delete driver.values; 
 		}
@@ -269,6 +285,7 @@ select_statement:
 				} catch (std::runtime_error& e){
 					driver.table = NULL;
 					driver.error(e.what());
+					return Parser::SYNTAX_ERR;
 				}
 				delete t1;
 			}				
@@ -292,6 +309,7 @@ select_statement:
 				} catch (std::runtime_error& e){
 					driver.table = NULL;
 					driver.error(e.what());
+					return Parser::SYNTAX_ERR;
 				}
 							
 		}
@@ -340,11 +358,12 @@ from_clause:
 table_ref_commalist:
 		table_ref {
 			WickyEngine* we = WickyEngine::getInstance();			
-			try {
-				driver.table = we->GetTable(*$1);
+			try {				
+				driver.table = we->GetTable(*$1);				
 			} catch (std::runtime_error& e){
 				driver.table = NULL;
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}
 		}
 	|	table_ref_commalist ',' table_ref {
@@ -359,6 +378,7 @@ table_ref_commalist:
 			} catch (std::runtime_error& e){
 				driver.table = NULL;
 				driver.error(e.what());
+				return Parser::SYNTAX_ERR;
 			}		
 		}
 	;
