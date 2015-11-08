@@ -100,6 +100,7 @@ void WickyEngine::createIndex(std::string indexName, std::string tableName, std:
 			index->insertKey(key, i);
 		}
 	}
+	delete index;
 
 }
 void WickyEngine::dropIndex(std::string indexName, std::string tableName){
