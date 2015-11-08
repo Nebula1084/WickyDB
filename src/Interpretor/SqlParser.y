@@ -254,10 +254,10 @@ delete_statement_searched:
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
 			try {								
-				t=we->GetTable(*$3);				
-				we->Delete(t, *(driver.getCondition()));
-				delete t;
-				//we->DeleteByName(*$3, *(driver.getCondition()));				
+				//t=we->GetTable(*$3);				
+				//we->Delete(t, *(driver.getCondition()));
+				//delete t;
+				we->DeleteByName(*$3, *(driver.getCondition()));				
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){
@@ -275,10 +275,10 @@ insert_statement:
 			WickyEngine* we = WickyEngine::getInstance();
 			Table* t = NULL;
 			try {
-				t=we->GetTable(*$3);
-				//we->InsertByName(*$3, *(driver.values));
-				we->Insert(t, *(driver.values));
-				delete t;
+				//t=we->GetTable(*$3);
+				we->InsertByName(*$3, *(driver.values));
+				//we->Insert(t, *(driver.values));
+				//delete t;
 				delete $3;
 			} catch (std::runtime_error& e){
 				if (t != NULL){
