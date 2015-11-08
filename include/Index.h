@@ -34,7 +34,22 @@ public:
 		key length does not match
 	*/
 	int insertKey(Key key, int pointer);
+	/*
+	@K key
+	@return pointer value
+		KEY_DO_NOT_EXIST: -2
+	@throw 
+		key length does not match
+	*/	
 	int search(Key k);
+	/*
+	@K key
+	@return
+		KEY_DO_NOT_EXIST: -2
+		INSERT_SUCCESS: 1
+	@throw 
+		key length does not match
+	*/		
 	int deleteKey(Key k);
 	int getKeyLen();
 	int getMaxKeyNum();

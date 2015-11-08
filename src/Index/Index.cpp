@@ -93,6 +93,8 @@ int Index::insertKey(Key K, int P){
 }
 
 int Index::search(Key k){
+	if (k.getLength() != keyLen)
+		throw std::runtime_error("key length does not match");
 	std::pair<Node*, int> res =	find(k);
 	Node* n = res.first;
 	int i = res.second;
@@ -103,6 +105,8 @@ int Index::search(Key k){
 }
 
 int Index::deleteKey(Key k){
+	if (k.getLength() != keyLen)
+		throw std::runtime_error("key length does not match");
 	std::pair<Node*, int> tmp = find(k);
 	Node* n = tmp.first;
 	int i = tmp.second;
