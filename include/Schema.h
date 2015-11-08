@@ -66,6 +66,7 @@ public:
 	void addAttribute(std::string attrName, std::string type);
 	bool isAttrExists(std::string attrName);
 	bool isIndexExists(std::string indexName);
+	std::string getAttrOfIndex(std::string indexName); //get the attribute has this index
 	/**
 	* return NOINDEX, if there is no index on attribute
 	* return the index name if the index is exist

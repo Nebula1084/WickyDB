@@ -19,6 +19,7 @@ public:
 	
 	static CatalogManager* getInstance();
 	void store(Schema sch);
+	void saveChange(Schema sch);
 	void drop(std::string tableName);
 	Schema get(std::string name);
 	std::list<std::string> getTables();

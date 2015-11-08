@@ -67,7 +67,8 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 
 	unsigned char buf[1000000];
 	memset(buf,0,sizeof(buf));
-	b->readAll(filename, 0, buf);
+	b->readAll(filename,0 , buf);
+
 	std::string raw((char *)buf);
 	// std::cout<<"read: "<<raw<<std::endl;
 	Split(raw, " ", rawVec);
@@ -77,15 +78,21 @@ Table RecordManager::readTable(Schema s, BufferManager *b){
 		std::cout<<"WARNING! the data is unsafe!"<<std::endl;
 
 	int count = 1;
-	
+
+	// std::cout<<"****************"<<std::endl;
+	// for(int i = attrNumber; i>0; i--)
+	// 	if(rawVec.size()>5)
+	// 		std::cout<<" "<<rawVec[rawVec.size()-i];
+	// std::cout<<std::endl;
+
 	while(count < rawVec.size()){
 		Tuple x;
 		x.col.clear();
 		// std::cout<<"go for loop"<<std::endl;
 		for(int i = 0; i < attrNumber; i++){
 			x.col.push_back(rawVec[count++]);
-			if(count>=rawVec.size())
-				break;
+			// if(count>=rawVec.size())
+			// 	break;
 		}
 		// std::cout<<"before push"<<std::endl;
 		result->rows.push_back(x);
@@ -110,6 +117,7 @@ bool RecordManager::writeTable(Table table, BufferManager *b){
 	if(b->isFileExists(filename))
 		b->removeFile(filename);
 	b->write(filename,0, output);
+	 std::cout<<output.size()<<std::endl;
 }
 
 void RecordManager::Split(std::string src, std::string separator, std::vector<std::string>& dest)

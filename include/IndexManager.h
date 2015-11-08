@@ -1,5 +1,5 @@
 #ifndef _INDEXMANAGER_H
-#define _INDEXMANGAER_H
+#define _INDEXMANAGER_H
 
 #include <string>
 #include <stdexcept>
