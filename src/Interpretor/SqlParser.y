@@ -106,8 +106,9 @@ base_table_def:
 			} catch (std::runtime_error& e){
 				driver.error(e.what());
 				return Parser::SYNTAX_ERR;
-			}						
-			delete driver.schema;			
+			}
+			delete driver.schema;
+			driver.schema = NULL;
 		}
 	;
 	
@@ -241,11 +242,11 @@ insert_statement:
 					delete t;
 					t = NULL;					
 				}		
-				driver.error(e.what());
-				delete driver.values; 
+				driver.error(e.what());				
 				return Parser::SYNTAX_ERR;
 			}
 			delete driver.values; 
+			driver.values = NULL;
 		}
 	;
 	
@@ -303,6 +304,8 @@ select_statement:
 						driver.table->printTable();
 						delete driver.cs;					
 						delete t1;
+						driver.cs = NULL;
+						t1 = NULL;
 					} else {					
 						driver.table->printTable();
 					}

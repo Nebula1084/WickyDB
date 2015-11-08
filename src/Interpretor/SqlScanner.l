@@ -84,7 +84,7 @@ execfile { return token::EXEC; }
 
 	/* names */
 
-[A-Za-z][A-Za-z0-9_]*	{
+[A-Za-z][A-Za-z0-9_.]*	{
 	yylval->strval = new std::string (yytext);	
 	return token::NAME; 
 };
@@ -135,9 +135,10 @@ execfile { return token::EXEC; }
 void
 Parser::scan_begin ()
 {
-	yy_flex_debug = trace_scanning;
+	yy_flex_debug = trace_scanning;	
 	if (file.empty () || file == "-") {
 		yyin = stdin;		
+	yyrestart(yyin);
 	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file);

@@ -517,7 +517,7 @@ static yyconst flex_int32_t yy_ec[256] =
 
 static yyconst flex_int32_t yy_meta[46] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    2,    1,    1,
+        1,    1,    1,    1,    1,    1,    2,    2,    1,    1,
         1,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -2381,9 +2381,10 @@ void yyfree (void * ptr )
 void
 Parser::scan_begin ()
 {
-	yy_flex_debug = trace_scanning;
+	yy_flex_debug = trace_scanning;	
 	if (file.empty () || file == "-") {
 		yyin = stdin;		
+	yyrestart(yyin);
 	} else if (!(yyin = fopen (file.c_str (), "r")))
 	{
 		error ("cannot open " + file);
