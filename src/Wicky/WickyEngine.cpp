@@ -11,7 +11,8 @@
 WickyEngine* WickyEngine::instance = NULL;
 
 int countInsert=0;
-
+bool trickDelete=false;
+bool okDelete=false;
 WickyEngine::WickyEngine(){
 	
 }
@@ -134,11 +135,24 @@ Table* WickyEngine::Select(Table* t, Condition c){
 	opMap[">="]=5;
 	countInsert = 0;
 
+
+
+
 	list<pair<string,string> > cond;
 	//initial the table to be returned
 	Table* resultTable = new Table(t->getTableName());
 	resultTable->CreateTable(t->getAttrList());
 	vector<Tuple> resultRow = t->rows;		//the rows to be returned
+
+	if(okDelete==true){
+		int alreadyDeleted;
+		BufferManager *bm = BufferManager::getInstance();
+		bm->read(t->getTableName(),0,&alreadyDeleted);
+		vector<Tuple>::iterator it = resultRow.begin()+alreadyDeleted;
+		resultRow.erase(it);
+	}
+
+
 	vector<Attribute> tAttr = t->getAttrList();
 	vector<Tuple> tempRow;
 	vector<string> tempStore;				//store the condition
@@ -549,10 +563,18 @@ int WickyEngine::Delete(Table* t, Condition c){
 	}
 	int recordNum = t->rows.size()-resultRow.size();
 	cout<<"Totally delete "<<recordNum<<" records"<<endl;
-	t->rows = resultRow;
-	BufferManager *bm = BufferManager::getInstance();
-	RecordManager rm;
-	rm.writeTable(*t, bm);
+	if(trickDelete==false){
+		t->rows = resultRow;
+		BufferManager *bm = BufferManager::getInstance();
+		RecordManager rm;
+		// cout<<"before write table"<<endl;
+		rm.writeTable(*t, bm);
+	}
+	else{
+		BufferManager *bm = BufferManager::getInstance();
+		bm->write(t->getTableName(),0,toDeleteIndex[0]);
+		okDelete=true;
+	}
 	return 0;
 }
 
@@ -589,6 +611,7 @@ int WickyEngine::InsertByName(std::string filename, std::vector<std::pair<std::s
 		Insert(tempTable, values);
 	}
 	else{
+		trickDelete = true;
 		using namespace std;
 		if(attrFlag==false){
 			CatalogManager* cm = CatalogManager::getInstance();
